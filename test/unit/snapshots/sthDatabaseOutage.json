@@ -128,11 +128,31 @@
   },
   "duringOutage.deleteEntity": {
     "request": "DELETE /STH/v1/contextEntities/type/T/id/E1",
-    "error": "ETIMEDOUT"
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
   },
   "duringOutage.deleteAll": {
     "request": "DELETE /STH/v1/contextEntities",
-    "error": "ETIMEDOUT"
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
   },
   "duringOutage.version": {
     "request": "GET /version",
