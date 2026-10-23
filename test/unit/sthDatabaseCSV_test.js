@@ -18,6 +18,8 @@
  * If not, see http://www.gnu.org/licenses/.
  */
 
+/* eslint-disable consistent-return */
+
 // Tests of the CSV files generated when the raw data is requested with filetype=csv
 
 const ROOT_PATH = require('app-root-path').toString();
