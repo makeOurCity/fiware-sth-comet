@@ -22,6 +22,7 @@ const ROOT_PATH = require('app-root-path');
 const sthServerUtils = require(ROOT_PATH + '/lib/server/utils/sthServerUtils');
 const boom = require('@hapi/boom');
 const expect = require('expect.js');
+const joi = require('joi');
 
 /**
  * Returns a fake of the hapi response toolkit (h) which records the responses it creates
@@ -148,6 +149,64 @@ describe('sthServerUtils tests', function() {
             return handler({}, h).then(function(response) {
                 expect(response.source).to.equal('first');
             });
+        });
+    });
+
+    describe('getLegacyValidationMessage', function() {
+        const schema = joi.object({
+            lastN: joi
+                .number()
+                .integer()
+                .greater(-1),
+            aggrPeriod: joi.string().valid('month', 'day'),
+            dateFrom: joi.date(),
+            level: joi.string().required()
+        });
+
+        /**
+         * Returns the validation error of the provided value against the test schema
+         * @param {Object} value The value to validate
+         * @return {Error} The validation error
+         */
+        function getValidationError(value) {
+            return schema.validate(Object.assign({ level: 'INFO' }, value)).error;
+        }
+
+        it('should wrap the message of an invalid key as joi 14 did', function() {
+            expect(sthServerUtils.getLegacyValidationMessage(getValidationError({ lastN: -1 }))).to.equal(
+                'child "lastN" fails because ["lastN" must be greater than -1]'
+            );
+        });
+
+        it('should wrap the message of a missing required key as joi 14 did', function() {
+            expect(sthServerUtils.getLegacyValidationMessage(schema.validate({}).error)).to.equal(
+                'child "level" fails because ["level" is required]'
+            );
+        });
+
+        it('should wrap the message of a value not allowed as joi 14 did', function() {
+            expect(sthServerUtils.getLegacyValidationMessage(getValidationError({ aggrPeriod: 'year' }))).to.equal(
+                'child "aggrPeriod" fails because ["aggrPeriod" must be one of [month, day]]'
+            );
+        });
+
+        it('should use the joi 14 message for an invalid date', function() {
+            expect(sthServerUtils.getLegacyValidationMessage(getValidationError({ dateFrom: 'x' }))).to.equal(
+                'child "dateFrom" fails because ["dateFrom" must be a number of milliseconds or valid date string]'
+            );
+        });
+
+        it('should not wrap the message of an unknown key, as joi 14 did not', function() {
+            expect(sthServerUtils.getLegacyValidationMessage(getValidationError({ foo: 'bar' }))).to.equal(
+                '"foo" is not allowed'
+            );
+        });
+
+        it('should return the message of an error without validation details as is', function() {
+            const error = boom.badRequest('child "fiware-service" fails because [fiware-service is required]');
+            expect(sthServerUtils.getLegacyValidationMessage(error)).to.equal(
+                'child "fiware-service" fails because [fiware-service is required]'
+            );
         });
     });
 });
