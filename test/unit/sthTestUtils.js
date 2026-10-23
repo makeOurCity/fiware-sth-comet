@@ -128,7 +128,7 @@ function addEventTest(anEvent, includeTimeInstantMetadata, done) {
             shouldCreate: true,
             shouldTruncate: true
         },
-        function(err, collection) {
+        function (err, collection) {
             if (err) {
                 done(err);
             } else if (includeTimeInstantMetadata) {
@@ -187,7 +187,7 @@ function addEventTest(anEvent, includeTimeInstantMetadata, done) {
  */
 function addAggregatedDataTest(anEvent, done) {
     let counter = 0;
-    const callback = function(err) {
+    const callback = function (err) {
         if (err) {
             done(err);
         }
@@ -209,7 +209,7 @@ function addAggregatedDataTest(anEvent, done) {
             shouldCreate: true,
             shouldTruncate: true
         },
-        function(err, collection) {
+        function (err, collection) {
             if (err) {
                 done(err);
             } else {
@@ -307,7 +307,7 @@ function addAggregatedDataTest(anEvent, done) {
 function eachEventTestSuite(attrName, attrType, includeTimeInstantMetadata) {
     let anEvent;
 
-    before(function() {
+    before(function () {
         if (events.length === sthTestConfig.SAMPLES) {
             cleanEvents();
         }
@@ -319,11 +319,11 @@ function eachEventTestSuite(attrName, attrType, includeTimeInstantMetadata) {
         console.log('New event: %s', JSON.stringify(anEvent));
     });
 
-    it('should store the single event', function(done) {
+    it('should store the single event', function (done) {
         addEventTest(anEvent, includeTimeInstantMetadata, done);
     });
 
-    it('should store aggregated data for each resolution', function(done) {
+    it('should store aggregated data for each resolution', function (done) {
         addAggregatedDataTest(anEvent, done);
     });
 }
@@ -342,7 +342,7 @@ function dropRawEventCollectionTest(done) {
     });
     /* eslint-disable-next-line no-console */
     console.log(collectionName4Events);
-    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName4Events), function(err) {
+    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName4Events), function (err) {
         if (err && err.code === 26) {
             err = null;
         }
@@ -362,7 +362,7 @@ function dropAggregatedDataCollectionTest(done) {
         entityType: sthTestConfig.ENTITY_TYPE,
         attrName: sthTestConfig.ATTRIBUTE_NAME
     });
-    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName4Aggregated), function(err) {
+    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName4Aggregated), function (err) {
         if (err && err.code === 26) {
             err = null;
         }
@@ -526,7 +526,7 @@ function noRawDataIfEntityCaseChange(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -547,7 +547,7 @@ function noRawDataIfEntityCaseChange(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -593,7 +593,7 @@ function rawDataAvailableDateFilter(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -625,7 +625,7 @@ function rawDataAvailableDateFilter(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -699,7 +699,7 @@ function noAggregatedDataIfEntityCaseChangeTest(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -728,7 +728,7 @@ function noAggregatedDataIfEntityCaseChangeTest(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -812,7 +812,7 @@ function noAggregatedDataSinceDateTest(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -846,7 +846,7 @@ function noAggregatedDataSinceDateTest(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -953,7 +953,7 @@ function aggregatedDataAvailableSinceDateTest(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -1023,7 +1023,7 @@ function aggregatedDataAvailableSinceDateTest(ngsiVersion, params, done) {
                     'Fiware-ServicePath': servicePath || sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -1102,14 +1102,14 @@ function aggregatedDataAvailableSinceDateTest(ngsiVersion, params, done) {
  * @param {boolean} checkRecvTime Flag indicating if the recvTime should be checked
  */
 function rawDataRetrievalSuite(options, attrName, attrType, checkRecvTime) {
-    describe('should respond', function() {
+    describe('should respond', function () {
         const optionsForCaseSensitivity = {};
         const optionsWithNoDates = {};
         const optionsWithDateFrom = {};
         const optionsWithDateTo = {};
         const optionsWithFromAndToDate = {};
 
-        before(function() {
+        before(function () {
             for (const prop in options) {
                 optionsForCaseSensitivity[prop] = options[prop];
                 optionsWithNoDates[prop] = options[prop];
@@ -1326,7 +1326,7 @@ function aggregatedDataRetrievalTests(index, attrName, attrType, aggrMethod) {
  * @param {string} aggrMethod The aggregation method
  */
 function aggregatedDataRetrievalSuite(attrName, attrType, aggrMethod) {
-    describe('with aggrMethod as ' + aggrMethod, function() {
+    describe('with aggrMethod as ' + aggrMethod, function () {
         for (let i = 0; i < sthConfig.AGGREGATION_BY.length; i++) {
             describe(
                 'and aggrPeriod as ' + sthConfig.AGGREGATION_BY[i],
@@ -1409,7 +1409,7 @@ function noAttributesTest(service, servicePath, done) {
                 ]
             }
         },
-        function(err, response, body) {
+        function (err, response, body) {
             expect(err).to.equal(null);
             expect(response.statusCode).to.equal(400);
             expect(body.statusCode).to.equal(400);
@@ -1544,7 +1544,7 @@ function nonAggregatableAttributeValuesTest(service, servicePath, done) {
             json: true,
             body
         },
-        function(err, response) {
+        function (err, response) {
             expect(err).to.equal(null);
             expect(response.statusCode).to.equal(200);
             done();
@@ -1566,12 +1566,12 @@ let complexNotificationTest;
  * @param {boolean} includeTimeInstantMetadata The attribute should include a TimeInstant metadata
  */
 function complexNotificationSuite(attrName, attrType, includeTimeInstantMetadata) {
-    describe('attribute of type ' + attrType, function() {
-        before(function() {
+    describe('attribute of type ' + attrType, function () {
+        before(function () {
             sthTestConfig.COMPLEX_NOTIFICATION_STARTED = true;
         });
 
-        describe('reception', function() {
+        describe('reception', function () {
             it(
                 'should attend the notification',
                 complexNotificationTest.bind(null, {
@@ -1584,7 +1584,7 @@ function complexNotificationSuite(attrName, attrType, includeTimeInstantMetadata
             );
         });
 
-        describe('for each new notification', function() {
+        describe('for each new notification', function () {
             describe(
                 'raw data retrieval with lastN',
                 rawDataRetrievalSuite.bind(
@@ -1638,18 +1638,18 @@ function complexNotificationSuite(attrName, attrType, includeTimeInstantMetadata
  * @param {boolean} includeTimeInstantMetadata The attribute should include a TimeInstant metadata
  */
 function eventNotificationSuite(attrName, attrType, includeTimeInstantMetadata) {
-    before(function() {
+    before(function () {
         cleanEvents();
     });
 
-    describe('no attribute values notification', function() {
+    describe('no attribute values notification', function () {
         it(
             'should respond with 400 - Bad Request',
             noAttributesTest.bind(null, sthConfig.DEFAULT_SERVICE, sthConfig.DEFAULT_SERVICE_PATH)
         );
     });
 
-    describe('non-aggretabable values notification', function() {
+    describe('non-aggretabable values notification', function () {
         it(
             'should respond with 200 - OK',
             nonAggregatableAttributeValuesTest.bind(null, sthConfig.DEFAULT_SERVICE, sthConfig.DEFAULT_SERVICE_PATH)
@@ -1725,7 +1725,7 @@ complexNotificationTest = function complexNotificationTest(params, done) {
                 contextResponses
             }
         },
-        function(err, response, body) {
+        function (err, response, body) {
             for (let i = 0; i < 3; i++) {
                 if (events.indexOf(anEvent) < 0) {
                     events.push(anEvent);
@@ -1754,7 +1754,7 @@ function status200Test(ngsiVersion, options, done) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -1779,7 +1779,7 @@ function status200Test(ngsiVersion, options, done) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(err).to.equal(null);
                 expect(response.statusCode).to.equal(200);
@@ -1814,7 +1814,7 @@ function status400Test(ngsiVersion, options, done) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response) {
+            function (err, response) {
                 expect(response.statusCode).to.equal(400);
                 done();
             }
@@ -1830,7 +1830,7 @@ function status400Test(ngsiVersion, options, done) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response) {
+            function (err, response) {
                 expect(response.statusCode).to.equal(400);
                 done();
             }
@@ -1876,7 +1876,7 @@ function numericAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, aggr
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.value[0].points.length).to.equal(1);
                 expect(parseInt(bodyJSON.value[0].points[0].offset, 10)).to.equal(
@@ -1908,9 +1908,8 @@ function numericAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, aggr
                         dateFrom:
                             contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
                                 .metadatas[0].value,
-                        dateTo:
-                            contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
-                                .metadatas[0].value
+                        dateTo: contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement
+                            .attributes[0].metadatas[0].value
                     },
                     contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0].name
                 ),
@@ -1922,7 +1921,7 @@ function numericAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, aggr
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].points.length).to.equal(1);
                 expect(
@@ -1931,7 +1930,8 @@ function numericAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, aggr
                     sthUtils.getOffset(
                         resolution,
                         new Date(
-                            contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0].metadatas[0].value
+                            contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
+                                .metadatas[0].value
                         )
                     )
                 );
@@ -2001,7 +2001,7 @@ function textualAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, reso
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.value[0].points.length).to.equal(1);
                 expect(parseInt(bodyJSON.value[0].points[0].offset, 10)).to.equal(
@@ -2030,9 +2030,8 @@ function textualAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, reso
                         dateFrom:
                             contextResponseTextualWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
                                 .metadatas[0].value,
-                        dateTo:
-                            contextResponseTextualWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
-                                .metadatas[0].value
+                        dateTo: contextResponseTextualWithFixedTimeInstant.contextResponses[0].contextElement
+                            .attributes[0].metadatas[0].value
                     },
                     contextResponseTextualWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0].name
                 ),
@@ -2044,7 +2043,7 @@ function textualAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, reso
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].points.length).to.equal(1);
                 expect(
@@ -2053,7 +2052,8 @@ function textualAggregatedDataUpdatedTest(ngsiVersion, contextResponseFile, reso
                     sthUtils.getOffset(
                         resolution,
                         new Date(
-                            contextResponseTextualWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0].metadatas[0].value
+                            contextResponseTextualWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
+                                .metadatas[0].value
                         )
                     )
                 );
@@ -2112,7 +2112,7 @@ function aggregatedDataNonExistentTest(ngsiVersion, contextResponseFile, aggrMet
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.value.length).to.equal(0);
                 done(err);
@@ -2131,9 +2131,8 @@ function aggregatedDataNonExistentTest(ngsiVersion, contextResponseFile, aggrMet
                         dateFrom:
                             contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
                                 .metadatas[0].value,
-                        dateTo:
-                            contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0]
-                                .metadatas[0].value
+                        dateTo: contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement
+                            .attributes[0].metadatas[0].value
                     },
                     contextResponseNumericWithFixedTimeInstant.contextResponses[0].contextElement.attributes[0].name
                 ),
@@ -2145,7 +2144,7 @@ function aggregatedDataNonExistentTest(ngsiVersion, contextResponseFile, aggrMet
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(0);
                 expect(bodyJSON.contextResponses[0].statusCode.code).to.equal('200');
@@ -2165,7 +2164,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
     let contextResponsesObj;
     let contextResponsesObjV1;
 
-    before(function() {
+    before(function () {
         const contextResponseFileV1 =
             './contextResponses/V1contextResponse' +
             (aggregationType === sthConfig.AGGREGATIONS.NUMERIC ? 'Numeric' : 'Textual') +
@@ -2179,7 +2178,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
         contextResponsesObj = require(contextResponseFile);
     });
 
-    it('should store the raw and aggregated data for some ' + aggregationType + ' entity attribute', function(done) {
+    it('should store the raw and aggregated data for some ' + aggregationType + ' entity attribute', function (done) {
         request(
             {
                 uri: getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -2197,14 +2196,14 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                     contextResponses: contextResponsesObjV1.contextResponses
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 expect(body).to.be(undefined);
                 done(err);
             }
         );
     });
 
-    it('should retrieve the raw data', function(done) {
+    it('should retrieve the raw data', function (done) {
         // By construction, the file only have one key and that key is the attribute name
         const attrName = Object.keys(contextResponsesObj)[0];
 
@@ -2227,7 +2226,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.type).to.equal('StructuredValue');
                 expect(bodyJSON.value.length).to.equal(1);
@@ -2237,7 +2236,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
         );
     });
 
-    it('should retrieve the raw data - NGSIv1', function(done) {
+    it('should retrieve the raw data - NGSIv1', function (done) {
         request(
             {
                 uri: getURL(
@@ -2246,8 +2245,8 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                         lastN: 0,
                         dateFrom:
                             contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].metadatas[0].value,
-                        dateTo:
-                            contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].metadatas[0].value
+                        dateTo: contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].metadatas[0]
+                            .value
                     },
                     contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].name
                 ),
@@ -2259,7 +2258,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                 expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.equal(
@@ -2383,34 +2382,35 @@ function dataRemovalSuite(aggregationType, removalOptions) {
         }
     }
 
-    it('should delete the raw and aggregated data for the same ' + aggregationType + ' entity attribute', function(
-        done
-    ) {
-        request(
-            {
-                uri: getURL(sthTestConfig.API_OPERATION.DELETE, removalOptions),
-                method: 'DELETE',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                    'Fiware-Service': sthConfig.DEFAULT_SERVICE,
-                    'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
+    it(
+        'should delete the raw and aggregated data for the same ' + aggregationType + ' entity attribute',
+        function (done) {
+            request(
+                {
+                    uri: getURL(sthTestConfig.API_OPERATION.DELETE, removalOptions),
+                    method: 'DELETE',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                        'Fiware-Service': sthConfig.DEFAULT_SERVICE,
+                        'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
+                    },
+                    json: true,
+                    body: {
+                        subscriptionId: '1234567890ABCDF123456789',
+                        originator: 'orion.contextBroker.instance',
+                        contextResponses: contextResponsesObjV1.contextResponses
+                    }
                 },
-                json: true,
-                body: {
-                    subscriptionId: '1234567890ABCDF123456789',
-                    originator: 'orion.contextBroker.instance',
-                    contextResponses: contextResponsesObjV1.contextResponses
+                function (err, response, body) {
+                    expect(body).to.be(undefined);
+                    done(err);
                 }
-            },
-            function(err, response, body) {
-                expect(body).to.be(undefined);
-                done(err);
-            }
-        );
-    });
+            );
+        }
+    );
 
-    it('should not retrieve the deleted raw data', function(done) {
+    it('should not retrieve the deleted raw data', function (done) {
         // By construction, the file only have one key and that key is the attribute name
         const attrName = Object.keys(contextResponsesObj)[0];
 
@@ -2433,7 +2433,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.type).to.equal('StructuredValue');
                 expect(bodyJSON.value.length).to.equal(0);
@@ -2442,7 +2442,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
         );
     });
 
-    it('should not retrieve the deleted raw data - NGSIv1', function(done) {
+    it('should not retrieve the deleted raw data - NGSIv1', function (done) {
         // FIXME: remove the else branch when NGSIv1 becomes obsolete
         request(
             {
@@ -2452,8 +2452,8 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                         lastN: 0,
                         dateFrom:
                             contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].metadatas[0].value,
-                        dateTo:
-                            contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].metadatas[0].value
+                        dateTo: contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].metadatas[0]
+                            .value
                     },
                     contextResponsesObjV1.contextResponses[0].contextElement.attributes[0].name
                 ),
@@ -2465,7 +2465,7 @@ function dataRemovalSuite(aggregationType, removalOptions) {
                     'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                 }
             },
-            function(err, response, body) {
+            function (err, response, body) {
                 const bodyJSON = JSON.parse(body);
                 expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(0);
                 expect(bodyJSON.contextResponses[0].statusCode.code).to.equal('200');
@@ -2603,7 +2603,7 @@ function validLogLevelChangeTest(level, done) {
             }),
             method: 'PUT'
         },
-        function(err, response) {
+        function (err, response) {
             expect(err).to.equal(null);
             expect(response.statusCode).to.equal(200);
             done();

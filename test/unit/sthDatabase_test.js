@@ -112,10 +112,7 @@ function connectToDatabase(callback) {
     if (sthDatabase.connection) {
         return process.nextTick(callback.bind(null, null, sthDatabase.connection));
     }
-    sthDatabase.connect(
-        DATABASE_CONNECTION_PARAMS,
-        callback
-    );
+    sthDatabase.connect(DATABASE_CONNECTION_PARAMS, callback);
 }
 
 /**
@@ -133,7 +130,7 @@ function dropCollection(collectionNameParams, dataType, dataModel, callback) {
             : sthDatabaseNaming.getAggregatedCollectionName(collectionNameParams);
 
     if (collectionName) {
-        sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName), function(err) {
+        sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName), function (err) {
             if (err && err.code === 26) {
                 // The collection does not exist
                 return process.nextTick(callback);
@@ -152,9 +149,9 @@ function cleanDatabaseTests() {
     const dataModelsKeys = Object.keys(sthConfig.DATA_MODELS);
     const dataTypeKeys = Object.keys(sthTestConfig.DATA_TYPES);
 
-    describe('database clean up', function() {
-        dataModelsKeys.forEach(function(dataModel) {
-            dataTypeKeys.forEach(function(dataType) {
+    describe('database clean up', function () {
+        dataModelsKeys.forEach(function (dataModel) {
+            dataTypeKeys.forEach(function (dataType) {
                 //prettier-ignore
                 it('should drop the ' + sthConfig.DATA_MODELS[dataModel] + ' ' + sthTestConfig.DATA_TYPES[dataType] + 
                     ' data collection if it exists',
@@ -213,13 +210,13 @@ function collectionAccessTests() {
 
     cleanDatabaseTests();
 
-    dataModels.forEach(function(dataModel) {
-        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function() {
-            before(function() {
+    dataModels.forEach(function (dataModel) {
+        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function () {
+            before(function () {
                 sthConfig.DATA_MODEL = sthConfig.DATA_MODELS[dataModel];
             });
 
-            dataTypes.forEach(function(dataType) {
+            dataTypes.forEach(function (dataType) {
                 //prettier-ignore
                 it('should notify as error a non-existent ' + sthTestConfig.DATA_TYPES[dataType] + 
                     ' data collection if it should not be created',
@@ -264,7 +261,7 @@ function collectionAccessTests() {
                 );
             });
 
-            after(function() {
+            after(function () {
                 sthConfig.DATA_MODEL = ORIGINAL_DATA_MODEL;
             });
         });
@@ -425,7 +422,7 @@ function expectResult(params, count, result, callback) {
  */
 function expectDataStored(params, count, callback) {
     const query = getQuery4ExpectDataStored(params.dataType, params.aggregation);
-    sthUtils.promiseToCallback(params.collection.find(query).toArray(), function(err, result) {
+    sthUtils.promiseToCallback(params.collection.find(query).toArray(), function (err, result) {
         if (err) {
             return callback(err);
         }
@@ -493,7 +490,7 @@ function expectUpdatesNotificationInfo(notificationInfoParams, notificationInfo,
             expect(notificationInfo.updates).to.have.property('attrValue', notificationInfoParams.attribute.value);
     }
     if (aggregation === sthConfig.AGGREGATIONS.NUMERIC) {
-        sthConfig.AGGREGATION_BY.forEach(function(aggregationBy) {
+        sthConfig.AGGREGATION_BY.forEach(function (aggregationBy) {
             expect(notificationInfo.newMinValues[aggregationBy]).to.equal(notificationInfoParams.attribute.value);
         });
     }
@@ -516,7 +513,7 @@ function shouldStoreTest(aggregation, dataType, position, done) {
             isAggregated: dataType === sthTestConfig.DATA_TYPES.AGGREGATED,
             shouldTruncate: false
         },
-        function(err, collection) {
+        function (err, collection) {
             if (err) {
                 return done(err);
             }
@@ -524,7 +521,7 @@ function shouldStoreTest(aggregation, dataType, position, done) {
             storeDataParams.recvTime = new Date(DATE.getTime() + (position - 1) * DELAY);
             storeDataParams.notificationInfo = { inserts: true };
             if (dataType === sthTestConfig.DATA_TYPES.RAW) {
-                sthDatabase.storeRawData(storeDataParams, function(err) {
+                sthDatabase.storeRawData(storeDataParams, function (err) {
                     if (err) {
                         return done(err);
                     }
@@ -539,7 +536,7 @@ function shouldStoreTest(aggregation, dataType, position, done) {
                     );
                 });
             } else {
-                sthDatabase.storeAggregatedData(storeDataParams, function(err) {
+                sthDatabase.storeAggregatedData(storeDataParams, function (err) {
                     if (err) {
                         return done(err);
                     }
@@ -568,23 +565,23 @@ function storageTests() {
     const aggregations = Object.keys(sthConfig.AGGREGATIONS);
     let collection;
 
-    before(function() {
+    before(function () {
         ORIGINAL_DATA_MODEL = sthConfig.DATA_MODEL;
     });
 
     cleanDatabaseTests();
 
-    dataModels.forEach(function(dataModel) {
-        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function() {
-            before(function() {
+    dataModels.forEach(function (dataModel) {
+        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function () {
+            before(function () {
                 sthConfig.DATA_MODEL = sthConfig.DATA_MODELS[dataModel];
             });
 
-            aggregations.forEach(function(aggregation) {
-                describe(sthConfig.AGGREGATIONS[aggregation], function() {
-                    dataTypes.forEach(function(dataType) {
-                        describe(sthTestConfig.DATA_TYPES[dataType] + ' data', function() {
-                            before(function(done) {
+            aggregations.forEach(function (aggregation) {
+                describe(sthConfig.AGGREGATIONS[aggregation], function () {
+                    dataTypes.forEach(function (dataType) {
+                        describe(sthTestConfig.DATA_TYPES[dataType] + ' data', function () {
+                            before(function (done) {
                                 sthDatabase.getCollection(
                                     sthConfig.AGGREGATIONS[aggregation] === sthConfig.AGGREGATIONS.NUMERIC
                                         ? NUMERIC_COLLECTION_NAME_PARAMS
@@ -595,7 +592,7 @@ function storageTests() {
                                             sthTestConfig.DATA_TYPES[dataType] === sthTestConfig.DATA_TYPES.AGGREGATED,
                                         shouldTruncate: false
                                     },
-                                    function(err, theCollection) {
+                                    function (err, theCollection) {
                                         if (err) {
                                             return done(err);
                                         }
@@ -610,12 +607,12 @@ function storageTests() {
                                     'should detect a new ' +
                                         sthConfig.AGGREGATIONS[aggregation] +
                                         ' attribute value notification is susceptible of being inserted',
-                                    function(done) {
+                                    function (done) {
                                         const notificationInfoParams = getDataStoreParams(
                                             collection,
                                             sthConfig.AGGREGATIONS[aggregation]
                                         );
-                                        sthDatabase.getNotificationInfo(notificationInfoParams, function(err, result) {
+                                        sthDatabase.getNotificationInfo(notificationInfoParams, function (err, result) {
                                             if (sthTestConfig.DATA_TYPES[dataType] === sthTestConfig.DATA_TYPES.RAW) {
                                                 expect(err).to.be(null);
                                                 expect(result).to.eql({ inserts: true });
@@ -707,7 +704,7 @@ function storageTests() {
                 });
             });
 
-            after(function() {
+            after(function () {
                 sthConfig.DATA_MODEL = ORIGINAL_DATA_MODEL;
             });
         });
@@ -745,7 +742,7 @@ function retrievalTest(params, options, count, done) {
             isAggregated: params.dataType === sthTestConfig.DATA_TYPES.AGGREGATED,
             shouldTruncate: false
         },
-        function(err, collection) {
+        function (err, collection) {
             if (err) {
                 return done(err);
             }
@@ -760,7 +757,7 @@ function retrievalTest(params, options, count, done) {
                     retrievalDataParams.filetype = options.filetype;
                     params.limit = options.lastN || options.hLimit;
                 }
-                sthDatabase.getRawData(retrievalDataParams, function(err, results) {
+                sthDatabase.getRawData(retrievalDataParams, function (err, results) {
                     if (err) {
                         return done(err);
                     }
@@ -775,7 +772,7 @@ function retrievalTest(params, options, count, done) {
                     params.aggregatedFunction = options.aggrMethod;
                     params.resolution = options.aggrPeriod;
                 }
-                sthDatabase.getAggregatedData(retrievalDataParams, function(err, results) {
+                sthDatabase.getAggregatedData(retrievalDataParams, function (err, results) {
                     if (err) {
                         return done(err);
                     }
@@ -921,7 +918,7 @@ function shouldRetrieveTests(count, aggregation, dataType) {
             )
         );
     } else {
-        sthConfig.AGGREGATION_BY.forEach(function(aggregationBy) {
+        sthConfig.AGGREGATION_BY.forEach(function (aggregationBy) {
             if (aggregation === sthConfig.AGGREGATIONS.NUMERIC) {
                 //prettier-ignore
                 it('should retrieve ' + count + ' ' + aggregation + ' ' + dataType + ' data for a resolution of ' + 
@@ -1059,22 +1056,22 @@ function retrievalTests() {
     const dataModels = Object.keys(sthConfig.DATA_MODELS);
     const aggregations = Object.keys(sthConfig.AGGREGATIONS);
 
-    before(function() {
+    before(function () {
         ORIGINAL_DATA_MODEL = sthConfig.DATA_MODEL;
     });
 
     cleanDatabaseTests();
 
-    dataModels.forEach(function(dataModel) {
-        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function() {
-            before(function() {
+    dataModels.forEach(function (dataModel) {
+        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function () {
+            before(function () {
                 sthConfig.DATA_MODEL = sthConfig.DATA_MODELS[dataModel];
             });
 
-            aggregations.forEach(function(aggregation) {
-                describe(sthConfig.AGGREGATIONS[aggregation], function() {
-                    dataTypes.forEach(function(dataType) {
-                        describe(sthTestConfig.DATA_TYPES[dataType] + ' data', function() {
+            aggregations.forEach(function (aggregation) {
+                describe(sthConfig.AGGREGATIONS[aggregation], function () {
+                    dataTypes.forEach(function (dataType) {
+                        describe(sthTestConfig.DATA_TYPES[dataType] + ' data', function () {
                             shouldRetrieveTests(
                                 0,
                                 sthConfig.AGGREGATIONS[aggregation],
@@ -1105,84 +1102,75 @@ function retrievalTests() {
                 });
             });
 
-            after(function() {
+            after(function () {
                 sthConfig.DATA_MODEL = ORIGINAL_DATA_MODEL;
             });
         });
     });
 }
 
-describe('sthDatabase tests', function() {
+describe('sthDatabase tests', function () {
     this.timeout(5000);
-    describe('database connection', function() {
-        it('should connect to the database', function(done) {
-            sthDatabase.connect(
-                DATABASE_CONNECTION_PARAMS,
-                function(err, connection) {
-                    expect(err).to.be(null);
-                    expect(connection).to.equal(sthDatabase.connection);
-                    done();
-                }
-            );
+    describe('database connection', function () {
+        it('should connect to the database', function (done) {
+            sthDatabase.connect(DATABASE_CONNECTION_PARAMS, function (err, connection) {
+                expect(err).to.be(null);
+                expect(connection).to.equal(sthDatabase.connection);
+                done();
+            });
         });
 
-        it('should disconnect from the database', function(done) {
-            sthDatabase.closeConnection(function(err) {
+        it('should disconnect from the database', function (done) {
+            sthDatabase.closeConnection(function (err) {
                 expect(err).to.be(null);
                 expect(sthDatabase.connection).to.be(null);
                 done();
             });
         });
 
-        it('should notify as error the aim to connect to the database at an unavailable host', function(done) {
+        it('should notify as error the aim to connect to the database at an unavailable host', function (done) {
             const INVALID_DATABASE_CONNECTION_PARAMS = _.clone(DATABASE_CONNECTION_PARAMS);
             INVALID_DATABASE_CONNECTION_PARAMS.dbURI = 'unavailable_localhost:27017';
             // The driver keeps on looking for an available server for reconnectTries * reconnectInterval ms
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectTries = 1;
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 500;
-            sthDatabase.connect(
-                INVALID_DATABASE_CONNECTION_PARAMS,
-                function(err, connection) {
-                    /* eslint-disable-next-line no-unused-expressions */
-                    expect(err).to.exist;
-                    expect(err.name).to.equal('MongoServerSelectionError');
-                    expect(err.message).to.contain('ENOTFOUND');
-                    expect(connection).to.equal(null);
-                    done();
-                }
-            );
+            sthDatabase.connect(INVALID_DATABASE_CONNECTION_PARAMS, function (err, connection) {
+                /* eslint-disable-next-line no-unused-expressions */
+                expect(err).to.exist;
+                expect(err.name).to.equal('MongoServerSelectionError');
+                expect(err.message).to.contain('ENOTFOUND');
+                expect(connection).to.equal(null);
+                done();
+            });
         });
 
-        it('should notify as error the aim to connect to the database at an unavailable port', function(done) {
+        it('should notify as error the aim to connect to the database at an unavailable port', function (done) {
             const INVALID_DATABASE_CONNECTION_PARAMS = _.clone(DATABASE_CONNECTION_PARAMS);
             INVALID_DATABASE_CONNECTION_PARAMS.dbURI = 'localhost:12345';
             // The driver keeps on looking for an available server for reconnectTries * reconnectInterval ms
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectTries = 1;
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 500;
-            sthDatabase.connect(
-                INVALID_DATABASE_CONNECTION_PARAMS,
-                function(err, connection) {
-                    /* eslint-disable-next-line no-unused-expressions */
-                    expect(err).to.exist;
-                    expect(err.name).to.equal('MongoServerSelectionError');
-                    expect(err.message).to.contain('ECONNREFUSED');
-                    expect(connection).to.equal(null);
-                    done();
-                }
-            );
+            sthDatabase.connect(INVALID_DATABASE_CONNECTION_PARAMS, function (err, connection) {
+                /* eslint-disable-next-line no-unused-expressions */
+                expect(err).to.exist;
+                expect(err.name).to.equal('MongoServerSelectionError');
+                expect(err.message).to.contain('ECONNREFUSED');
+                expect(connection).to.equal(null);
+                done();
+            });
         });
     });
 
-    describe('helper functions', function() {
-        it('should return the database name for a service', function() {
+    describe('helper functions', function () {
+        it('should return the database name for a service', function () {
             const databaseName = sthConfig.DB_PREFIX + sthConfig.DEFAULT_SERVICE;
             expect(sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE)).to.equal(
                 sthConfig.NAME_ENCODING ? sthDatabaseNameCodec.encodeDatabaseName(databaseName) : databaseName
             );
         });
 
-        describe('collection access', function() {
-            before(function(done) {
+        describe('collection access', function () {
+            before(function (done) {
                 connectToDatabase(done);
             });
 
@@ -1190,8 +1178,8 @@ describe('sthDatabase tests', function() {
         });
     });
 
-    describe('storage and retrieval', function() {
-        before(function(done) {
+    describe('storage and retrieval', function () {
+        before(function (done) {
             connectToDatabase(done);
         });
 

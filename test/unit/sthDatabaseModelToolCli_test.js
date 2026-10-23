@@ -40,16 +40,16 @@ function runTool(args) {
     });
 }
 
-describe('sthDatabaseModelTool command line tests', function() {
+describe('sthDatabaseModelTool command line tests', function () {
     this.timeout(15000);
 
-    it('should print the version of the package', function() {
+    it('should print the version of the package', function () {
         const result = runTool(['-V']);
         expect(result.status).to.equal(0);
         expect(result.stdout.trim()).to.equal(require(ROOT_PATH + '/package.json').version);
     });
 
-    it('should exit with an error if a collection is set but no database is set', function() {
+    it('should exit with an error if a collection is set but no database is set', function () {
         const result = runTool(['-a', '-c', 'a-collection']);
         expect(result.status).to.equal(1);
         expect(result.stderr).to.contain(

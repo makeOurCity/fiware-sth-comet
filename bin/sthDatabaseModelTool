@@ -44,18 +44,18 @@ function exitGracefully(err) {
     if (err) {
         sthLogger.error(sthConfig.LOGGING_CONTEXT.DB_LOG, 'Exiting gracefully due to error: ', err);
     }
-    sthDatabaseModelTool.cleanResources(function() {
+    sthDatabaseModelTool.cleanResources(function () {
         process.exit(err ? 1 : 0);
     });
 }
 
 // In case Control+C is clicked, exit gracefully
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
     return exitGracefully();
 });
 
 // In case of an uncaught exception exists gracefully
-process.on('uncaughtException', function(exception) {
+process.on('uncaughtException', function (exception) {
     return exitGracefully(exception);
 });
 
@@ -116,12 +116,12 @@ function print2Target(target, analysis, callback) {
         '\n\n' +
         '- The following databases and collections need to be migrated:\n';
     if (analysis.result.length) {
-        analysis.result.forEach(function(databaseInfo) {
+        analysis.result.forEach(function (databaseInfo) {
             output += "  - Database: '" + databaseInfo.databaseName + "'\n";
             if (databaseInfo.collections2Migrate.length === 0) {
                 output += '    - No collection needs migration\n';
             } else {
-                databaseInfo.collections2Migrate.forEach(function(collectionInfo) {
+                databaseInfo.collections2Migrate.forEach(function (collectionInfo) {
                     output += "    - Collection '" + collectionInfo.collectionName + "'\n";
                     output += '      - Data model: ' + collectionInfo.dataModel + '\n';
                 });
@@ -146,7 +146,7 @@ function print2Target(target, analysis, callback) {
  * @param err The error if anything happened
  * @param analysis The result of the analysis if available
  */
-const onAnalysis = function(err, analysis) {
+const onAnalysis = function (err, analysis) {
     if (err) {
         sthLogger.error(sthConfig.LOGGING_CONTEXT.DB_LOG, 'Some error ocurred: ', err);
     } else {
@@ -155,7 +155,7 @@ const onAnalysis = function(err, analysis) {
             'Analysis finished successfully with result: ',
             JSON.stringify(analysis)
         );
-        print2Target('console', analysis, function() {
+        print2Target('console', analysis, function () {
             exitGracefully(err);
         });
     }
@@ -212,7 +212,7 @@ function migrateCollection(databaseName, collectionInfo, callback) {
                 updateCollection: options.updateCollection,
                 dictionary: options.dictionary
             },
-            function(err) {
+            function (err) {
                 if (err) {
                     migrationSummary[databaseName].error += 1;
                     if (options.full) {
@@ -256,7 +256,7 @@ function migrateCollection(databaseName, collectionInfo, callback) {
                 return process.nextTick(callback);
             }
         );
-        collectionMigrationProgress.on('progress', function(progressData) {
+        collectionMigrationProgress.on('progress', function (progressData) {
             if (!showProgressChecked && !showProgress && options.verbose) {
                 showProgressChecked = true;
                 if (

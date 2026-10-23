@@ -89,20 +89,20 @@ function sendRequest(options, callback) {
             //  delay the stop of the hapi server
             agent: false
         },
-        function(res) {
+        function (res) {
             let body = '';
             res.setEncoding('utf8');
-            res.on('data', function(chunk) {
+            res.on('data', function (chunk) {
                 body += chunk;
             });
-            res.on('end', function() {
+            res.on('end', function () {
                 finish(null, { statusCode: res.statusCode, headers: res.headers, body });
             });
             res.on('error', finish);
         }
     );
 
-    const timer = setTimeout(function() {
+    const timer = setTimeout(function () {
         const err = new Error(
             'No complete response received within ' + timeout + 'ms for ' + options.method + ' ' + options.path
         );
@@ -129,7 +129,7 @@ function sendRequest(options, callback) {
 function toSendRequestOptions(options) {
     const url = new URL(options.uri);
     const headers = Object.assign({}, options.headers);
-    const hasAcceptHeader = Object.keys(headers).some(function(name) {
+    const hasAcceptHeader = Object.keys(headers).some(function (name) {
         return name.toLowerCase() === 'accept';
     });
     if (options.json && !hasAcceptHeader) {
@@ -174,7 +174,7 @@ function parseResponseBody(body, json) {
  *  the headers and the body) and the body, which is parsed as JSON if the json option is true
  */
 function request(options, callback) {
-    sendRequest(toSendRequestOptions(options), function(err, response) {
+    sendRequest(toSendRequestOptions(options), function (err, response) {
         if (err) {
             return callback(err);
         }
@@ -193,7 +193,7 @@ function request(options, callback) {
  * @return {Function} The callback to pass to sendRequest()
  */
 function assertResponse(done, assertions) {
-    return function(err, response) {
+    return function (err, response) {
         try {
             assertions(err, response);
         } catch (assertionError) {

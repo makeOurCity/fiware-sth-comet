@@ -37,9 +37,9 @@ console.log(sthConfig);
 console.log('\n***** Unit tests environment variables:');
 console.log(sthTestConfig);
 
-describe('sth tests', function() {
-    describe('database connection', function() {
-        it('should be a database available', function(done) {
+describe('sth tests', function () {
+    describe('database connection', function () {
+        it('should be a database available', function (done) {
             sth.sthDatabase.connect(
                 {
                     authentication: sthConfig.DB_AUTHENTICATION,
@@ -48,7 +48,7 @@ describe('sth tests', function() {
                     database: sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE),
                     poolSize: sthConfig.POOL_SIZE
                 },
-                function(err) {
+                function (err) {
                     done(err);
                 }
             );
@@ -57,16 +57,16 @@ describe('sth tests', function() {
 
     describe('database clean up', sthTestUtils.cleanDatabaseSuite);
 
-    describe('server start', function() {
-        it('should start gracefully', function(done) {
-            sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err, server) {
+    describe('server start', function () {
+        it('should start gracefully', function (done) {
+            sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function (err, server) {
                 expect(err).to.not.be.ok();
                 expect(server.info.started).to.be.greaterThan(0);
                 done();
             });
         });
 
-        it('should listen on the IPv4 loopback address if the host is localhost', function() {
+        it('should listen on the IPv4 loopback address if the host is localhost', function () {
             if (sthConfig.STH_HOST !== 'localhost') {
                 this.skip();
             }
@@ -74,14 +74,14 @@ describe('sth tests', function() {
         });
     });
 
-    describe('invalid routes', function() {
-        it('should respond with 404 - Not Found if invalid HTTP method', function(done) {
+    describe('invalid routes', function () {
+        it('should respond with 404 - Not Found if invalid HTTP method', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ_V2),
                     method: 'PUT'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(404);
@@ -92,14 +92,14 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 404 - Not Found if invalid HTTP method - NGSIv1', function(done) {
+        it('should respond with 404 - Not Found if invalid HTTP method - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ),
                     method: 'PUT'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(404);
@@ -110,7 +110,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 404 - Not Found if invalid path', function(done) {
+        it('should respond with 404 - Not Found if invalid path', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ_V2, {
@@ -118,7 +118,7 @@ describe('sth tests', function() {
                     }),
                     method: 'GET'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(404);
@@ -129,7 +129,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 404 - Not Found if invalid path - NGSIv1', function(done) {
+        it('should respond with 404 - Not Found if invalid path - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -138,7 +138,7 @@ describe('sth tests', function() {
                     }),
                     method: 'GET'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(404);
@@ -149,13 +149,13 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 400 - Bad Request if missing Fiware-Service header', function(done) {
+        it('should respond with 400 - Bad Request if missing Fiware-Service header', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ_V2),
                     method: 'GET'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(400);
@@ -168,14 +168,14 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 400 - Bad Request if missing Fiware-Service header - NGSIv1', function(done) {
+        it('should respond with 400 - Bad Request if missing Fiware-Service header - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ),
                     method: 'GET'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(400);
@@ -186,7 +186,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 400 - Bad Request if missing Fiware-ServicePath header', function(done) {
+        it('should respond with 400 - Bad Request if missing Fiware-ServicePath header', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ_V2),
@@ -195,7 +195,7 @@ describe('sth tests', function() {
                         'Fiware-Service': sthConfig.DEFAULT_SERVICE
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(400);
@@ -208,7 +208,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should respond with 400 - Bad Request if missing Fiware-ServicePath header - NGSIv1', function(done) {
+        it('should respond with 400 - Bad Request if missing Fiware-ServicePath header - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -218,7 +218,7 @@ describe('sth tests', function() {
                         'Fiware-Service': sthConfig.DEFAULT_SERVICE
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(400);
@@ -232,7 +232,7 @@ describe('sth tests', function() {
         it(
             'should respond with 400 - Bad Request if missing lastN, hLimit and hOffset or aggrMethod and aggrPeriod ' +
                 'query params',
-            function(done) {
+            function (done) {
                 request(
                     {
                         uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.READ_V2),
@@ -242,7 +242,7 @@ describe('sth tests', function() {
                             'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                         }
                     },
-                    function(err, response, body) {
+                    function (err, response, body) {
                         const bodyJSON = JSON.parse(body);
                         expect(err).to.equal(null);
                         expect(response.statusCode).to.equal(400);
@@ -259,7 +259,7 @@ describe('sth tests', function() {
         it(
             'should respond with 400 - Bad Request if missing lastN, hLimit and hOffset or aggrMethod and aggrPeriod ' +
                 'query params - NGSIv1',
-            function(done) {
+            function (done) {
                 // FIXME: remove this case when NGSIv1 becomes obsolete
                 request(
                     {
@@ -270,7 +270,7 @@ describe('sth tests', function() {
                             'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                         }
                     },
-                    function(err, response, body) {
+                    function (err, response, body) {
                         const bodyJSON = JSON.parse(body);
                         expect(err).to.equal(null);
                         expect(response.statusCode).to.equal(400);
@@ -511,16 +511,16 @@ describe('sth tests', function() {
         sthTestUtils.eventNotificationSuite.bind(null, 'attribute-string-2', 'string', true)
     );
 
-    describe('notification of already existent numeric data should register it only once', function() {
+    describe('notification of already existent numeric data should register it only once', function () {
         let contextResponseNumericWithFixedTimeInstant;
         let contextResponseNumericWithFixedTimeInstantV1;
 
-        before(function() {
+        before(function () {
             contextResponseNumericWithFixedTimeInstant = require('./contextResponses/contextResponseNumericWithFixedTimeInstant');
             contextResponseNumericWithFixedTimeInstantV1 = require('./contextResponses/V1contextResponseNumericWithFixedTimeInstant');
         });
 
-        it('should store the raw and aggregated data for the first time', function(done) {
+        it('should store the raw and aggregated data for the first time', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -538,14 +538,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseNumericWithFixedTimeInstantV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should try to store the raw and aggregated data for second time', function(done) {
+        it('should try to store the raw and aggregated data for second time', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -563,14 +563,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseNumericWithFixedTimeInstantV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should only retrieve the raw data as stored once', function(done) {
+        it('should only retrieve the raw data as stored once', function (done) {
             // By construction, the file only have one key and that key is the attribute name
             const attrName = Object.keys(contextResponseNumericWithFixedTimeInstant)[0];
 
@@ -593,7 +593,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.value.length).to.equal(1);
                     expect(bodyJSON.value[0].attrValue).to.equal(
@@ -604,7 +604,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should only retrieve the raw data as stored once - NGSIv1', function(done) {
+        it('should only retrieve the raw data as stored once - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -615,9 +615,8 @@ describe('sth tests', function() {
                             dateFrom:
                                 contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
                                     .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
+                            dateTo: contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                .attributes[0].metadatas[0].value
                         },
                         contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement.attributes[0]
                             .name
@@ -630,7 +629,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.equal(
@@ -728,16 +727,16 @@ describe('sth tests', function() {
         }
     });
 
-    describe('notification of already existent textual data should register it only once', function() {
+    describe('notification of already existent textual data should register it only once', function () {
         let contextResponseTextualWithFixedTimeInstant;
         let contextResponseTextualWithFixedTimeInstantV1;
 
-        before(function() {
+        before(function () {
             contextResponseTextualWithFixedTimeInstant = require('./contextResponses/contextResponseTextualWithFixedTimeInstant');
             contextResponseTextualWithFixedTimeInstantV1 = require('./contextResponses/V1contextResponseTextualWithFixedTimeInstant');
         });
 
-        it('should store the raw and aggregated data for the first time', function(done) {
+        it('should store the raw and aggregated data for the first time', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -755,14 +754,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseTextualWithFixedTimeInstantV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should try to store the raw and aggregated data for second time', function(done) {
+        it('should try to store the raw and aggregated data for second time', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -780,14 +779,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseTextualWithFixedTimeInstantV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should only retrieve the raw data as stored once', function(done) {
+        it('should only retrieve the raw data as stored once', function (done) {
             // By construction, the file only have one key and that key is the attribute name
             const attrName = Object.keys(contextResponseTextualWithFixedTimeInstant)[0];
 
@@ -810,7 +809,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.value.length).to.equal(1);
                     expect(bodyJSON.value[0].attrValue).to.equal(
@@ -821,7 +820,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should only retrieve the raw data as stored once - NGSIv1', function(done) {
+        it('should only retrieve the raw data as stored once - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -832,9 +831,8 @@ describe('sth tests', function() {
                             dateFrom:
                                 contextResponseTextualWithFixedTimeInstantV1.contextResponses[0].contextElement
                                     .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseTextualWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
+                            dateTo: contextResponseTextualWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                .attributes[0].metadatas[0].value
                         },
                         contextResponseTextualWithFixedTimeInstantV1.contextResponses[0].contextElement.attributes[0]
                             .name
@@ -847,7 +845,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.equal(
@@ -884,16 +882,16 @@ describe('sth tests', function() {
         }
     });
 
-    describe('notification of an update to already existent numeric data should update the original value', function() {
+    describe('notification of an update to already existent numeric data should update the original value', function () {
         let contextResponseNumericWithFixedTimeInstantUpdate;
         let contextResponseNumericWithFixedTimeInstantUpdateV1;
 
-        before(function() {
+        before(function () {
             contextResponseNumericWithFixedTimeInstantUpdate = require('./contextResponses/contextResponseNumericWithFixedTimeInstantUpdate');
             contextResponseNumericWithFixedTimeInstantUpdateV1 = require('./contextResponses/V1contextResponseNumericWithFixedTimeInstantUpdate');
         });
 
-        it('should store the raw and aggregated data for the first time', function(done) {
+        it('should store the raw and aggregated data for the first time', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -911,14 +909,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseNumericWithFixedTimeInstantUpdateV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should update the already existent data', function(done) {
+        it('should update the already existent data', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -936,14 +934,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseNumericWithFixedTimeInstantUpdateV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should retrieve the updated raw data', function(done) {
+        it('should retrieve the updated raw data', function (done) {
             // By construction, the file only have one key and that key is the attribute name
             const attrName = Object.keys(contextResponseNumericWithFixedTimeInstantUpdate)[0];
 
@@ -955,8 +953,8 @@ describe('sth tests', function() {
                             lastN: 0,
                             dateFrom:
                                 contextResponseNumericWithFixedTimeInstantUpdate[attrName].metadata.TimeInstant.value,
-                            dateTo:
-                                contextResponseNumericWithFixedTimeInstantUpdate[attrName].metadata.TimeInstant.value
+                            dateTo: contextResponseNumericWithFixedTimeInstantUpdate[attrName].metadata.TimeInstant
+                                .value
                         },
                         attrName
                     ),
@@ -968,7 +966,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.value.length).to.equal(1);
                     expect(bodyJSON.value[0].attrValue).to.equal(
@@ -979,7 +977,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should retrieve the updated raw data - NGSIv1', function(done) {
+        it('should retrieve the updated raw data - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -990,9 +988,8 @@ describe('sth tests', function() {
                             dateFrom:
                                 contextResponseNumericWithFixedTimeInstantUpdateV1.contextResponses[0].contextElement
                                     .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseNumericWithFixedTimeInstantUpdateV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
+                            dateTo: contextResponseNumericWithFixedTimeInstantUpdateV1.contextResponses[0]
+                                .contextElement.attributes[0].metadatas[0].value
                         },
                         contextResponseNumericWithFixedTimeInstantUpdateV1.contextResponses[0].contextElement
                             .attributes[0].name
@@ -1005,7 +1002,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.equal(
@@ -1103,16 +1100,16 @@ describe('sth tests', function() {
         }
     });
 
-    describe('notification of already existent textual data should update the original value', function() {
+    describe('notification of already existent textual data should update the original value', function () {
         let contextResponseTextualWithFixedTimeInstantUpdate;
         let contextResponseTextualWithFixedTimeInstantUpdateV1;
 
-        before(function() {
+        before(function () {
             contextResponseTextualWithFixedTimeInstantUpdate = require('./contextResponses/contextResponseTextualWithFixedTimeInstantUpdate');
             contextResponseTextualWithFixedTimeInstantUpdateV1 = require('./contextResponses/V1contextResponseTextualWithFixedTimeInstantUpdate');
         });
 
-        it('should store the raw and aggregated data for the first time', function(done) {
+        it('should store the raw and aggregated data for the first time', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -1130,14 +1127,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseTextualWithFixedTimeInstantUpdateV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should update the stored raw and aggregated data', function(done) {
+        it('should update the stored raw and aggregated data', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -1155,14 +1152,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseTextualWithFixedTimeInstantUpdateV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should retrieve the updated raw data', function(done) {
+        it('should retrieve the updated raw data', function (done) {
             // By construction, the file only have one key and that key is the attribute name
             const attrName = Object.keys(contextResponseTextualWithFixedTimeInstantUpdate)[0];
 
@@ -1174,8 +1171,8 @@ describe('sth tests', function() {
                             lastN: 0,
                             dateFrom:
                                 contextResponseTextualWithFixedTimeInstantUpdate[attrName].metadata.TimeInstant.value,
-                            dateTo:
-                                contextResponseTextualWithFixedTimeInstantUpdate[attrName].metadata.TimeInstant.value
+                            dateTo: contextResponseTextualWithFixedTimeInstantUpdate[attrName].metadata.TimeInstant
+                                .value
                         },
                         attrName
                     ),
@@ -1187,7 +1184,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.value.length).to.equal(1);
                     expect(bodyJSON.value[0].attrValue).to.equal(
@@ -1198,7 +1195,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should retrieve the updated raw data - NGSIv1', function(done) {
+        it('should retrieve the updated raw data - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -1209,9 +1206,8 @@ describe('sth tests', function() {
                             dateFrom:
                                 contextResponseTextualWithFixedTimeInstantUpdateV1.contextResponses[0].contextElement
                                     .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseTextualWithFixedTimeInstantUpdateV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
+                            dateTo: contextResponseTextualWithFixedTimeInstantUpdateV1.contextResponses[0]
+                                .contextElement.attributes[0].metadatas[0].value
                         },
                         contextResponseTextualWithFixedTimeInstantUpdateV1.contextResponses[0].contextElement
                             .attributes[0].name
@@ -1224,7 +1220,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.equal(
@@ -1261,16 +1257,16 @@ describe('sth tests', function() {
         }
     });
 
-    describe('notification of an array attribute value should register it only as raw data', function() {
+    describe('notification of an array attribute value should register it only as raw data', function () {
         let contextResponseArrayWithFixedTimeInstant;
         let contextResponseArrayWithFixedTimeInstantV1;
 
-        before(function() {
+        before(function () {
             contextResponseArrayWithFixedTimeInstant = require('./contextResponses/contextResponseArrayWithFixedTimeInstant');
             contextResponseArrayWithFixedTimeInstantV1 = require('./contextResponses/V1contextResponseArrayWithFixedTimeInstant');
         });
 
-        it('should store the raw data but not the aggregated data', function(done) {
+        it('should store the raw data but not the aggregated data', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -1288,14 +1284,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseArrayWithFixedTimeInstantV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should retrieve the raw data', function(done) {
+        it('should retrieve the raw data', function (done) {
             // By construction, the file only have one key and that key is the attribute name
             const attrName = Object.keys(contextResponseArrayWithFixedTimeInstant)[0];
 
@@ -1318,7 +1314,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.value.length).to.equal(1);
                     expect(bodyJSON.value[0].attrValue).to.eql(
@@ -1329,7 +1325,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should retrieve the raw data - NGSIv1', function(done) {
+        it('should retrieve the raw data - NGSIv1', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -1340,9 +1336,8 @@ describe('sth tests', function() {
                             dateFrom:
                                 contextResponseArrayWithFixedTimeInstantV1.contextResponses[0].contextElement
                                     .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseArrayWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
+                            dateTo: contextResponseArrayWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                .attributes[0].metadatas[0].value
                         },
                         contextResponseArrayWithFixedTimeInstantV1.contextResponses[0].contextElement.attributes[0].name
                     ),
@@ -1354,7 +1349,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.eql(
@@ -1481,16 +1476,16 @@ describe('sth tests', function() {
         }
     });
 
-    describe('notification of an object attribute value should register it only as raw data', function() {
+    describe('notification of an object attribute value should register it only as raw data', function () {
         let contextResponseObjectWithFixedTimeInstant;
         let contextResponseObjectWithFixedTimeInstantV1;
 
-        before(function() {
+        before(function () {
             contextResponseObjectWithFixedTimeInstant = require('./contextResponses/contextResponseObjectWithFixedTimeInstant');
             contextResponseObjectWithFixedTimeInstantV1 = require('./contextResponses/V1contextResponseObjectWithFixedTimeInstant');
         });
 
-        it('should store the raw data but not the aggregated data', function(done) {
+        it('should store the raw data but not the aggregated data', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.NOTIFY),
@@ -1508,14 +1503,14 @@ describe('sth tests', function() {
                         contextResponses: contextResponseObjectWithFixedTimeInstantV1.contextResponses
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     expect(body).to.be(undefined);
                     done(err);
                 }
             );
         });
 
-        it('should retrieve the raw data', function(done) {
+        it('should retrieve the raw data', function (done) {
             // By construction, the file only have one key and that key is the attribute name
             const attrName = Object.keys(contextResponseObjectWithFixedTimeInstant)[0];
 
@@ -1538,7 +1533,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.value.length).to.equal(1);
                     expect(bodyJSON.value[0].attrValue).to.eql(
@@ -1549,7 +1544,7 @@ describe('sth tests', function() {
             );
         });
 
-        it('should retrieve the raw data', function(done) {
+        it('should retrieve the raw data', function (done) {
             // FIXME: remove this case when NGSIv1 becomes obsolete
             request(
                 {
@@ -1560,9 +1555,8 @@ describe('sth tests', function() {
                             dateFrom:
                                 contextResponseObjectWithFixedTimeInstantV1.contextResponses[0].contextElement
                                     .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseObjectWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
+                            dateTo: contextResponseObjectWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                .attributes[0].metadatas[0].value
                         },
                         contextResponseObjectWithFixedTimeInstantV1.contextResponses[0].contextElement.attributes[0]
                             .name
@@ -1575,7 +1569,7 @@ describe('sth tests', function() {
                         'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
                     }
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values.length).to.equal(1);
                     expect(bodyJSON.contextResponses[0].contextElement.attributes[0].values[0].attrValue).to.eql(
@@ -1705,7 +1699,7 @@ describe('sth tests', function() {
     const contextResponseNumericWithFixedTimeInstantUpdate = require('./contextResponses/V1contextResponseNumericWithFixedTimeInstantUpdate');
     const contextResponseTextualWithFixedTimeInstantUpdate = require('./contextResponses/V1contextResponseTextualWithFixedTimeInstantUpdate');
 
-    describe('Data removal', function() {
+    describe('Data removal', function () {
         describe(
             'Removal of concrete attributes of entities including numeric data',
             sthTestUtils.dataRemovalSuite.bind(null, sthConfig.AGGREGATIONS.NUMERIC, {
@@ -1755,7 +1749,7 @@ describe('sth tests', function() {
         );
     });
 
-    describe('PUT /admin/log', function() {
+    describe('PUT /admin/log', function () {
         it('should accept FATAL as a valid logging level', sthTestUtils.validLogLevelChangeTest.bind(null, 'FATAL'));
 
         it('should accept ERROR as a valid logging level', sthTestUtils.validLogLevelChangeTest.bind(null, 'ERROR'));
@@ -1769,7 +1763,7 @@ describe('sth tests', function() {
 
         it('should accept DEBUG as a valid logging level', sthTestUtils.validLogLevelChangeTest.bind(null, 'DEBUG'));
 
-        it('should ignore case sensitivity in the logging levels', function(done) {
+        it('should ignore case sensitivity in the logging levels', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.ADMIN.SET_LOG_LEVEL, {
@@ -1777,7 +1771,7 @@ describe('sth tests', function() {
                     }),
                     method: 'PUT'
                 },
-                function(err, response) {
+                function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(200);
                     done();
@@ -1786,14 +1780,14 @@ describe('sth tests', function() {
         });
     });
 
-    describe('GET /version', function() {
-        it('should provide version information', function(done) {
+    describe('GET /version', function () {
+        it('should provide version information', function (done) {
             request(
                 {
                     uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.VERSION),
                     method: 'GET'
                 },
-                function(err, response, body) {
+                function (err, response, body) {
                     const bodyJSON = JSON.parse(body);
                     expect(err).to.equal(null);
                     expect(bodyJSON.version).not.to.be(undefined);
@@ -1805,8 +1799,8 @@ describe('sth tests', function() {
 
     describe('should clean the data if requested', sthTestUtils.cleanDatabaseSuite);
 
-    describe('server stop', function() {
-        it('should stop gracefully', function(done) {
+    describe('server stop', function () {
+        it('should stop gracefully', function (done) {
             sth.exitGracefully(null, done);
         });
     });
