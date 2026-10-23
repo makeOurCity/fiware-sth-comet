@@ -3,3 +3,6 @@
 - Remove: RPM stuff
 - Add: README section describing the makeOurCity fork of the archived upstream project (#3)
 - Add: HTTP E2E tests for POST /notify, GET and DELETE, detecting that hapi 16 does not respond to them on Node.js 16+ (#4)
+- Upgrade: hapi dep from 16.7.0 to @hapi/hapi ~21.4.11, fixing that POST /notify and DELETE requests are not responded on Node.js 16+ (#5)
+- Upgrade: joi dep from 14.0.6 to ~17.13.8 (#5)
+- Upgrade: boom dep from 7.2.2 to @hapi/boom ~10.0.1 (#5)
