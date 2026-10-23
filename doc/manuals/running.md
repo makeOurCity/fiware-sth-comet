@@ -42,13 +42,17 @@ The environment variables accepted by the script (for which there exists counter
     couple of examples below). Optional. Default value: "localhost:27017".
 -   `DB_AUTH_SOURCE`: The auth source to use for the database connection. Optional. Default value "".
 -   `DB_RECONNECT_TRIES`: MongoDB server attempts to reconnect. Default value 30.
--   `DB_RECONNECT_INTERVAL`: time to wait in milliseconds between MongoDB reconnection attemps. Default value 1000.
+-   `DB_RECONNECT_INTERVAL`: time to wait in milliseconds between MongoDB reconnection attemps. Default value 1000. The
+    MongoDB driver 6.x does not reconnect a fixed number of times anymore. Instead, it keeps on looking for an available
+    server for up to `DB_RECONNECT_TRIES` \* `DB_RECONNECT_INTERVAL` milliseconds (30 seconds by default) before failing
+    a database operation (the `serverSelectionTimeoutMS` driver option).
 -   `REPLICA_SET`: The name of the replica set to connect to, if any. Default value: "".
 -   `DB_PREFIX`: The prefix to be added to the service for the creation of the databases. More information below.
     Optional. Default value: "sth\_".
 -   `COLLECTION\PREFIX`: The prefix to be added to the collections in the databases. More information below. Optional.
     Default value: "sth\_".
--   `POOL_SIZE`: The default MongoDB pool size of database connections. Optional. Default value: "5".
+-   `POOL_SIZE`: The maximum number of connections in the MongoDB connection pool (the `maxPoolSize` driver option).
+    Optional. Default value: "5".
 -   `WRITE_CONCERN`: The [write concern policy](https://docs.mongodb.com/manual/core/write-concern/) to apply when
     writing data to the MongoDB database. Default value: "1".
 -   `SHOULD_STORE`: Flag indicating if the raw and/or aggregated data should be persisted. Valid values are: "only-raw",
