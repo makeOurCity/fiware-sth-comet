@@ -1,0 +1,1603 @@
+{
+  "notifyNew": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "fiware-correlator": "snapshot-notifyNew"
+      },
+      "body": ""
+    }
+  },
+  "notifySecondValue": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "fiware-correlator": "snapshot-notifySecondValue"
+      },
+      "body": ""
+    }
+  },
+  "notifyThirdValue": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "fiware-correlator": "snapshot-notifyThirdValue"
+      },
+      "body": ""
+    }
+  },
+  "notifyDuplicate": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {},
+      "body": ""
+    }
+  },
+  "notifyValueUpdate": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "fiware-correlator": "snapshot-notifyValueUpdate"
+      },
+      "body": ""
+    }
+  },
+  "notifySecondEntity": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "fiware-correlator": "snapshot-notifySecondEntity"
+      },
+      "body": ""
+    }
+  },
+  "notifyUnicodeAttribute": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "fiware-correlator": "snapshot-notifyUnicodeAttribute"
+      },
+      "body": ""
+    }
+  },
+  "v1Raw": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1Raw"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "22"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "25"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "30"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawWithoutCorrelator": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "<uuid>"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "30"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawLastNCount": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=2&count=true",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawLastNCount",
+        "fiware-total-count": "3"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "25"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "30"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawPagination": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?hLimit=2&hOffset=1&count=true",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawPagination",
+        "fiware-total-count": "3"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "25"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "30"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawDateRange": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?dateFrom=2026-10-23T10:15:30.000Z&dateTo=2026-10-23T10:16:30.000Z&lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawDateRange"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "22"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "25"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawPaginationDateRange": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?dateFrom=2026-10-23T10:16:30.000Z&hLimit=10&hOffset=0&count=true",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawPaginationDateRange",
+        "fiware-total-count": "2"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "25"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "30"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawLastN0": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=0",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawLastN0"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "22"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "25"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "30"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawText": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/status?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawText"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "status",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "status",
+                      "attrType": "Text",
+                      "attrValue": "ng"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "status",
+                      "attrType": "Text",
+                      "attrValue": "ng"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "status",
+                      "attrType": "Text",
+                      "attrValue": "ok"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1RawUnknownEntity": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/NOPE/attributes/temperature?lastN=10&count=true",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1RawUnknownEntity",
+        "fiware-total-count": "0"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "NOPE",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrSumMinute": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=minute",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrSumMinute"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T10:00:00.000Z",
+                        "resolution": "minute"
+                      },
+                      "points": [
+                        {
+                          "offset": 15,
+                          "samples": 1,
+                          "sum": 22
+                        },
+                        {
+                          "offset": 16,
+                          "samples": 1,
+                          "sum": 25
+                        }
+                      ]
+                    },
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T11:00:00.000Z",
+                        "resolution": "minute"
+                      },
+                      "points": [
+                        {
+                          "offset": 0,
+                          "samples": 1,
+                          "sum": 30
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrSum2Minute": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum2&aggrPeriod=minute",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrSum2Minute"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T10:00:00.000Z",
+                        "resolution": "minute"
+                      },
+                      "points": [
+                        {
+                          "offset": 15,
+                          "samples": 1,
+                          "sum2": 484
+                        },
+                        {
+                          "offset": 16,
+                          "samples": 1,
+                          "sum2": 625
+                        }
+                      ]
+                    },
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T11:00:00.000Z",
+                        "resolution": "minute"
+                      },
+                      "points": [
+                        {
+                          "offset": 0,
+                          "samples": 1,
+                          "sum2": 900
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrMaxHourDateRange": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=max&aggrPeriod=hour&dateFrom=2026-10-23T10:15:30.000Z&dateTo=2026-10-23T10:16:30.000Z",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrMaxHourDateRange"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T00:00:00.000Z",
+                        "resolution": "hour"
+                      },
+                      "points": [
+                        {
+                          "offset": 10,
+                          "samples": 2,
+                          "max": 25
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrMinDay": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=min&aggrPeriod=day",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrMinDay"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-01T00:00:00.000Z",
+                        "resolution": "day"
+                      },
+                      "points": [
+                        {
+                          "offset": 23,
+                          "samples": 3,
+                          "min": 22
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrMinMaxHour": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=min,max&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrMinMaxHour"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T00:00:00.000Z",
+                        "resolution": "hour"
+                      },
+                      "points": [
+                        {
+                          "offset": 10,
+                          "samples": 2,
+                          "min": 22,
+                          "max": 25
+                        },
+                        {
+                          "offset": 11,
+                          "samples": 1,
+                          "min": 30,
+                          "max": 30
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrAllHour": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=all&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrAllHour"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T00:00:00.000Z",
+                        "resolution": "hour"
+                      },
+                      "points": [
+                        {
+                          "offset": 10,
+                          "samples": 2,
+                          "min": 22,
+                          "max": 25,
+                          "sum": 47,
+                          "sum2": 1109
+                        },
+                        {
+                          "offset": 11,
+                          "samples": 1,
+                          "min": 30,
+                          "max": 30,
+                          "sum": 30,
+                          "sum2": 900
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrSumSecond": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=second",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrSumSecond"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrSumMonth": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=month",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrSumMonth"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrOccurHour": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/status?aggrMethod=occur&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrOccurHour"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "status",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "status",
+                        "origin": "2026-10-23T00:00:00.000Z",
+                        "resolution": "hour"
+                      },
+                      "points": [
+                        {
+                          "offset": 10,
+                          "samples": 2,
+                          "occur": {
+                            "ok": 0,
+                            "ng": 2
+                          }
+                        },
+                        {
+                          "offset": 11,
+                          "samples": 1,
+                          "occur": {
+                            "ok": 1
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v1AggrUnknownEntity": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/NOPE/attributes/temperature?aggrMethod=sum&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v1AggrUnknownEntity"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "NOPE",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "v2Raw": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2Raw"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T10:15:30.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "22"
+          },
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T10:16:30.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "25"
+          },
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T11:00:00.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "30"
+          }
+        ]
+      }
+    }
+  },
+  "v2RawCount": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=10&count=true",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2RawCount",
+        "fiware-total-count": "3"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T10:15:30.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "22"
+          },
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T10:16:30.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "25"
+          },
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T11:00:00.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "30"
+          }
+        ]
+      }
+    }
+  },
+  "v2RawPagination": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&hLimit=1&hOffset=0",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2RawPagination"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T10:15:30.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "22"
+          }
+        ]
+      }
+    }
+  },
+  "v2RawDateRange": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&dateFrom=2026-10-23T10:16:30.000Z&lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2RawDateRange"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T10:16:30.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "25"
+          },
+          {
+            "_id": "<ObjectId>",
+            "recvTime": "2026-10-23T11:00:00.000Z",
+            "attrName": "temperature",
+            "attrType": "Number",
+            "attrValue": "30"
+          }
+        ]
+      }
+    }
+  },
+  "v2AggrSumHour": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&aggrMethod=sum&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2AggrSumHour"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": {
+              "attrName": "temperature",
+              "origin": "2026-10-23T00:00:00.000Z",
+              "resolution": "hour"
+            },
+            "points": [
+              {
+                "offset": 10,
+                "samples": 2,
+                "sum": 47
+              },
+              {
+                "offset": 11,
+                "samples": 1,
+                "sum": 30
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "v2AggrAllMinute": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&aggrMethod=all&aggrPeriod=minute",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2AggrAllMinute"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": {
+              "attrName": "temperature",
+              "origin": "2026-10-23T10:00:00.000Z",
+              "resolution": "minute"
+            },
+            "points": [
+              {
+                "offset": 15,
+                "samples": 1,
+                "min": 22,
+                "max": 22,
+                "sum": 22,
+                "sum2": 484
+              },
+              {
+                "offset": 16,
+                "samples": 1,
+                "min": 25,
+                "max": 25,
+                "sum": 25,
+                "sum2": 625
+              }
+            ]
+          },
+          {
+            "_id": {
+              "attrName": "temperature",
+              "origin": "2026-10-23T11:00:00.000Z",
+              "resolution": "minute"
+            },
+            "points": [
+              {
+                "offset": 0,
+                "samples": 1,
+                "min": 30,
+                "max": 30,
+                "sum": 30,
+                "sum2": 900
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "v2AggrOccurMinute": {
+    "request": "GET /STH/v2/entities/E1/attrs/status?type=T&aggrMethod=occur&aggrPeriod=minute",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2AggrOccurMinute"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": [
+          {
+            "_id": {
+              "attrName": "status",
+              "origin": "2026-10-23T10:00:00.000Z",
+              "resolution": "minute"
+            },
+            "points": [
+              {
+                "offset": 15,
+                "samples": 1,
+                "occur": {
+                  "ok": 0,
+                  "ng": 1
+                }
+              },
+              {
+                "offset": 16,
+                "samples": 1,
+                "occur": {
+                  "ng": 1
+                }
+              }
+            ]
+          },
+          {
+            "_id": {
+              "attrName": "status",
+              "origin": "2026-10-23T11:00:00.000Z",
+              "resolution": "minute"
+            },
+            "points": [
+              {
+                "offset": 0,
+                "samples": 1,
+                "occur": {
+                  "ok": 1
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "v2RawUnknownEntity": {
+    "request": "GET /STH/v2/entities/NOPE/attrs/temperature?type=T&lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-v2RawUnknownEntity"
+      },
+      "body": {
+        "type": "StructuredValue",
+        "value": []
+      }
+    }
+  },
+  "csvLastN": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10&filetype=csv",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-disposition": "attachment; filename*= utf-8''temperature-<timestamp>-<counter>.csv",
+        "content-type": "application/octet-stream"
+      },
+      "body": "attrName,attrType,attrValue,recvTime\r\ntemperature,Number,30,Fri Oct 23 2026 11:00:00 GMT+0000 (Coordinated Universal Time)\r\ntemperature,Number,25,Fri Oct 23 2026 10:16:30 GMT+0000 (Coordinated Universal Time)\r\ntemperature,Number,22,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\n"
+    }
+  },
+  "csvPagination": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?hLimit=2&hOffset=0&filetype=csv",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-disposition": "attachment; filename*= utf-8''temperature-<timestamp>-<counter>.csv",
+        "content-type": "application/octet-stream"
+      },
+      "body": "attrName,attrType,attrValue,recvTime\r\ntemperature,Number,22,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\ntemperature,Number,25,Fri Oct 23 2026 10:16:30 GMT+0000 (Coordinated Universal Time)\r\n"
+    }
+  },
+  "csvOnlyFiletype": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/status?filetype=csv",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-disposition": "attachment; filename*= utf-8''status-<timestamp>-<counter>.csv",
+        "content-type": "application/octet-stream"
+      },
+      "body": "attrName,attrType,attrValue,recvTime\r\nstatus,Text,ng,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\nstatus,Text,ng,Fri Oct 23 2026 10:16:30 GMT+0000 (Coordinated Universal Time)\r\nstatus,Text,ok,Fri Oct 23 2026 11:00:00 GMT+0000 (Coordinated Universal Time)\r\n"
+    }
+  },
+  "csvUnicodeAttribute": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E3/attributes/%E6%B8%A9%E5%BA%A6?lastN=10&filetype=csv",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-disposition": "attachment; filename*= utf-8''%E6%B8%A9%E5%BA%A6-<timestamp>-<counter>.csv",
+        "content-type": "application/octet-stream"
+      },
+      "body": "attrName,attrType,attrValue,recvTime\r\n温度,Number,12.5,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\n"
+    }
+  },
+  "csvUnknownEntity": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/NOPE/attributes/temperature?lastN=10&filetype=csv",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-csvUnknownEntity"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "NOPE",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "deleteAttribute": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/E1/attributes/temperature",
+    "response": {
+      "statusCode": 204,
+      "headers": {
+        "fiware-correlator": "snapshot-deleteAttribute"
+      },
+      "body": ""
+    }
+  },
+  "afterDeleteAttributeRaw": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-afterDeleteAttributeRaw"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "afterDeleteAttributeAggregated": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-afterDeleteAttributeAggregated"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "afterDeleteAttributeOtherAttributeKept": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/status?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-afterDeleteAttributeOtherAttributeKept"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "status",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "status",
+                      "attrType": "Text",
+                      "attrValue": "ng"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:16:30.000Z",
+                      "attrName": "status",
+                      "attrType": "Text",
+                      "attrValue": "ng"
+                    },
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T11:00:00.000Z",
+                      "attrName": "status",
+                      "attrType": "Text",
+                      "attrValue": "ok"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "deleteEntity": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/E1",
+    "response": {
+      "statusCode": 204,
+      "headers": {
+        "fiware-correlator": "snapshot-deleteEntity"
+      },
+      "body": ""
+    }
+  },
+  "afterDeleteEntity": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/status?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-afterDeleteEntity"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "status",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "afterDeleteEntityOtherEntityKept": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E2/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-afterDeleteEntityOtherEntityKept"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "5"
+                    }
+                  ]
+                }
+              ],
+              "id": "E2",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "deleteNonExistentEntity": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/NOPE",
+    "response": {
+      "statusCode": 204,
+      "headers": {
+        "fiware-correlator": "snapshot-deleteNonExistentEntity"
+      },
+      "body": ""
+    }
+  },
+  "deleteNonExistentAttribute": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/NOPE/attributes/x",
+    "response": {
+      "statusCode": 204,
+      "headers": {
+        "fiware-correlator": "snapshot-deleteNonExistentAttribute"
+      },
+      "body": ""
+    }
+  },
+  "deleteAll": {
+    "request": "DELETE /STH/v1/contextEntities",
+    "response": {
+      "statusCode": 204,
+      "headers": {
+        "fiware-correlator": "snapshot-deleteAll"
+      },
+      "body": ""
+    }
+  },
+  "afterDeleteAll": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E2/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "snapshot-afterDeleteAll"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E2",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "deleteAllAgain": {
+    "request": "DELETE /STH/v1/contextEntities",
+    "response": {
+      "statusCode": 204,
+      "headers": {
+        "fiware-correlator": "snapshot-deleteAllAgain"
+      },
+      "body": ""
+    }
+  }
+}
