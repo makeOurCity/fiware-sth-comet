@@ -117,9 +117,8 @@ More on this in the **Releasing** section below.
 ## Testing
 
 The test environment is preconfigured to run the [Mocha](https://mochajs.org/) Test Runner with support for the
-[Should.js](https://shouldjs.github.io/) assertion Library .
-
-Module mocking during testing can be done with [proxyquire](https://github.com/thlorenz/proxyquire).
+[expect.js](https://github.com/Automattic/expect.js) assertion Library. The tests need a MongoDB instance listening on
+`localhost:27017`.
 
 To run tests, type:
 

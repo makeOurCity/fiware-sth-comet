@@ -25,7 +25,6 @@ const ROOT_PATH = require('app-root-path');
 const STH_CONFIGURATION_PATH = ROOT_PATH + '/lib/configuration/sthConfiguration';
 let sthConfig = require(STH_CONFIGURATION_PATH);
 const expect = require('expect.js');
-const clearRequire = require('clear-require');
 
 const DEFAULT_VALUES = {
     LOGOPS_LEVEL: 'INFO',
@@ -223,7 +222,7 @@ describe('sthConfiguration tests', function() {
 
     describe('setting values via environment variables', function() {
         beforeEach(function() {
-            clearRequire(STH_CONFIGURATION_PATH);
+            delete require.cache[require.resolve(STH_CONFIGURATION_PATH)];
         });
 
         it("should set the logging level configuration parameter to 'DEBUG'", function() {
