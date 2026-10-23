@@ -37,7 +37,7 @@ const PINNED_KEYS = ['DATA_MODEL', 'NAME_ENCODING', 'NAME_MAPPING', 'NAME_SEPARA
  */
 function getPinnedValues() {
     const values = {};
-    PINNED_KEYS.forEach(function(key) {
+    PINNED_KEYS.forEach(function (key) {
         values[key] = sthConfig[key];
     });
     return values;
@@ -48,7 +48,7 @@ function getPinnedValues() {
  * @param {Object} values The values by key
  */
 function setValues(values) {
-    Object.keys(values).forEach(function(key) {
+    Object.keys(values).forEach(function (key) {
         sthConfig[key] = values[key];
     });
 }

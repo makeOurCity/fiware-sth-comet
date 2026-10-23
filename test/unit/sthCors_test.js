@@ -91,25 +91,25 @@ function corsSuite(matcher, configuration, env) {
     const requests = getRequests();
     let child;
 
-    before(function(done) {
+    before(function (done) {
         this.timeout(15000);
-        sthTestProcess.startSth(Object.assign({ STH_PORT: PORT }, env), function(err, theChild) {
+        sthTestProcess.startSth(Object.assign({ STH_PORT: PORT }, env), function (err, theChild) {
             child = theChild;
             done(err);
         });
     });
 
-    after(function(done) {
+    after(function (done) {
         this.timeout(15000);
-        sthTestProcess.stopSth(child, 'SIGTERM', function() {
+        sthTestProcess.stopSth(child, 'SIGTERM', function () {
             done();
         });
     });
 
-    Object.keys(requests).forEach(function(name) {
+    Object.keys(requests).forEach(function (name) {
         const request = requests[name];
         const snapshotName = configuration + '.' + name;
-        it(snapshotName + ': ' + request.method + ' ' + request.path, function(done) {
+        it(snapshotName + ': ' + request.method + ' ' + request.path, function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: request.method,
@@ -117,7 +117,7 @@ function corsSuite(matcher, configuration, env) {
                     port: PORT,
                     headers: Object.assign({ 'Fiware-Correlator': 'cors-' + name }, request.headers)
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     matcher.match(snapshotName, sthSnapshot.toSnapshot(request, err, response));
                 })
             );
@@ -125,10 +125,10 @@ function corsSuite(matcher, configuration, env) {
     });
 }
 
-describe('CORS snapshots', function() {
+describe('CORS snapshots', function () {
     const matcher = sthSnapshot.createMatcher(path.join(__dirname, 'snapshots', 'sthCors.json'));
 
-    after(function() {
+    after(function () {
         matcher.save();
     });
 

@@ -48,13 +48,13 @@ function spawnSth(env) {
     child.exitInfo = null;
     child.stdout.setEncoding('utf8');
     child.stderr.setEncoding('utf8');
-    child.stdout.on('data', function(chunk) {
+    child.stdout.on('data', function (chunk) {
         child.output += chunk;
     });
-    child.stderr.on('data', function(chunk) {
+    child.stderr.on('data', function (chunk) {
         child.output += chunk;
     });
-    child.on('exit', function(code, signal) {
+    child.on('exit', function (code, signal) {
         child.exitInfo = { code, signal };
     });
     return child;
@@ -69,7 +69,7 @@ function spawnSth(env) {
  *  timeout expired
  */
 function waitForOutput(child, text, timeout, callback) {
-    const timer = setTimeout(function() {
+    const timer = setTimeout(function () {
         finish(new Error('The STH process did not write "' + text + '" within ' + timeout + 'ms:\n' + child.output));
     }, timeout);
 
@@ -106,7 +106,7 @@ function waitForExit(child, timeout, callback) {
     if (child.exitInfo) {
         return process.nextTick(callback.bind(null, null, child.exitInfo));
     }
-    const timer = setTimeout(function() {
+    const timer = setTimeout(function () {
         child.removeListener('exit', onExit);
         callback(new Error('The STH process did not exit within ' + timeout + 'ms:\n' + child.output));
     }, timeout);
@@ -126,7 +126,7 @@ function waitForExit(child, timeout, callback) {
  */
 function startSth(env, callback) {
     const child = spawnSth(env);
-    waitForOutput(child, STARTED_MESSAGE, DEFAULT_TIMEOUT, function(err) {
+    waitForOutput(child, STARTED_MESSAGE, DEFAULT_TIMEOUT, function (err) {
         if (err) {
             child.kill('SIGKILL');
             return callback(err);
@@ -146,7 +146,7 @@ function stopSth(child, signal, callback) {
         return process.nextTick(callback.bind(null, null, child && child.exitInfo));
     }
     child.kill(signal || 'SIGTERM');
-    waitForExit(child, DEFAULT_TIMEOUT, function(err, exitInfo) {
+    waitForExit(child, DEFAULT_TIMEOUT, function (err, exitInfo) {
         if (err) {
             child.kill('SIGKILL');
         }

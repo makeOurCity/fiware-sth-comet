@@ -83,7 +83,7 @@ function pickHeaders(headers) {
     Object.keys(headers)
         .filter(isRelevantHeader)
         .sort()
-        .forEach(function(name) {
+        .forEach(function (name) {
             result[name] = normalizeHeaderValue(name, headers[name]);
         });
     return result;
@@ -100,7 +100,7 @@ function replaceObjectIds(value) {
     }
     if (value && typeof value === 'object') {
         const result = {};
-        Object.keys(value).forEach(function(key) {
+        Object.keys(value).forEach(function (key) {
             result[key] = replaceObjectIds(value[key]);
         });
         return result;

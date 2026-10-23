@@ -151,27 +151,24 @@ function connect(options, callback) {
  * @param {Function} callback The callback
  */
 function setUp(connectOptions, callback) {
-    connect(
-        connectOptions,
-        function(err) {
+    connect(connectOptions, function (err) {
+        if (err) {
+            return callback(err);
+        }
+        sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function (err) {
             if (err) {
                 return callback(err);
             }
-            sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err) {
-                if (err) {
-                    return callback(err);
-                }
-                send('cleanUp', getRequests().deleteAll, function() {
-                    send('seed', getRequests().notify, function(err, response) {
-                        if (!err && response.statusCode !== 200) {
-                            err = new Error('Unexpected response to the seed notification: ' + response.statusCode);
-                        }
-                        callback(err);
-                    });
+            send('cleanUp', getRequests().deleteAll, function () {
+                send('seed', getRequests().notify, function (err, response) {
+                    if (!err && response.statusCode !== 200) {
+                        err = new Error('Unexpected response to the seed notification: ' + response.statusCode);
+                    }
+                    callback(err);
                 });
             });
-        }
-    );
+        });
+    });
 }
 
 /**
@@ -180,9 +177,9 @@ function setUp(connectOptions, callback) {
  */
 function tearDown(callback) {
     function removeDataAndStop() {
-        send('cleanUp', getRequests().deleteAll, function() {
-            sthServer.stopServer(function() {
-                sthDatabase.closeConnection(function() {
+        send('cleanUp', getRequests().deleteAll, function () {
+            sthServer.stopServer(function () {
+                sthDatabase.closeConnection(function () {
                     callback();
                 });
             });
@@ -193,10 +190,7 @@ function tearDown(callback) {
         return removeDataAndStop();
     }
     // The connection was closed by the test
-    return connect(
-        {},
-        removeDataAndStop
-    );
+    return connect({}, removeDataAndStop);
 }
 
 /**
@@ -209,7 +203,7 @@ function tearDown(callback) {
 function waitForStatusCode(request, statusCode, timeout, callback) {
     const deadline = Date.now() + timeout;
     (function attempt() {
-        send('poll', request, function(err, response) {
+        send('poll', request, function (err, response) {
             if (!err && response.statusCode === statusCode) {
                 return callback(null, response);
             }
@@ -225,27 +219,27 @@ function waitForStatusCode(request, statusCode, timeout, callback) {
     })();
 }
 
-describe('Database outage', function() {
+describe('Database outage', function () {
     let restoreConfiguration;
 
-    before(function() {
+    before(function () {
         // The responses depend on the data model and the naming of the collections
         restoreConfiguration = sthConfigurationPin.pinInitialConfiguration();
     });
 
-    after(function() {
+    after(function () {
         restoreConfiguration();
     });
 
-    describe('closing and opening the connection', function() {
+    describe('closing and opening the connection', function () {
         const matcher = sthSnapshot.createMatcher(path.join(__dirname, 'snapshots', 'sthDatabaseOutage.json'));
         const requests = getRequests();
 
-        before(function(done) {
+        before(function (done) {
             setUp({}, done);
         });
 
-        after(function(done) {
+        after(function (done) {
             matcher.save();
             tearDown(done);
         });
@@ -257,23 +251,23 @@ describe('Database outage', function() {
          */
         function snapshotTest(phase, name) {
             const request = requests[name];
-            it(phase + '.' + name + ': ' + request.method + ' ' + request.path, function(done) {
+            it(phase + '.' + name + ': ' + request.method + ' ' + request.path, function (done) {
                 send(
                     name,
                     request,
-                    sthHttpTestClient.assertResponse(done, function(err, response) {
+                    sthHttpTestClient.assertResponse(done, function (err, response) {
                         matcher.match(phase + '.' + name, sthSnapshot.toSnapshot(request, err, response));
                     })
                 );
             });
         }
 
-        describe('before the outage', function() {
+        describe('before the outage', function () {
             snapshotTest('beforeOutage', 'aggregated');
         });
 
-        describe('while the connection is closed', function() {
-            before(function(done) {
+        describe('while the connection is closed', function () {
+            before(function (done) {
                 sthDatabase.closeConnection(done);
             });
 
@@ -290,12 +284,9 @@ describe('Database outage', function() {
             ].forEach(snapshotTest.bind(null, 'duringOutage'));
         });
 
-        describe('after opening the connection again', function() {
-            before(function(done) {
-                connect(
-                    {},
-                    done
-                );
+        describe('after opening the connection again', function () {
+            before(function (done) {
+                connect({}, done);
             });
 
             snapshotTest('afterOutage', 'aggregated');
@@ -305,39 +296,39 @@ describe('Database outage', function() {
 
     (DOCKER_MONGO_CONTAINER ? describe : describe.skip)(
         'stopping and starting the MongoDB container (opt-in, STH_TEST_DOCKER_MONGO=<container>)',
-        function() {
-            before(function(done) {
+        function () {
+            before(function (done) {
                 this.timeout(10000);
                 // Close any connection left open by previous tests so that the reconnection options are applied
-                sthDatabase.closeConnection(function() {
+                sthDatabase.closeConnection(function () {
                     setUp({ reconnectTries: 120, reconnectInterval: 500 }, done);
                 });
             });
 
-            after(function(done) {
+            after(function (done) {
                 this.timeout(60000);
                 // Make sure the container is running again even if the test failed
-                childProcess.exec('docker start ' + DOCKER_MONGO_CONTAINER, function() {
-                    waitForStatusCode(getRequests().aggregated, 200, 50000, function() {
+                childProcess.exec('docker start ' + DOCKER_MONGO_CONTAINER, function () {
+                    waitForStatusCode(getRequests().aggregated, 200, 50000, function () {
                         tearDown(done);
                     });
                 });
             });
 
-            it('should respond with 500 while MongoDB is stopped and recover automatically once started', function(done) {
+            it('should respond with 500 while MongoDB is stopped and recover automatically once started', function (done) {
                 this.timeout(120000);
                 const aggregated = getRequests().aggregated;
                 let expected;
-                send('beforeStop', aggregated, function(err, response) {
+                send('beforeStop', aggregated, function (err, response) {
                     if (err) {
                         return done(err);
                     }
                     expected = JSON.parse(response.body);
-                    childProcess.exec('docker stop ' + DOCKER_MONGO_CONTAINER, function(err) {
+                    childProcess.exec('docker stop ' + DOCKER_MONGO_CONTAINER, function (err) {
                         if (err) {
                             return done(err);
                         }
-                        waitForStatusCode(aggregated, 500, 20000, function(err, response) {
+                        waitForStatusCode(aggregated, 500, 20000, function (err, response) {
                             if (err) {
                                 return done(err);
                             }
@@ -347,11 +338,11 @@ describe('Database outage', function() {
                                 return done(assertionError);
                             }
                             const startTime = Date.now();
-                            childProcess.exec('docker start ' + DOCKER_MONGO_CONTAINER, function(err) {
+                            childProcess.exec('docker start ' + DOCKER_MONGO_CONTAINER, function (err) {
                                 if (err) {
                                     return done(err);
                                 }
-                                waitForStatusCode(aggregated, 200, 60000, function(err, response) {
+                                waitForStatusCode(aggregated, 200, 60000, function (err, response) {
                                     if (err) {
                                         return done(err);
                                     }

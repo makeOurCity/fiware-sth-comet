@@ -52,7 +52,7 @@ const SHUTDOWN_MESSAGES = [
  */
 function expectInOrder(output, texts) {
     let position = -1;
-    texts.forEach(function(text) {
+    texts.forEach(function (text) {
         const index = output.indexOf(text, position + 1);
         expect(index).to.be.greaterThan(position);
         position = index;
@@ -66,14 +66,14 @@ function expectInOrder(output, texts) {
  * @return {Function} The mocha test
  */
 function gracefulShutdownTest(signal) {
-    return function(done) {
+    return function (done) {
         this.timeout(15000);
-        sthTestProcess.startSth({ STH_PORT: PORT }, function(err, child) {
+        sthTestProcess.startSth({ STH_PORT: PORT }, function (err, child) {
             if (err) {
                 return done(err);
             }
-            sthHttpTestClient.sendRequest({ method: 'GET', path: '/version', port: PORT }, function(err, response) {
-                sthTestProcess.stopSth(child, signal, function(stopErr, exitInfo) {
+            sthHttpTestClient.sendRequest({ method: 'GET', path: '/version', port: PORT }, function (err, response) {
+                sthTestProcess.stopSth(child, signal, function (stopErr, exitInfo) {
                     try {
                         expect(err).to.equal(null);
                         expect(response.statusCode).to.equal(200);
@@ -94,8 +94,8 @@ function gracefulShutdownTest(signal) {
     };
 }
 
-describe('STH process lifecycle', function() {
-    describe('graceful shutdown', function() {
+describe('STH process lifecycle', function () {
+    describe('graceful shutdown', function () {
         it('should serve requests and exit with code 0 when receiving SIGTERM', gracefulShutdownTest('SIGTERM'));
 
         it('should serve requests and exit with code 0 when receiving SIGINT', gracefulShutdownTest('SIGINT'));
@@ -103,8 +103,8 @@ describe('STH process lifecycle', function() {
         it('should serve requests and exit with code 0 when receiving SIGHUP', gracefulShutdownTest('SIGHUP'));
     });
 
-    describe('startup errors', function() {
-        it('should exit with code 1 without starting the server if the database is not reachable', function(done) {
+    describe('startup errors', function () {
+        it('should exit with code 1 without starting the server if the database is not reachable', function (done) {
             this.timeout(15000);
             const startTime = Date.now();
             const child = sthTestProcess.spawnSth({
@@ -113,7 +113,7 @@ describe('STH process lifecycle', function() {
                 DB_RECONNECT_TRIES: 1,
                 DB_RECONNECT_INTERVAL: 100
             });
-            sthTestProcess.waitForExit(child, 10000, function(err, exitInfo) {
+            sthTestProcess.waitForExit(child, 10000, function (err, exitInfo) {
                 try {
                     expect(err).to.equal(null);
                     expect(exitInfo).to.eql({ code: 1, signal: null });
@@ -137,19 +137,19 @@ describe('STH process lifecycle', function() {
             });
         });
 
-        it('should exit with code 1 if the port is already in use', function(done) {
+        it('should exit with code 1 if the port is already in use', function (done) {
             this.timeout(15000);
             const blocker = net.createServer();
             // Occupy the address the STH listens on for its default host (localhost), which is resolved to IPv4 first
-            sthServerUtils.getListenAddress('localhost').then(function(address) {
-                blocker.listen(PORT, address, function() {
+            sthServerUtils.getListenAddress('localhost').then(function (address) {
+                blocker.listen(PORT, address, function () {
                     const child = sthTestProcess.spawnSth({ STH_PORT: PORT });
-                    sthTestProcess.waitForExit(child, 10000, function(err, exitInfo) {
+                    sthTestProcess.waitForExit(child, 10000, function (err, exitInfo) {
                         if (err) {
                             // Do not leave the STH running on the port used by the other tests
                             child.kill('SIGKILL');
                         }
-                        blocker.close(function() {
+                        blocker.close(function () {
                             try {
                                 expect(err).to.equal(null);
                                 expect(exitInfo).to.eql({ code: 1, signal: null });
