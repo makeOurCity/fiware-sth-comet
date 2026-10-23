@@ -72,11 +72,20 @@ release process is explained in the **Releasing** section below.
 
 ESLint
 
-Uses the provided `.eslintrc.json` flag files. To check source code style, type
+Uses the provided `eslint.config.js` file, which also checks the formatting of the code with Prettier. To check source
+code style, type
 
 ```bash
 npm run lint
 ```
+
+To fix the errors which can be fixed automatically, including the formatting, type
+
+```bash
+npm run lint:fix
+```
+
+The CI fails if `npm run lint` reports any error, so run it before committing.
 
 ## Branching model
 

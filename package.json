@@ -40,8 +40,6 @@
     "eslint-plugin-prettier": "~5.5.7",
     "expect.js": "~0.3.1",
     "globals": "~17.13.0",
-    "husky": "~1.1.0",
-    "lint-staged": "~7.3.0",
     "mocha": "~12.0.3",
     "prettier": "~3.9.10",
     "remark-cli": "~8.0.1",
@@ -69,25 +67,6 @@
     "rfc5987-value-chars": "~1.0.0"
   },
   "keywords": [],
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "*.js": [
-      "prettier --config .prettierrc.json --write",
-      "git add"
-    ],
-    "*.md": [
-      "prettier --no-config --tab-width 4 --print-width 120 --write --prose-wrap always",
-      "git add"
-    ],
-    "*.yml": [
-      "prettier --no-config --write",
-      "git add"
-    ]
-  },
   "remarkConfig": {
     "settings": {
       "bullet": "-",
