@@ -65,6 +65,13 @@ describe('sth tests', function() {
                 done();
             });
         });
+
+        it('should listen on the IPv4 loopback address if the host is localhost', function() {
+            if (sthConfig.STH_HOST !== 'localhost') {
+                this.skip();
+            }
+            expect(sth.sthServer.server.info.address).to.equal('127.0.0.1');
+        });
     });
 
     describe('invalid routes', function() {

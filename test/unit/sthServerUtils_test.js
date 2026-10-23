@@ -89,6 +89,43 @@ describe('sthServerUtils tests', function() {
         });
     });
 
+    describe('getListenAddress', function() {
+        it('should resolve localhost to the IPv4 loopback address, as Node.js 16 and lower did', function() {
+            return sthServerUtils.getListenAddress('localhost').then(function(address) {
+                expect(address).to.equal('127.0.0.1');
+            });
+        });
+
+        it('should keep an IPv4 address as is', function() {
+            return sthServerUtils.getListenAddress('0.0.0.0').then(function(address) {
+                expect(address).to.equal('0.0.0.0');
+            });
+        });
+
+        it('should keep an IPv6 address as is', function() {
+            return sthServerUtils.getListenAddress('::1').then(function(address) {
+                expect(address).to.equal('::1');
+            });
+        });
+
+        it('should keep an undefined host as is so the server listens on all the interfaces', function() {
+            return sthServerUtils.getListenAddress(undefined).then(function(address) {
+                expect(address).to.equal(undefined);
+            });
+        });
+
+        it('should fail if the host name cannot be resolved', function() {
+            return sthServerUtils.getListenAddress('unresolvable.invalid').then(
+                function() {
+                    throw new Error('Expected the promise to be rejected');
+                },
+                function(err) {
+                    expect(err.code).to.equal('ENOTFOUND');
+                }
+            );
+        });
+    });
+
     describe('toHapiHandler', function() {
         it('should resolve with the response created from the value passed to reply()', function() {
             const h = createFakeToolkit();

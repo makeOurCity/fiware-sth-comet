@@ -1,8 +1,8 @@
 # Dependencies
 
 The STH component is a **Node.js application** which depends on certain Node.js modules as stated in the
-[`project.json`](https://github.com/telefonicaid/fiware-sth-comet/blob/master/package.json) file. Currently, the STH
-component currently supports **Node 0.10** and **Node 4.0**.
+[`package.json`](https://github.com/makeOurCity/fiware-sth-comet/blob/master/package.json) file. Currently, the STH
+component supports **Node.js 22** and **Node.js 24**, which are the versions tested by the CI.
 
 Apart from these Node.js modules, the STH component also needs a running MongoDB instance where the raw and aggregated
 time series context information is stored for its proper functioning. Since the STH component uses

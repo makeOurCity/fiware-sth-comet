@@ -1,0 +1,7 @@
+# Configuration of hadolint, the Dockerfile linter run by the CI (see .github/workflows/ci.yml)
+ignored:
+  # Pin versions in apt-get install: the image installs the security updates of the base image instead,
+  #  and pinned Debian package versions stop being available after each point release
+  - DL3008
+  # Non-numeric user id: the node user is created by the official Node.js image with the uid 1000
+  - DL3066

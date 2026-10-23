@@ -18,7 +18,7 @@
   },
   "main": "lib/sth",
   "engines": {
-    "node": ">=14"
+    "node": ">=22"
   },
   "scripts": {
     "start": "node ./lib/sth",
@@ -30,11 +30,12 @@
     "lint:text": "textlint 'README.md' 'doc/*.md' 'doc/**/*.md'",
     "prettier": "prettier --config .prettierrc.json --write '**/**/**/*.js' '**/**/*.js' '**/*.js' '*.js'",
     "prettier:text": "prettier 'README.md' 'doc/*.md' 'doc/**/*.md' --no-config --tab-width 4 --print-width 120 --write --prose-wrap always",
-    "test:coverage": "istanbul cover _mocha -- --recursive 'test/unit/' --reporter spec --timeout 3000 --ui bdd --exit",
+    "test:coverage": "c8 --reporter=lcov --reporter=text-summary mocha --recursive 'test/unit/' --reporter spec --timeout 3000 --ui bdd --exit",
     "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "watch": "watch 'npm test && npm run lint' ./lib ./test"
   },
   "devDependencies": {
+    "c8": "~12.0.0",
     "clear-require": "~1.0.1",
     "coveralls": "~3.0.2",
     "eslint": "~5.16.0",
@@ -43,7 +44,6 @@
     "eslint-plugin-prettier": "~3.1.0",
     "expect.js": "~0.3.1",
     "husky": "~1.1.0",
-    "istanbul": "~0.4.5",
     "lint-staged": "~7.3.0",
     "mocha": "5.2.0",
     "prettier": "~1.14.2",
