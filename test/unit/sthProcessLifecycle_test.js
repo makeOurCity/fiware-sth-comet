@@ -116,13 +116,16 @@ describe('STH process lifecycle', function() {
                 try {
                     expect(err).to.equal(null);
                     expect(exitInfo).to.eql({ code: 1, signal: null });
-                    // The first connection is not retried: the process exits right away
+                    // The first connection waits at most DB_RECONNECT_TRIES * DB_RECONNECT_INTERVAL
+                    // (serverSelectionTimeoutMS, 100 ms here) and the process exits right away
                     expect(Date.now() - startTime).to.be.lessThan(5000);
                     expect(child.output).to.contain(
                         'Establishing connection to the database at mongodb://localhost:1/'
                     );
-                    expect(child.output).to.contain('lvl=ERROR');
-                    expect(child.output).to.contain('failed to connect to server [localhost:1] on first connect');
+                    // The MongoDB driver 6.x reports the failure as a server selection error
+                    expect(child.output).to.match(
+                        /lvl=ERROR [^\n]*msg=MongoServerSelectionError: connect ECONNREFUSED [^\n]*:1\n/
+                    );
                     expect(child.output).to.contain('No hapi server running');
                     expect(child.output).not.to.contain('Server started at');
                     expect(child.output).not.to.contain('Application exited successfully');
