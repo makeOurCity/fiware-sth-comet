@@ -1,0 +1,254 @@
+{
+  "beforeOutage.aggregated": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "outage-aggregated"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T00:00:00.000Z",
+                        "resolution": "hour"
+                      },
+                      "points": [
+                        {
+                          "offset": 10,
+                          "samples": 1,
+                          "sum": 21.5
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "duringOutage.aggregated": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=hour",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.raw": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.rawV2": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=10",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "InternalServer Error",
+        "description": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.csv": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10&filetype=csv",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.notify": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "name": "MongoConnectionError"
+      }
+    }
+  },
+  "duringOutage.deleteAttribute": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/E1/attributes/temperature",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.deleteEntity": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/E1",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.deleteAll": {
+    "request": "DELETE /STH/v1/contextEntities",
+    "response": {
+      "statusCode": 500,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 500,
+        "error": "Internal Server Error",
+        "message": "MongoDB is not connected"
+      }
+    }
+  },
+  "duringOutage.version": {
+    "request": "GET /version",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "version": "2.11.0-next"
+      }
+    }
+  },
+  "afterOutage.aggregated": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=hour",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "outage-aggregated"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": {
+                        "attrName": "temperature",
+                        "origin": "2026-10-23T00:00:00.000Z",
+                        "resolution": "hour"
+                      },
+                      "points": [
+                        {
+                          "offset": 10,
+                          "samples": 1,
+                          "sum": 21.5
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "afterOutage.raw": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "outage-raw"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": [
+                    {
+                      "_id": "<ObjectId>",
+                      "recvTime": "2026-10-23T10:15:30.000Z",
+                      "attrName": "temperature",
+                      "attrType": "Number",
+                      "attrValue": "21.5"
+                    }
+                  ]
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  }
+}
