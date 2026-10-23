@@ -123,6 +123,111 @@ describe('sthHttpTestClient tests', function() {
         });
     });
 
+    describe('toSendRequestOptions()', function() {
+        it('should split the uri into the host, the port and the path including the query string', function() {
+            const options = sthHttpTestClient.toSendRequestOptions({
+                uri: 'http://localhost:8666/STH/v2/entities/x?lastN=1&type=y',
+                method: 'GET'
+            });
+            expect(options.host).to.equal('localhost');
+            expect(options.port).to.equal(8666);
+            expect(options.path).to.equal('/STH/v2/entities/x?lastN=1&type=y');
+            expect(options.method).to.equal('GET');
+        });
+
+        it('should keep the headers and the body of the request', function() {
+            const body = { subscriptionId: 'x' };
+            const options = sthHttpTestClient.toSendRequestOptions({
+                uri: 'http://localhost:8666/notify',
+                method: 'POST',
+                headers: { 'Fiware-Service': 'testservice' },
+                body
+            });
+            expect(options.headers).to.eql({ 'Fiware-Service': 'testservice' });
+            expect(options.body).to.be(body);
+        });
+
+        it('should accept JSON responses if json is true and no Accept header is set, as the request module', function() {
+            expect(
+                sthHttpTestClient.toSendRequestOptions({ uri: 'http://localhost:8666/', method: 'GET', json: true })
+                    .headers
+            ).to.eql({ Accept: 'application/json' });
+            expect(
+                sthHttpTestClient.toSendRequestOptions({
+                    uri: 'http://localhost:8666/',
+                    method: 'GET',
+                    json: true,
+                    headers: { accept: 'text/csv' }
+                }).headers
+            ).to.eql({ accept: 'text/csv' });
+        });
+    });
+
+    describe('parseResponseBody()', function() {
+        it('should return the body as a string if json is not true', function() {
+            expect(sthHttpTestClient.parseResponseBody('{"a":1}', false)).to.equal('{"a":1}');
+            expect(sthHttpTestClient.parseResponseBody('', false)).to.equal('');
+        });
+
+        it('should return the parsed body if json is true', function() {
+            expect(sthHttpTestClient.parseResponseBody('{"a":1}', true)).to.eql({ a: 1 });
+        });
+
+        it('should return undefined for an empty body if json is true', function() {
+            expect(sthHttpTestClient.parseResponseBody('', true)).to.equal(undefined);
+        });
+
+        it('should return the body as a string if json is true but it is not valid JSON', function() {
+            expect(sthHttpTestClient.parseResponseBody('a,b\n1,2', true)).to.equal('a,b\n1,2');
+        });
+    });
+
+    describe('request()', function() {
+        it('should call back with the response and the body as the request module', function(done) {
+            const body = { subscriptionId: 'x' };
+            sthHttpTestClient.request(
+                {
+                    uri: 'http://' + sthConfig.STH_HOST + ':' + port + '/notify?a=b',
+                    method: 'POST',
+                    headers: { 'Fiware-Service': 'testservice' },
+                    json: true,
+                    body
+                },
+                function(err, response, responseBody) {
+                    try {
+                        expect(err).to.equal(null);
+                        expect(response.statusCode).to.equal(201);
+                        expect(response.headers['content-type']).to.equal('application/json');
+                        expect(responseBody).to.eql({ echo: JSON.stringify(body) });
+                        expect(response.body).to.eql(responseBody);
+                        expect(lastRequest.url).to.equal('/notify?a=b');
+                        expect(lastRequest.headers['fiware-service']).to.equal('testservice');
+                        expect(lastRequest.headers.accept).to.equal('application/json');
+                    } catch (assertionError) {
+                        return done(assertionError);
+                    }
+                    return done();
+                }
+            );
+        });
+
+        it('should call back with the error and no response if the request fails', function(done) {
+            sthHttpTestClient.request(
+                { uri: 'http://' + sthConfig.STH_HOST + ':' + port + '/never-responds', method: 'GET', timeout: 100 },
+                function(err, response, responseBody) {
+                    try {
+                        expect(err.code).to.equal('ETIMEDOUT');
+                        expect(response).to.equal(undefined);
+                        expect(responseBody).to.equal(undefined);
+                    } catch (assertionError) {
+                        return done(assertionError);
+                    }
+                    return done();
+                }
+            );
+        });
+    });
+
     describe('sendRequest()', function() {
         it('should resolve with the status code, the headers and the body of the response', function(done) {
             sthHttpTestClient.sendRequest(
