@@ -5,7 +5,7 @@
 - Add: HTTP E2E tests for POST /notify, GET and DELETE, detecting that hapi 16 does not respond to them on Node.js 16+ (#4)
 - Add: snapshot (characterization) tests of the HTTP API responses, CORS, database outage, startup and shutdown, recorded before the dependency upgrades (#18)
 - Upgrade: hapi dep from 16.7.0 to @hapi/hapi ~21.4.11, fixing that POST /notify and DELETE requests are not responded on Node.js 16+ (#5)
-- Upgrade: joi dep from 14.0.6 to ~17.13.8 (#5)
+- Upgrade: joi dep from 14.0.6 to ~17.13.8, keeping the validation error messages composed as joi 14 did (#5)
 - Upgrade: boom dep from 7.2.2 to @hapi/boom ~10.0.1 (#5)
 - Upgrade: mongodb dep from ~3.6.12 to ~6.21.0, removing the driver deprecation warnings (it requires Node.js >= 16.20.1) (#6)
 - Upgrade: POOL_SIZE is passed to the MongoDB driver as maxPoolSize, and DB_RECONNECT_TRIES * DB_RECONNECT_INTERVAL as serverSelectionTimeoutMS, since the driver 6.x does not support poolSize, reconnectTries and reconnectInterval (#6)
