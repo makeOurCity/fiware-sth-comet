@@ -20,9 +20,9 @@
 # For those usages not covered by the GNU Affero General Public License
 # please contact with: sc_support at telefonica dot com
 
-ARG NODE_VERSION=14-slim
+ARG NODE_VERSION=24.22.1-slim
 FROM node:${NODE_VERSION}
-ARG GITHUB_ACCOUNT=telefonicaid
+ARG GITHUB_ACCOUNT=makeOurCity
 ARG GITHUB_REPOSITORY=fiware-sth-comet
 ARG DOWNLOAD=latest
 ARG SOURCE_BRANCH=master
@@ -37,7 +37,9 @@ ENV GITHUB_REPOSITORY=${GITHUB_REPOSITORY}
 ENV DOWNLOAD=${DOWNLOAD}
 ENV STH_PORT=${STH_PORT}
 
-MAINTAINER FIWARE STH . Telefónica I+D
+LABEL maintainer="FIWARE STH . Telefónica I+D"
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 #
 # The following RUN command retrieves the source code from GitHub.
@@ -57,8 +59,8 @@ MAINTAINER FIWARE STH . Telefónica I+D
 RUN apt-get update && \
 	# Install security updates
 	apt-get upgrade -y && \
-	# Ensure that unzip, wget and curl are installed
-	apt-get install -y --no-install-recommends unzip ca-certificates curl wget && \
+	# Ensure that unzip and curl are installed
+	apt-get install -y --no-install-recommends unzip ca-certificates curl && \
 	if [ "${DOWNLOAD}" = "latest" ] ; \
 	then \
 		RELEASE="${SOURCE_BRANCH}"; \
@@ -72,7 +74,7 @@ RUN apt-get update && \
 	 	echo "INFO: Building Release: ${RELEASE}"; \
 	fi && \
 	RELEASE_CONCAT=$(echo "${RELEASE}" | tr / -); \
-	wget --no-check-certificate -O source.zip https://github.com/"${GITHUB_ACCOUNT}"/"${GITHUB_REPOSITORY}"/archive/"${RELEASE}".zip && \
+	curl -fsSL -o source.zip https://github.com/"${GITHUB_ACCOUNT}"/"${GITHUB_REPOSITORY}"/archive/"${RELEASE}".zip && \
 	unzip source.zip && \
 	rm source.zip && \
 	mv "${GITHUB_REPOSITORY}-${RELEASE_CONCAT}" /opt/sth && \
@@ -85,18 +87,12 @@ RUN apt-get update && \
 WORKDIR /opt/sth
 
 RUN \
-	# Ensure that Git is installed prior to running npm install
-	apt-get update && \
-	apt-get install -y git && \
-	echo "INFO: npm install --production..." && \
-	npm install --production && \
+	echo "INFO: npm install --omit=dev..." && \
+	npm install --omit=dev && \
+	npm cache clean --force && \
 	# Ensure permissions over default directory used by STH to generate csv files
 	mkdir temp && \
 	chmod 777 temp && \
-	# Remove Git and clean apt cache
-	apt-get clean && \
-	apt-get remove -y git && \
-	apt-get -y autoremove && \
 	chmod +x docker/entrypoint.sh
 
 USER node
@@ -107,5 +103,7 @@ EXPOSE ${STH_PORT}
 ENTRYPOINT ["docker/entrypoint.sh"]
 CMD ["-- ", "config.js"]
 
+# The shell form is needed to expand STH_PORT
+# hadolint ignore=DL3025
 HEALTHCHECK --interval=60s --start-period=10s \
             CMD curl --fail http://localhost:${STH_PORT}/version  || exit 1
