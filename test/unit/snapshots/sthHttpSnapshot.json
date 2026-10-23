@@ -1257,7 +1257,7 @@
         "content-disposition": "attachment; filename*= utf-8''temperature-<timestamp>-<counter>.csv",
         "content-type": "application/octet-stream"
       },
-      "body": "attrName,attrType,attrValue,recvTime\r\ntemperature,Number,30,Fri Oct 23 2026 11:00:00 GMT+0000 (Coordinated Universal Time)\r\ntemperature,Number,25,Fri Oct 23 2026 10:16:30 GMT+0000 (Coordinated Universal Time)\r\ntemperature,Number,22,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\n"
+      "body": "attrName,attrType,attrValue,recvTime\r\ntemperature,Number,30,Fri Oct 23 2026 11:00:00 GMT+0000 (<time zone name>)\r\ntemperature,Number,25,Fri Oct 23 2026 10:16:30 GMT+0000 (<time zone name>)\r\ntemperature,Number,22,Fri Oct 23 2026 10:15:30 GMT+0000 (<time zone name>)\r\n"
     }
   },
   "csvPagination": {
@@ -1268,7 +1268,7 @@
         "content-disposition": "attachment; filename*= utf-8''temperature-<timestamp>-<counter>.csv",
         "content-type": "application/octet-stream"
       },
-      "body": "attrName,attrType,attrValue,recvTime\r\ntemperature,Number,22,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\ntemperature,Number,25,Fri Oct 23 2026 10:16:30 GMT+0000 (Coordinated Universal Time)\r\n"
+      "body": "attrName,attrType,attrValue,recvTime\r\ntemperature,Number,22,Fri Oct 23 2026 10:15:30 GMT+0000 (<time zone name>)\r\ntemperature,Number,25,Fri Oct 23 2026 10:16:30 GMT+0000 (<time zone name>)\r\n"
     }
   },
   "csvOnlyFiletype": {
@@ -1279,7 +1279,7 @@
         "content-disposition": "attachment; filename*= utf-8''status-<timestamp>-<counter>.csv",
         "content-type": "application/octet-stream"
       },
-      "body": "attrName,attrType,attrValue,recvTime\r\nstatus,Text,ng,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\nstatus,Text,ng,Fri Oct 23 2026 10:16:30 GMT+0000 (Coordinated Universal Time)\r\nstatus,Text,ok,Fri Oct 23 2026 11:00:00 GMT+0000 (Coordinated Universal Time)\r\n"
+      "body": "attrName,attrType,attrValue,recvTime\r\nstatus,Text,ng,Fri Oct 23 2026 10:15:30 GMT+0000 (<time zone name>)\r\nstatus,Text,ng,Fri Oct 23 2026 10:16:30 GMT+0000 (<time zone name>)\r\nstatus,Text,ok,Fri Oct 23 2026 11:00:00 GMT+0000 (<time zone name>)\r\n"
     }
   },
   "csvUnicodeAttribute": {
@@ -1290,7 +1290,7 @@
         "content-disposition": "attachment; filename*= utf-8''%E6%B8%A9%E5%BA%A6-<timestamp>-<counter>.csv",
         "content-type": "application/octet-stream"
       },
-      "body": "attrName,attrType,attrValue,recvTime\r\n温度,Number,12.5,Fri Oct 23 2026 10:15:30 GMT+0000 (Coordinated Universal Time)\r\n"
+      "body": "attrName,attrType,attrValue,recvTime\r\n温度,Number,12.5,Fri Oct 23 2026 10:15:30 GMT+0000 (<time zone name>)\r\n"
     }
   },
   "csvUnknownEntity": {

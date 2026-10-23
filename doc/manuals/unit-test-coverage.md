@@ -73,9 +73,10 @@ as JSON files in the `test/unit/snapshots/` directory:
 -   `sthCors.json`: responses with CORS enabled and disabled.
 -   `sthDatabaseOutage.json`: responses while the connection to the database is closed.
 
-The values which change from run to run, such as the generated correlators, the ObjectIds and the name of the CSV files,
-are replaced by placeholders. The snapshots were recorded with the code previous to the upgrade of its dependencies
-running on Node.js 14, so that any change in the behaviour of the API makes the tests fail.
+The values which change from run to run or depend on the environment, such as the generated correlators, the ObjectIds,
+the name of the CSV files and the time zone names of the dates in the CSV files, are replaced by placeholders (the dates
+are formatted in UTC). The snapshots were recorded with the code previous to the upgrade of its dependencies running on
+Node.js 14, so that any change in the behaviour of the API makes the tests fail.
 
 When a change of the behaviour is intended, record the snapshots again and review the differences before committing
 them:

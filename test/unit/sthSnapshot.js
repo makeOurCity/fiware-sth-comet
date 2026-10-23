@@ -22,8 +22,8 @@
  * Snapshot (characterization) testing support.
  *
  * HTTP responses are reduced to their status code, their relevant headers and their body, the values which change
- *  from run to run are replaced by placeholders, and the result is compared with the snapshot stored in a JSON file
- *  under test/unit/snapshots/.
+ *  from run to run or depend on the environment are replaced by placeholders, and the result is compared with the
+ *  snapshot stored in a JSON file under test/unit/snapshots/.
  *
  * The snapshots were recorded with the code previous to the upgrade of its dependencies running on Node.js 14, so
  *  that the tests detect any change in the behaviour of the API. To record them again after an intended change, run
@@ -43,6 +43,9 @@ const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 const OBJECT_ID_REGEXP = /^[0-9a-f]{24}$/i;
 // Name of the generated CSV files: <attrName>-<Date.now()>-<counter>.csv
 const CSV_FILE_NAME_REGEXP = /-\d+-\d+\.csv$/;
+// Time zone name of the dates formatted by Date#toString(), such as the ones of the CSV files, which depends on the
+//  locale: "GMT+0000 (Coordinated Universal Time)" or "GMT+0000 (協定世界時)", for example
+const TIME_ZONE_NAME_REGEXP = /(GMT[+-]\d{4}) \([^)]*\)/g;
 
 /**
  * Returns true if the header is relevant for the snapshots
@@ -110,7 +113,7 @@ function replaceObjectIds(value) {
 
 /**
  * Returns the body of a response ready to be compared: JSON bodies are parsed and normalized, the rest of them are
- *  kept as strings
+ *  kept as strings replacing the time zone names of the dates
  * @param {String} body The response body
  * @param {String} contentType The content-type header of the response, if any
  * @return {*} The normalized body
@@ -119,7 +122,7 @@ function normalizeBody(body, contentType) {
     if (body && contentType && contentType.indexOf('application/json') === 0) {
         return replaceObjectIds(JSON.parse(body));
     }
-    return body;
+    return body.replace(TIME_ZONE_NAME_REGEXP, '$1 (<time zone name>)');
 }
 
 /**

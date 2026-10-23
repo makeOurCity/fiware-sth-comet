@@ -143,10 +143,13 @@ describe('STH process lifecycle', function() {
                         try {
                             expect(err).to.equal(null);
                             expect(exitInfo).to.eql({ code: 1, signal: null });
-                            expect(child.output).to.contain(
-                                'listen EADDRINUSE: address already in use 127.0.0.1:' +
-                                    PORT +
-                                    ' (another STH instance maybe already listening on the same port)'
+                            // The address depends on how localhost is resolved (127.0.0.1 or ::1)
+                            expect(child.output).to.match(
+                                new RegExp(
+                                    'listen EADDRINUSE: address already in use \\S+:' +
+                                        PORT +
+                                        ' \\(another STH instance maybe already listening on the same port\\)'
+                                )
                             );
                             expect(child.output).to.contain('Connection to MongoDb succesfully closed');
                             expect(child.output).not.to.contain('Application exited successfully');

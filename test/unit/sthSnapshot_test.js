@@ -76,6 +76,19 @@ describe('sthSnapshot', function() {
             expect(sthSnapshot.normalizeBody('a,b\n1,2', 'application/octet-stream')).to.equal('a,b\n1,2');
         });
 
+        it('should replace the time zone names of the dates in non JSON bodies, which depend on the locale', function() {
+            expect(
+                sthSnapshot.normalizeBody(
+                    'a,Fri Oct 23 2026 11:00:00 GMT+0000 (Coordinated Universal Time)\r\n' +
+                        'b,Fri Oct 23 2026 11:00:00 GMT+0000 (協定世界時)\r\n',
+                    'application/octet-stream'
+                )
+            ).to.equal(
+                'a,Fri Oct 23 2026 11:00:00 GMT+0000 (<time zone name>)\r\n' +
+                    'b,Fri Oct 23 2026 11:00:00 GMT+0000 (<time zone name>)\r\n'
+            );
+        });
+
         it('should keep an empty body as an empty string', function() {
             expect(sthSnapshot.normalizeBody('', undefined)).to.equal('');
         });
