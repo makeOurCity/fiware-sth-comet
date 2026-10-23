@@ -57,6 +57,7 @@ module.exports = [
             'no-new-wrappers': 'error',
             'no-object-constructor': 'error',
             'no-octal-escape': 'error',
+            'no-path-concat': 'error',
             'no-proto': 'error',
             'no-return-assign': 'error',
             'no-script-url': 'error',
