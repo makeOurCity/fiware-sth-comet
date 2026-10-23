@@ -29,9 +29,18 @@ const sthTestConfig = require(ROOT_PATH + '/test/unit/sthTestConfiguration');
 const sthTestHelper = require(ROOT_PATH + '/test/unit/sthTestUtils.js');
 const hapi = require('hapi');
 const expect = require('expect.js');
-const request = require('request');
+const sthHttpTestClient = require(ROOT_PATH + '/test/unit/sthHttpTestClient');
 
 describe('sthGetLogLevelHandler tests', function() {
+    after(function(done) {
+        // Leave neither the server nor the database connection open for the next test files
+        sth.sthServer.stopServer(function() {
+            sth.sthDatabase.closeConnection(function() {
+                done();
+            });
+        });
+    });
+
     describe('database connection', function() {
         it('should be a database available', function(done) {
             sth.sthDatabase.connect(
@@ -58,7 +67,7 @@ describe('sthGetLogLevelHandler tests', function() {
     describe('server start', function() {
         it('should start gracefully', function(done) {
             sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err, server) {
-                expect(err).to.equal(undefined);
+                expect(err).to.not.be.ok();
                 expect(server).to.be.a(hapi.Server);
                 done();
             });
@@ -67,17 +76,15 @@ describe('sthGetLogLevelHandler tests', function() {
 
     describe('GET /admin/log', function() {
         it('should respond with the logging level', function(done) {
-            request(
+            sthHttpTestClient.sendRequest(
                 {
-                    uri: sthTestHelper.getURL(sthTestConfig.API_OPERATION.ADMIN.GET_LOG_LEVEL),
                     method: 'GET',
-                    json: true
+                    path: new URL(sthTestHelper.getURL(sthTestConfig.API_OPERATION.ADMIN.GET_LOG_LEVEL)).pathname
                 },
-                function(err, response, body) {
+                sthHttpTestClient.assertResponse(done, function(err, response) {
                     expect(err).to.equal(null);
-                    expect(body.level).to.equal(sthConfig.LOGOPS_LEVEL);
-                    done();
-                }
+                    expect(JSON.parse(response.body).level).to.equal(sthConfig.LOGOPS_LEVEL);
+                })
             );
         });
     });

@@ -2,3 +2,4 @@
 - Add: aggrMethod 'all' to get all the possible aggregations (#432, step 2)
 - Remove: RPM stuff
 - Add: README section describing the makeOurCity fork of the archived upstream project (#3)
+- Add: HTTP E2E tests for POST /notify, GET and DELETE, detecting that hapi 16 does not respond to them on Node.js 16+ (#4)

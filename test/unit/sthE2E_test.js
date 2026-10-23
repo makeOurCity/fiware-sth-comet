@@ -30,10 +30,27 @@ const sthDatabaseNaming = require(ROOT_PATH + '/lib/database/model/sthDatabaseNa
 const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthTestConfig = require(ROOT_PATH + '/test/unit/sthTestConfiguration');
 const expect = require('expect.js');
-const request = require('request');
+const sthHttpTestClient = require(ROOT_PATH + '/test/unit/sthHttpTestClient');
 const sth = require(ROOT_PATH + '/lib/sth');
 
 const DATABASE_NAME = sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE);
+const FIWARE_HEADERS = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    'Fiware-Service': sthConfig.DEFAULT_SERVICE,
+    'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
+};
+
+/**
+ * Returns the path, including the query string, of the provided URL
+ * @param {String} anURL The URL
+ * @return {String} The path
+ */
+function getPath(anURL) {
+    const parsedURL = new URL(anURL);
+    return parsedURL.pathname + parsedURL.search;
+}
+
 const DATABASE_CONNECTION_PARAMS = {
     authentication: sthConfig.DB_AUTHENTICATION,
     dbURI: sthConfig.DB_URI,
@@ -75,97 +92,84 @@ describe('return 500 test', function() {
         });
 
         it('should return 500 when GET http request V1 (e2e)', function(done) {
-            request(
+            sthHttpTestClient.sendRequest(
                 {
-                    uri: sthTestUtils.getURL(
-                        sthTestConfig.API_OPERATION.READ,
-                        {
-                            lastN: 0,
-                            dateFrom:
-                                contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value,
-                            dateTo:
-                                contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                    .attributes[0].metadatas[0].value
-                        },
-                        contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement.attributes[0]
-                            .name
-                    ),
                     method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Fiware-Service': sthConfig.DEFAULT_SERVICE,
-                        'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
-                    }
+                    path: getPath(
+                        sthTestUtils.getURL(
+                            sthTestConfig.API_OPERATION.READ,
+                            {
+                                lastN: 0,
+                                dateFrom:
+                                    contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                        .attributes[0].metadatas[0].value,
+                                dateTo:
+                                    contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                        .attributes[0].metadatas[0].value
+                            },
+                            contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                .attributes[0].name
+                        )
+                    ),
+                    headers: FIWARE_HEADERS
                 },
-                function(err, response) {
+                sthHttpTestClient.assertResponse(done, function(err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(500);
                     expect(JSON.parse(response.body).statusCode).to.equal(500);
                     expect(JSON.parse(response.body).error).to.equal('Internal Server Error');
                     expect(JSON.parse(response.body).message).to.equal('MongoDB is not connected');
-                    done(err);
-                }
+                })
             );
         });
 
         it('should return 500 when DELETE http request V1 (e2e)', function(done) {
-            request(
+            sthHttpTestClient.sendRequest(
                 {
-                    uri: sthTestUtils.getURL(sthTestConfig.API_OPERATION.DELETE, {
-                        entityType: 'T',
-                        entityId: 'E',
-                        attrName: 'A'
-                    }),
                     method: 'DELETE',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Fiware-Service': sthConfig.DEFAULT_SERVICE,
-                        'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
-                    }
+                    path: getPath(
+                        sthTestUtils.getURL(sthTestConfig.API_OPERATION.DELETE, {
+                            entityType: 'T',
+                            entityId: 'E',
+                            attrName: 'A'
+                        })
+                    ),
+                    headers: FIWARE_HEADERS
                 },
-                function(err, response) {
+                sthHttpTestClient.assertResponse(done, function(err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(500);
                     expect(JSON.parse(response.body).statusCode).to.equal(500);
                     expect(JSON.parse(response.body).error).to.equal('Internal Server Error');
                     expect(JSON.parse(response.body).message).to.equal('MongoDB is not connected');
-                    done(err);
-                }
+                })
             );
         });
 
         it('should return 500 when GET http request V2 (e2e)', function(done) {
-            let url = sthTestUtils.getURL(
-                sthTestConfig.API_OPERATION.READ_V2,
+            sthHttpTestClient.sendRequest(
                 {
-                    hLimit: 3,
-                    hOffset: 0,
-                    dateFrom: '2022-03-24T00:00:00.000Z',
-                    dateTo: '2022-03-31T00:00:00.000Z'
-                },
-                'A'
-            );
-            request(
-                {
-                    uri: url,
                     method: 'GET',
-                    headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
-                        'Fiware-Service': sthConfig.DEFAULT_SERVICE,
-                        'Fiware-ServicePath': sthConfig.DEFAULT_SERVICE_PATH
-                    }
+                    path: getPath(
+                        sthTestUtils.getURL(
+                            sthTestConfig.API_OPERATION.READ_V2,
+                            {
+                                hLimit: 3,
+                                hOffset: 0,
+                                dateFrom: '2022-03-24T00:00:00.000Z',
+                                dateTo: '2022-03-31T00:00:00.000Z'
+                            },
+                            'A'
+                        )
+                    ),
+                    headers: FIWARE_HEADERS
                 },
-                function(err, response) {
+                sthHttpTestClient.assertResponse(done, function(err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(500);
                     expect(JSON.parse(response.body).error).to.equal('InternalServer Error');
                     expect(JSON.parse(response.body).description).to.equal('MongoDB is not connected');
-                    done(err);
-                }
+                })
             );
         });
     });
