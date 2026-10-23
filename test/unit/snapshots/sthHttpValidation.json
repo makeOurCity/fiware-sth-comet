@@ -35,7 +35,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"lastN\" must be greater than -1",
+        "message": "child \"lastN\" fails because [\"lastN\" must be greater than -1]",
         "validation": {
           "source": "query",
           "keys": [
@@ -55,7 +55,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"lastN\" must be a number",
+        "message": "child \"lastN\" fails because [\"lastN\" must be a number]",
         "validation": {
           "source": "query",
           "keys": [
@@ -75,7 +75,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"lastN\" must be an integer",
+        "message": "child \"lastN\" fails because [\"lastN\" must be an integer]",
         "validation": {
           "source": "query",
           "keys": [
@@ -121,7 +121,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"hLimit\" must be greater than -1",
+        "message": "child \"hLimit\" fails because [\"hLimit\" must be greater than -1]",
         "validation": {
           "source": "query",
           "keys": [
@@ -141,7 +141,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"hOffset\" must be greater than -1",
+        "message": "child \"hOffset\" fails because [\"hOffset\" must be greater than -1]",
         "validation": {
           "source": "query",
           "keys": [
@@ -239,7 +239,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"aggrMethod\" with value \"avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/",
+        "message": "child \"aggrMethod\" fails because [\"aggrMethod\" with value \"avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/]",
         "validation": {
           "source": "query",
           "keys": [
@@ -259,7 +259,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"aggrMethod\" with value \"sum,avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/",
+        "message": "child \"aggrMethod\" fails because [\"aggrMethod\" with value \"sum,avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/]",
         "validation": {
           "source": "query",
           "keys": [
@@ -279,7 +279,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"aggrPeriod\" must be one of [month, day, hour, minute, second]",
+        "message": "child \"aggrPeriod\" fails because [\"aggrPeriod\" must be one of [month, day, hour, minute, second]]",
         "validation": {
           "source": "query",
           "keys": [
@@ -325,7 +325,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"dateFrom\" must be a valid date",
+        "message": "child \"dateFrom\" fails because [\"dateFrom\" must be a number of milliseconds or valid date string]",
         "validation": {
           "source": "query",
           "keys": [
@@ -345,7 +345,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"dateTo\" must be a valid date",
+        "message": "child \"dateTo\" fails because [\"dateTo\" must be a number of milliseconds or valid date string]",
         "validation": {
           "source": "query",
           "keys": [
@@ -365,7 +365,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"count\" must be a boolean",
+        "message": "child \"count\" fails because [\"count\" must be a boolean]",
         "validation": {
           "source": "query",
           "keys": [
@@ -440,7 +440,7 @@
       },
       "body": {
         "error": "BadRequest",
-        "description": "\"type\" is required"
+        "description": "child \"type\" fails because [\"type\" is required]"
       }
     }
   },
@@ -466,7 +466,7 @@
       },
       "body": {
         "error": "BadRequest",
-        "description": "\"lastN\" must be greater than -1"
+        "description": "child \"lastN\" fails because [\"lastN\" must be greater than -1]"
       }
     }
   },
@@ -492,7 +492,7 @@
       },
       "body": {
         "error": "BadRequest",
-        "description": "\"aggrMethod\" with value \"avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/"
+        "description": "child \"aggrMethod\" fails because [\"aggrMethod\" with value \"avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/]"
       }
     }
   },
@@ -505,7 +505,7 @@
       },
       "body": {
         "error": "BadRequest",
-        "description": "\"aggrPeriod\" must be one of [month, day, hour, minute, second]"
+        "description": "child \"aggrPeriod\" fails because [\"aggrPeriod\" must be one of [month, day, hour, minute, second]]"
       }
     }
   },
@@ -518,7 +518,7 @@
       },
       "body": {
         "error": "BadRequest",
-        "description": "\"dateFrom\" must be a valid date"
+        "description": "child \"dateFrom\" fails because [\"dateFrom\" must be a number of milliseconds or valid date string]"
       }
     }
   },
@@ -619,7 +619,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"level\" must be one of [FATAL, ERROR, WARNING, INFO, DEBUG]",
+        "message": "child \"level\" fails because [\"level\" must be one of [FATAL, ERROR, WARNING, INFO, DEBUG]]",
         "validation": {
           "source": "query",
           "keys": [
@@ -639,7 +639,7 @@
       "body": {
         "statusCode": 400,
         "error": "Bad Request",
-        "message": "\"level\" is required",
+        "message": "child \"level\" fails because [\"level\" is required]",
         "validation": {
           "source": "query",
           "keys": [
