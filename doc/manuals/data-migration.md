@@ -27,19 +27,18 @@ which will present the command help information:
 ```text
 Usage: sthDatabaseModelTool [options]
 
-  Options:
-
-    -h, --help                         output usage information
-    -V, --version                      output the version number
-    -a, --analysis                     prints the results of the data model analysis including the databases and collections which need to be migrated to the currently configured data model (mandatory if not -m or --migrate)
-    -m, --migrate                      migrates to the currently configured data model all the databases and collections which has been created using a distinct data model (mandatory if not -a or --analysis)
-    -v, --verbose [documents]          shows migration progress information if the number of documents to migrate in the collection is bigger or equal to the optional value passed (1 if no value passed)
-    -r, --remove-collection            the original data model collection will be removed to avoid conflict if migrating back to that data model in the future
-    -u, --update-collection            the migration will take place even if the target collections already exist combining the data of the original and target collections (use this option with special care since the migration operation is not idempotent for the aggregated data collections)
-    -f, --full                         the migration will continue with the pending collections in case a previous collection throws an error and cannot be migrated (it is recommended to be used with the -r option to avoid subsequent  migrations of the same aggregated data collections)
-    -d, --database <databaseName>      only this database will be taken into consideration for the analysis and/or migration process
-    -c, --collection <collectionName>  only this collection will be taken info consideration, a database is mandatory if a collection is set
-    -x, --dictionary <dictionary>      the path to a file including a dictionary to resolve the names of the collections to be migrated to their associated data (i.e., service path, entity id, entity type, attribute name and attribute type) (it is expected as a CSV file with lines including the following info: <collection-name>,<service-path>,<entity-id>,<entity-type>,<attribute-name>,<attribute-type>, some of which may not apply and can be left as blank)
+Options:
+  -V, --version                      output the version number
+  -a, --analysis                     prints the results of the data model analysis including the databases and collections which need to be migrated to the currently configured data model (mandatory if not -m or --migrate)
+  -m, --migrate                      migrates to the currently configured data model all the databases and collections which has been created using a distinct data model (mandatory if not -a or --analysis)
+  -v, --verbose [documents]          shows migration progress information if the number of documents to migrate in the collection is bigger or equal to the optional value passed (1 if no value passed)
+  -r, --remove-collection            the original data model collection will be removed to avoid conflict if migrating back to that data model in the future
+  -u, --update-collection            the migration will take place even if the target collections already exist combining the data of the original and target collections (use this option with special care since the migration operation is not idempotent for the aggregated data collections)
+  -f, --full                         the migration will continue with the pending collections in case a previous collection throws an error and cannot be migrated (it is recommended to be used with the -r option to avoid subsequent  migrations of the same aggregated data collections)
+  -d, --database <databaseName>      only this database will be taken into consideration for the analysis and/or migration process
+  -c, --collection <collectionName>  only this collection will be taken info consideration, a database is mandatory if a collection is set
+  -x, --dictionary <dictionary>      the path to a file including a dictionary to resolve the names of the collections to be migrated to their associated data (i.e., service path, entity id, entity type, attribute name and attribute type) (it is expected as a CSV file with lines including the following info: <collection-name>,<service-path>,<entity-id>,<entity-type>,<attribute-name>,<attribute-type>, some of which may not apply and can be left as blank)
+  -h, --help                         display help for command
 ```
 
 Special care should be taken when requesting a data model migration since the migration of aggregated time series

@@ -83,15 +83,14 @@ which will present the command help information:
 ```text
 Usage: sthDatabaseNameMapperTool [options]
 
-  Options:
-
-    -h, --help                         output usage information
-    -V, --version                      output the version number
-    -m, --map                          Shows a report regarding the result of the mapping process if applied to databases and collections of a specific STH instance (either the -m or -u options are mandatory)
-    -u, --unmap                        Shows a report regarding the result of the unmapping process if applied to databases and collections of a specific STH instance (either the -e or -d options are mandatory)
-    -f, --force                        Forces the mapping (-m) or unmapping (-u) process and consequently the databases will be renamed
-    -b, --database <databaseName>      Limits the mapping or unmapping process to certain database
-    -c, --collection <collectionName>  Limits the mapping or unmapping process to certain collection
+Options:
+  -V, --version                      output the version number
+  -m, --map                          Shows a report regarding the result of the mapping process if applied to databases and collections of a specific STH instance (either the -m or -u options are mandatory)
+  -u, --unmap                        Shows a report regarding the result of the unmapping process if applied to databases and collections of a specific STH instance (either the -e or -d options are mandatory)
+  -f, --force                        Forces the mapping (-m) or unmapping (-u) process and consequently the databases will be renamed
+  -b, --database <databaseName>      Limits the mapping or unmapping process to certain database
+  -c, --collection <collectionName>  Limits the mapping or unmapping process to certain collection
+  -h, --help                         display help for command
 ```
 
 You can use the `sthDatabaseNameMapperTool` command-line tool to analyse your STH component databases and to get reports
