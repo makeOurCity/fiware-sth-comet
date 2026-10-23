@@ -912,7 +912,10 @@ function aggregatedDataAvailableSinceDateTest(ngsiVersion, params, done) {
             break;
     }
 
-    let value, valueSum, valueSum2, valueOccur;
+    let value;
+    let valueSum;
+    let valueSum2;
+    let valueOccur;
     const aggrMethods = aggrMethod.split(',');
 
     for (let i = 0; i < aggrMethods.length; i++) {
