@@ -21,8 +21,6 @@
  * please contact with: [german.torodelvalle@telefonica.com]
  */
 
-/* eslint-disable consistent-return */
-
 const ROOT_PATH = require('app-root-path');
 const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthDatabaseNameMapper = require(ROOT_PATH + '/lib/database/model/sthDatabaseNameMapper');

@@ -230,7 +230,6 @@ function executeCommand() {
     }
 }
 
-/* eslint-disable-next-line no-useless-concat */
 program
     .version(version)
     .option(
