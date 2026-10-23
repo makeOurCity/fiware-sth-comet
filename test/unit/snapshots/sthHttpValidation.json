@@ -1,0 +1,680 @@
+{
+  "v1NoQuery": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "A combination of the following query params is required: lastN, hLimit and hOffset, filetype, or aggrMethod and aggrPeriod",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN",
+            "hLimit",
+            "hOffset",
+            "filetype",
+            "aggrMethod",
+            "aggrPeriod",
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1LastNNegative": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=-1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"lastN\" must be greater than -1",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN"
+          ]
+        }
+      }
+    }
+  },
+  "v1LastNNotANumber": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=abc",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"lastN\" must be a number",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN"
+          ]
+        }
+      }
+    }
+  },
+  "v1LastNDecimal": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1.5",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"lastN\" must be an integer",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN"
+          ]
+        }
+      }
+    }
+  },
+  "v1LastNOverMaxPageSize": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=101",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "hLimit <= lastN <= config.maxPageSize",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN",
+            "hLimit",
+            "hOffset",
+            "filetype",
+            "aggrMethod",
+            "aggrPeriod",
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1HLimitNegative": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?hLimit=-1&hOffset=0",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"hLimit\" must be greater than -1",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "hLimit"
+          ]
+        }
+      }
+    }
+  },
+  "v1HOffsetNegative": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?hLimit=1&hOffset=-1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"hOffset\" must be greater than -1",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "hOffset"
+          ]
+        }
+      }
+    }
+  },
+  "v1HLimitWithoutHOffset": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?hLimit=1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "A combination of the following query params is required: lastN, hLimit and hOffset, filetype, or aggrMethod and aggrPeriod",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN",
+            "hLimit",
+            "hOffset",
+            "filetype",
+            "aggrMethod",
+            "aggrPeriod",
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1HLimitOverMaxPageSize": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?hLimit=101&hOffset=0",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "hLimit <= lastN <= config.maxPageSize",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN",
+            "hLimit",
+            "hOffset",
+            "filetype",
+            "aggrMethod",
+            "aggrPeriod",
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1HLimitGreaterThanLastN": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=2&hLimit=3&hOffset=0",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "hLimit <= lastN <= config.maxPageSize",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN",
+            "hLimit",
+            "hOffset",
+            "filetype",
+            "aggrMethod",
+            "aggrPeriod",
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1AggrMethodInvalid": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=avg&aggrPeriod=hour",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"aggrMethod\" with value \"avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "aggrMethod"
+          ]
+        }
+      }
+    }
+  },
+  "v1AggrMethodListInvalid": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum,avg&aggrPeriod=hour",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"aggrMethod\" with value \"sum,avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "aggrMethod"
+          ]
+        }
+      }
+    }
+  },
+  "v1AggrPeriodInvalid": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum&aggrPeriod=week",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"aggrPeriod\" must be one of [month, day, hour, minute, second]",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "aggrPeriod"
+          ]
+        }
+      }
+    }
+  },
+  "v1AggrMethodWithoutAggrPeriod": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?aggrMethod=sum",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "A combination of the following query params is required: lastN, hLimit and hOffset, filetype, or aggrMethod and aggrPeriod",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "lastN",
+            "hLimit",
+            "hOffset",
+            "filetype",
+            "aggrMethod",
+            "aggrPeriod",
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1DateFromInvalid": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1&dateFrom=notADate",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"dateFrom\" must be a valid date",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "dateFrom"
+          ]
+        }
+      }
+    }
+  },
+  "v1DateToInvalid": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1&dateTo=2026-13-45",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"dateTo\" must be a valid date",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "dateTo"
+          ]
+        }
+      }
+    }
+  },
+  "v1CountInvalid": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1&count=maybe",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"count\" must be a boolean",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "count"
+          ]
+        }
+      }
+    }
+  },
+  "v1UnknownQueryParam": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1&foo=bar",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"foo\" is not allowed",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "foo"
+          ]
+        }
+      }
+    }
+  },
+  "v1MissingService": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "child \"fiware-service\" fails because [fiware-service is required]",
+        "validation": {
+          "source": "headers",
+          "keys": []
+        }
+      }
+    }
+  },
+  "v1MissingServicePath": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "child \"fiware-servicepath\" fails because [fiware-servicepath is required]",
+        "validation": {
+          "source": "headers",
+          "keys": []
+        }
+      }
+    }
+  },
+  "v2MissingType": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?lastN=1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "\"type\" is required"
+      }
+    }
+  },
+  "v2NoQuery": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "A combination of the following query params is required: lastN, hLimit and hOffset, filetype, or aggrMethod and aggrPeriod"
+      }
+    }
+  },
+  "v2LastNNegative": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=-1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "\"lastN\" must be greater than -1"
+      }
+    }
+  },
+  "v2HLimitGreaterThanLastN": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=2&hLimit=3&hOffset=0",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "hLimit <= lastN <= config.maxPageSize"
+      }
+    }
+  },
+  "v2AggrMethodInvalid": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&aggrMethod=avg&aggrPeriod=hour",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "\"aggrMethod\" with value \"avg\" fails to match the required pattern: /^(min|max|sum|sum2|occur|all)(,(min|max|sum|sum2|occur|all))*$/"
+      }
+    }
+  },
+  "v2AggrPeriodInvalid": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&aggrMethod=sum&aggrPeriod=week",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "\"aggrPeriod\" must be one of [month, day, hour, minute, second]"
+      }
+    }
+  },
+  "v2DateFromInvalid": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=1&dateFrom=notADate",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "\"dateFrom\" must be a valid date"
+      }
+    }
+  },
+  "v2MissingService": {
+    "request": "GET /STH/v2/entities/E1/attrs/temperature?type=T&lastN=1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "error": "BadRequest",
+        "description": "child \"fiware-service\" fails because [fiware-service is required]"
+      }
+    }
+  },
+  "notifyWithoutAttributes": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "At least one attribute with an aggregatable value should be included in the notification",
+        "validation": {
+          "source": "payload",
+          "keys": [
+            "attributes"
+          ]
+        }
+      }
+    }
+  },
+  "notifyMissingService": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "child \"fiware-service\" fails because [fiware-service is required]",
+        "validation": {
+          "source": "headers",
+          "keys": []
+        }
+      }
+    }
+  },
+  "notifyMissingServicePath": {
+    "request": "POST /notify",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "child \"fiware-servicepath\" fails because [fiware-servicepath is required]",
+        "validation": {
+          "source": "headers",
+          "keys": []
+        }
+      }
+    }
+  },
+  "deleteMissingService": {
+    "request": "DELETE /STH/v1/contextEntities/type/T/id/E1",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "child \"fiware-service\" fails because [fiware-service is required]",
+        "validation": {
+          "source": "headers",
+          "keys": []
+        }
+      }
+    }
+  },
+  "setLogLevelInvalid": {
+    "request": "PUT /admin/log?level=VERBOSE",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"level\" must be one of [FATAL, ERROR, WARNING, INFO, DEBUG]",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "level"
+          ]
+        }
+      }
+    }
+  },
+  "setLogLevelMissing": {
+    "request": "PUT /admin/log",
+    "response": {
+      "statusCode": 400,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": "\"level\" is required",
+        "validation": {
+          "source": "query",
+          "keys": [
+            "level"
+          ]
+        }
+      }
+    }
+  },
+  "unknownRoute": {
+    "request": "GET /unknown/route",
+    "response": {
+      "statusCode": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "validation-unknownRoute"
+      },
+      "body": {
+        "statusCode": 404,
+        "error": "Not Found"
+      }
+    }
+  },
+  "unsupportedMethod": {
+    "request": "PATCH /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=1",
+    "response": {
+      "statusCode": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "validation-unsupportedMethod"
+      },
+      "body": {
+        "statusCode": 404,
+        "error": "Not Found"
+      }
+    }
+  }
+}

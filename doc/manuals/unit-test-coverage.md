@@ -61,3 +61,43 @@ SAMPLES=100 START_DATE=2014-02-14T00:00:00 END_DATE=2014-02-14T23:59:59 CLEAN=fa
 
 In case of executing the tests with the `CLEAN` option set to false, the contents of the database can be inspected using
 the MongoDB (`mongo`) shell.
+
+## Snapshot (characterization) tests
+
+Some tests compare the complete responses of the HTTP API (status code, relevant headers and body) with snapshots stored
+as JSON files in the `test/unit/snapshots/` directory:
+
+-   `sthHttpSnapshot.json`: notifications, raw and aggregated data retrieval using the NGSI v1 and NGSI v2 APIs, CSV
+    download and data removal.
+-   `sthHttpValidation.json`: responses to invalid requests, including the error messages.
+-   `sthCors.json`: responses with CORS enabled and disabled.
+-   `sthDatabaseOutage.json`: responses while the connection to the database is closed.
+
+The values which change from run to run or depend on the environment, such as the generated correlators, the ObjectIds,
+the name of the CSV files and the time zone names of the dates in the CSV files, are replaced by placeholders (the dates
+are formatted in UTC). The snapshots were recorded with the code previous to the upgrade of its dependencies running on
+Node.js 14, so that any change in the behaviour of the API makes the tests fail.
+
+When a change of the behaviour is intended, record the snapshots again and review the differences before committing
+them:
+
+```bash
+UPDATE_SNAPSHOTS=1 npm test
+git diff test/unit/snapshots/
+```
+
+The snapshots which are not recorded again (for example, because the request was removed from the test) are kept and
+have to be removed by hand.
+
+## Database outage test
+
+An additional test stops and starts a MongoDB server run in a Docker container to check that the STH component
+reconnects automatically. It is skipped unless the `STH_TEST_DOCKER_MONGO` environment variable is set to the name of
+the container. The container is stopped and started again, so it must be started without the `--rm` option, and the
+`docker` command must be available where the tests are run:
+
+```bash
+docker run -d --name sth-mongo-outage -p 27018:27017 mongo:8.0
+DB_URI=localhost:27018 STH_TEST_DOCKER_MONGO=sth-mongo-outage npx mocha test/unit/sthDatabaseOutage_test.js --exit
+docker rm -f sth-mongo-outage
+```
