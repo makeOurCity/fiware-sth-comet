@@ -87,8 +87,8 @@ function dropCollection(type, dataModel, callback) {
             ? sthDatabaseNaming.getRawCollectionName(COLLECTION_NAME_PARAMS)
             : sthDatabaseNaming.getAggregatedCollectionName(COLLECTION_NAME_PARAMS);
 
-    sthDatabase.connection.dropCollection(collectionName, function(err) {
-        if (err && err.code === 26 && err.name === 'MongoError' && err.message === 'ns not found') {
+    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName), function(err) {
+        if (err && err.code === 26) {
             // The collection does not exist
             return process.nextTick(callback);
         }
@@ -135,11 +135,8 @@ function insertData(dataType, aggregationType, dataModel, callback) {
             ? sthDatabaseNaming.getRawCollectionName(COLLECTION_NAME_PARAMS)
             : sthDatabaseNaming.getAggregatedCollectionName(COLLECTION_NAME_PARAMS);
 
-    sthDatabase.connection.collection(collectionName, function(err, collection) {
-        if (err) {
-            return process.nextTick(callback.bind(null, err));
-        }
-
+    const collection = sthDatabase.connection.collection(collectionName);
+    process.nextTick(function() {
         INSERTION_PARAMS = {
             collection,
             recvTime: ATTRIBUTE.RECV_TIME[dataModel],
@@ -513,13 +510,15 @@ function getQuery4RawDataMigrationTest(originDataModel, targetDataModel) {
  * @param  {Function} callback       The callback
  */
 function expectCollectionRemoved(collectionName, callback) {
-    sthDatabase.connection.collection(collectionName, { strict: true }, function(err) {
-        let error;
-        if (err.message.indexOf('does not exist') === -1) {
-            error = err;
+    sthUtils.promiseToCallback(
+        sthDatabase.connection.listCollections({ name: collectionName }, { nameOnly: true }).toArray(),
+        function(err, collections) {
+            if (err) {
+                return callback(err);
+            }
+            callback(collections.length ? new Error('Collection ' + collectionName + ' was not removed') : undefined);
         }
-        callback(error);
-    });
+    );
 }
 
 /**
@@ -539,10 +538,13 @@ function expectCollectionRemoved(collectionName, callback) {
  * @param  {Function} done   mocha's done function
  */
 function expectRawDataMigration(params, options, done) {
-    sthDatabase.connection.collection(params.targetCollectionName, function(err, targetCollection) {
-        targetCollection
-            .find(getQuery4RawDataMigrationTest(params.originDataModel, params.targetDataModel))
-            .toArray(function(err, results) {
+    const targetCollection = sthDatabase.connection.collection(params.targetCollectionName);
+    process.nextTick(function() {
+        sthUtils.promiseToCallback(
+            targetCollection
+                .find(getQuery4RawDataMigrationTest(params.originDataModel, params.targetDataModel))
+                .toArray(),
+            function(err, results) {
                 if (err) {
                     return done(err);
                 }
@@ -552,9 +554,11 @@ function expectRawDataMigration(params, options, done) {
                         ? ATTRIBUTE.VALUE.NUMERIC
                         : params.originDataModel
                 );
-                targetCollection
-                    .find(getQuery4RawDataMigrationTest(params.targetDataModel, params.targetDataModel))
-                    .toArray(function(err, results) {
+                sthUtils.promiseToCallback(
+                    targetCollection
+                        .find(getQuery4RawDataMigrationTest(params.targetDataModel, params.targetDataModel))
+                        .toArray(),
+                    function(err, results) {
                         if (err) {
                             return done(err);
                         }
@@ -573,8 +577,10 @@ function expectRawDataMigration(params, options, done) {
                         } else {
                             done();
                         }
-                    });
-            });
+                    }
+                );
+            }
+        );
     });
 }
 
@@ -633,41 +639,44 @@ function getAggregatedEntry4Offset(points, offset) {
  * @param  {Function} callback         The callback
  */
 function expectAggregatedDataMigration4Resolution(params, options, callback) {
-    params.targetCollection
-        .find(getQuery4AggregatedDataMigrationTest(params.originDataModel, params.targetDataModel, params.resolution))
-        .toArray(function(err, results) {
-            if (err) {
-                return process.nextTick(callback.bind(this, err));
-            }
-            expect(results.length).to.equal(1);
-            const point = getAggregatedEntry4Offset(
-                results[0].points,
-                sthUtils.getOffset(params.resolution, ATTRIBUTE.RECV_TIME[params.originDataModel])
-            );
-            if (options.updateCollection) {
-                if (point.sum) {
-                    expect(point.samples).to.equal(2);
-                    expect(point.sum).to.equal(ATTRIBUTE.VALUE.NUMERIC * 2);
-                    expect(point.sum2).to.equal(Math.pow(ATTRIBUTE.VALUE.NUMERIC, 2) * 2);
-                    expect(point.min).to.equal(ATTRIBUTE.VALUE.NUMERIC);
-                    expect(point.max).to.equal(ATTRIBUTE.VALUE.NUMERIC);
-                } else {
-                    expect(point.samples).to.equal(2);
-                    expect(point.occur[params.originDataModel]).to.equal(1);
-                    expect(point.occur[params.targetDataModel]).to.equal(1);
-                }
-            } else if (point.sum) {
-                expect(point.samples).to.equal(1);
-                expect(point.sum).to.equal(ATTRIBUTE.VALUE.NUMERIC);
-                expect(point.sum2).to.equal(Math.pow(ATTRIBUTE.VALUE.NUMERIC, 2));
+    const query = getQuery4AggregatedDataMigrationTest(
+        params.originDataModel,
+        params.targetDataModel,
+        params.resolution
+    );
+    sthUtils.promiseToCallback(params.targetCollection.find(query).toArray(), function(err, results) {
+        if (err) {
+            return process.nextTick(callback.bind(this, err));
+        }
+        expect(results.length).to.equal(1);
+        const point = getAggregatedEntry4Offset(
+            results[0].points,
+            sthUtils.getOffset(params.resolution, ATTRIBUTE.RECV_TIME[params.originDataModel])
+        );
+        if (options.updateCollection) {
+            if (point.sum) {
+                expect(point.samples).to.equal(2);
+                expect(point.sum).to.equal(ATTRIBUTE.VALUE.NUMERIC * 2);
+                expect(point.sum2).to.equal(Math.pow(ATTRIBUTE.VALUE.NUMERIC, 2) * 2);
                 expect(point.min).to.equal(ATTRIBUTE.VALUE.NUMERIC);
                 expect(point.max).to.equal(ATTRIBUTE.VALUE.NUMERIC);
             } else {
-                expect(point.samples).to.equal(1);
+                expect(point.samples).to.equal(2);
                 expect(point.occur[params.originDataModel]).to.equal(1);
+                expect(point.occur[params.targetDataModel]).to.equal(1);
             }
-            return process.nextTick(callback);
-        });
+        } else if (point.sum) {
+            expect(point.samples).to.equal(1);
+            expect(point.sum).to.equal(ATTRIBUTE.VALUE.NUMERIC);
+            expect(point.sum2).to.equal(Math.pow(ATTRIBUTE.VALUE.NUMERIC, 2));
+            expect(point.min).to.equal(ATTRIBUTE.VALUE.NUMERIC);
+            expect(point.max).to.equal(ATTRIBUTE.VALUE.NUMERIC);
+        } else {
+            expect(point.samples).to.equal(1);
+            expect(point.occur[params.originDataModel]).to.equal(1);
+        }
+        return process.nextTick(callback);
+    });
 }
 
 /**
@@ -689,7 +698,9 @@ function expectAggregatedDataMigration4Resolution(params, options, callback) {
 function expectAggregatedDataMigration(params, options, done) {
     async.waterfall(
         [
-            async.apply(sthDatabase.connection.collection.bind(sthDatabase.connection, params.targetCollectionName)),
+            function getTargetCollection(callback) {
+                process.nextTick(callback, null, sthDatabase.connection.collection(params.targetCollectionName));
+            },
             function onTargetCollection(targetCollection, callback) {
                 const expect4Resolution = [];
                 sthConfig.AGGREGATION_BY.forEach(function(resolution) {

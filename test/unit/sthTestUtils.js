@@ -342,8 +342,8 @@ function dropRawEventCollectionTest(done) {
     });
     /* eslint-disable-next-line no-console */
     console.log(collectionName4Events);
-    sthDatabase.connection.dropCollection(collectionName4Events, function(err) {
-        if (err && err.message === 'ns not found') {
+    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName4Events), function(err) {
+        if (err && err.code === 26) {
             err = null;
         }
         return done(err);
@@ -362,8 +362,8 @@ function dropAggregatedDataCollectionTest(done) {
         entityType: sthTestConfig.ENTITY_TYPE,
         attrName: sthTestConfig.ATTRIBUTE_NAME
     });
-    sthDatabase.connection.dropCollection(collectionName4Aggregated, function(err) {
-        if (err && err.message === 'ns not found') {
+    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName4Aggregated), function(err) {
+        if (err && err.code === 26) {
             err = null;
         }
         return done(err);
