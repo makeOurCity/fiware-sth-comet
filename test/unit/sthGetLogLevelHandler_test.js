@@ -27,7 +27,6 @@ const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthDatabaseNaming = require(ROOT_PATH + '/lib/database/model/sthDatabaseNaming');
 const sthTestConfig = require(ROOT_PATH + '/test/unit/sthTestConfiguration');
 const sthTestHelper = require(ROOT_PATH + '/test/unit/sthTestUtils.js');
-const hapi = require('hapi');
 const expect = require('expect.js');
 const sthHttpTestClient = require(ROOT_PATH + '/test/unit/sthHttpTestClient');
 
@@ -68,7 +67,7 @@ describe('sthGetLogLevelHandler tests', function() {
         it('should start gracefully', function(done) {
             sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err, server) {
                 expect(err).to.not.be.ok();
-                expect(server).to.be.a(hapi.Server);
+                expect(server.info.started).to.be.greaterThan(0);
                 done();
             });
         });
