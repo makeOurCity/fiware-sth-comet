@@ -82,15 +82,53 @@ describe('sthHttpTestClient tests', function() {
         });
     });
 
+    describe('assertResponse()', function() {
+        it('should pass the error and the response to the assertions and call done() if they succeed', function() {
+            const response = { statusCode: 200 };
+            let receivedArgs;
+            let doneArgs;
+            const callback = sthHttpTestClient.assertResponse(
+                function(...args) {
+                    doneArgs = args;
+                },
+                function(err, res) {
+                    receivedArgs = [err, res];
+                }
+            );
+            callback(null, response);
+            expect(receivedArgs).to.eql([null, response]);
+            expect(doneArgs).to.eql([]);
+        });
+
+        it('should call done() with the assertion error instead of throwing it', function() {
+            const assertionError = new Error('assertion failed');
+            let doneArgs;
+            const callback = sthHttpTestClient.assertResponse(
+                function(...args) {
+                    doneArgs = args;
+                },
+                function() {
+                    throw assertionError;
+                }
+            );
+            expect(callback)
+                .withArgs(null, {})
+                .to.not.throwException();
+            expect(doneArgs).to.eql([assertionError]);
+        });
+    });
+
     describe('sendRequest()', function() {
         it('should resolve with the status code, the headers and the body of the response', function(done) {
-            sthHttpTestClient.sendRequest({ port, method: 'GET', path: '/some/path' }, function(err, response) {
-                expect(err).to.equal(null);
-                expect(response.statusCode).to.equal(201);
-                expect(response.headers['content-type']).to.equal('application/json');
-                expect(JSON.parse(response.body)).to.eql({ echo: '' });
-                done();
-            });
+            sthHttpTestClient.sendRequest(
+                { port, method: 'GET', path: '/some/path' },
+                sthHttpTestClient.assertResponse(done, function(err, response) {
+                    expect(err).to.equal(null);
+                    expect(response.statusCode).to.equal(201);
+                    expect(response.headers['content-type']).to.equal('application/json');
+                    expect(JSON.parse(response.body)).to.eql({ echo: '' });
+                })
+            );
         });
 
         it('should send the method, the path and the headers of the request', function(done) {
@@ -101,40 +139,50 @@ describe('sthHttpTestClient tests', function() {
                     path: '/some/path?query=value',
                     headers: { 'Fiware-Service': 'testservice' }
                 },
-                function(err) {
+                sthHttpTestClient.assertResponse(done, function(err) {
                     expect(err).to.equal(null);
                     expect(lastRequest.method).to.equal('DELETE');
                     expect(lastRequest.url).to.equal('/some/path?query=value');
                     expect(lastRequest.headers['fiware-service']).to.equal('testservice');
-                    done();
-                }
+                })
+            );
+        });
+
+        it('should not keep the connection alive so that stopping the server is not delayed', function(done) {
+            sthHttpTestClient.sendRequest(
+                { port, method: 'GET', path: '/' },
+                sthHttpTestClient.assertResponse(done, function(err) {
+                    expect(err).to.equal(null);
+                    expect(lastRequest.headers.connection).to.equal('close');
+                })
             );
         });
 
         it('should send an object body serialized as JSON with its content type and length', function(done) {
             const body = { subscriptionId: 'x', contextResponses: [] };
-            sthHttpTestClient.sendRequest({ port, method: 'POST', path: '/notify', body }, function(err) {
-                expect(err).to.equal(null);
-                expect(JSON.parse(lastRequest.body)).to.eql(body);
-                expect(lastRequest.headers['content-type']).to.equal('application/json');
-                expect(lastRequest.headers['content-length']).to.equal(String(JSON.stringify(body).length));
-                done();
-            });
+            sthHttpTestClient.sendRequest(
+                { port, method: 'POST', path: '/notify', body },
+                sthHttpTestClient.assertResponse(done, function(err) {
+                    expect(err).to.equal(null);
+                    expect(JSON.parse(lastRequest.body)).to.eql(body);
+                    expect(lastRequest.headers['content-type']).to.equal('application/json');
+                    expect(lastRequest.headers['content-length']).to.equal(String(JSON.stringify(body).length));
+                })
+            );
         });
 
         it('should fail with an ETIMEDOUT error if no response is received in time', function(done) {
             const startTime = Date.now();
-            sthHttpTestClient.sendRequest({ port, method: 'POST', path: '/never-responds', timeout: 200 }, function(
-                err,
-                response
-            ) {
-                expect(err).to.be.an(Error);
-                expect(err.code).to.equal('ETIMEDOUT');
-                expect(err.message).to.contain('POST /never-responds');
-                expect(response).to.equal(undefined);
-                expect(Date.now() - startTime).to.be.lessThan(1000);
-                done();
-            });
+            sthHttpTestClient.sendRequest(
+                { port, method: 'POST', path: '/never-responds', timeout: 200 },
+                sthHttpTestClient.assertResponse(done, function(err, response) {
+                    expect(err).to.be.an(Error);
+                    expect(err.code).to.equal('ETIMEDOUT');
+                    expect(err.message).to.contain('POST /never-responds');
+                    expect(response).to.equal(undefined);
+                    expect(Date.now() - startTime).to.be.lessThan(1000);
+                })
+            );
         });
 
         it('should not call back again once the request has timed out', function(done) {
@@ -148,8 +196,7 @@ describe('sthHttpTestClient tests', function() {
                     res.destroy();
                 });
                 setTimeout(function() {
-                    expect(calls).to.equal(1);
-                    done();
+                    done(calls === 1 ? undefined : new Error('Expected 1 callback call but got ' + calls));
                 }, 100);
             }, 200);
         });
@@ -159,11 +206,13 @@ describe('sthHttpTestClient tests', function() {
             unreachableServer.listen(0, 'localhost', function() {
                 const unreachablePort = unreachableServer.address().port;
                 unreachableServer.close(function() {
-                    sthHttpTestClient.sendRequest({ port: unreachablePort, method: 'GET', path: '/' }, function(err) {
-                        expect(err).to.be.an(Error);
-                        expect(err.code).to.equal('ECONNREFUSED');
-                        done();
-                    });
+                    sthHttpTestClient.sendRequest(
+                        { port: unreachablePort, method: 'GET', path: '/' },
+                        sthHttpTestClient.assertResponse(done, function(err) {
+                            expect(err).to.be.an(Error);
+                            expect(err.code).to.equal('ECONNREFUSED');
+                        })
+                    );
                 });
             });
         });

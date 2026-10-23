@@ -81,7 +81,10 @@ function sendRequest(options, callback) {
             port: options.port || sthConfig.STH_PORT,
             method: options.method,
             path: options.path,
-            headers: getHeaders(options.headers, payload)
+            headers: getHeaders(options.headers, payload),
+            // A new connection per request, closed after the response, since idle keep-alive connections
+            //  delay the stop of the hapi server
+            agent: false
         },
         function(res) {
             let body = '';
@@ -109,6 +112,27 @@ function sendRequest(options, callback) {
     req.end(payload);
 }
 
+/**
+ * Returns a sendRequest() callback which runs the provided assertions and notifies their result to mocha
+ *  through the done() function of the test case. Assertion errors are passed to done() instead of being
+ *  thrown from an asynchronous callback, where they would reach the uncaughtException handler registered
+ *  by lib/sth.js, which stops the server and exits the test process
+ * @param {Function} done The done() function of the mocha test case
+ * @param {Function} assertions Function called with the error and the response of the request
+ * @return {Function} The callback to pass to sendRequest()
+ */
+function assertResponse(done, assertions) {
+    return function(err, response) {
+        try {
+            assertions(err, response);
+        } catch (assertionError) {
+            return done(assertionError);
+        }
+        return done();
+    };
+}
+
 module.exports = {
-    sendRequest
+    sendRequest,
+    assertResponse
 };
