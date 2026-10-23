@@ -5,7 +5,7 @@ collection names, as well as other limitations. These restrictions are detailed 
 [MongoDB Limits and Thresholds](https://docs.mongodb.com/manual/reference/limits/) section in the MongoDB documentation.
 
 Since the names of the databases and the collections used by the STH component are composed from the concatenation of
-the values assigned to the service, service path, entity id, entity type and attribute name (depending on the chosen
+the values assigned to the service, service path, entity ID, entity type and attribute name (depending on the chosen
 data model) and we do not want the potential users of the STH component to inherit the restrictions imposed by MongoDB
 (as the database used by the STH component), a mapping mechanism is used before conforming the name of the databases and
 collections if enabled.

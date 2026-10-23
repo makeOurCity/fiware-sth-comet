@@ -222,7 +222,7 @@ The version numbers will change for each release according to the following rule
 -   All version numbers will always follow the common pattern: `X.Y.Z`
 -   _X_ will change only when there are changes in the release breaking backwards compatibility or when there are very
     important changes in the feature set of the component. If _X_ changes, _Y_ should be set to 0.
--   _Y_ will change every time a new version is released. If only _Y_ changes, it means some new features or bug fixes
+-   _Y_ will change every time a new version is released. If only _Y_ changes, it means some new features or bugfixes
     have been released, but the component is just an improved version of the current major (_X_) release.
 -   _Z_ will increment its value as new bugfixes are detected and fixed for each major (_X_) and minor (_Y_) release.
 
