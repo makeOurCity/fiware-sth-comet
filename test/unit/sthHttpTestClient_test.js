@@ -19,19 +19,24 @@
  */
 
 const ROOT_PATH = require('app-root-path');
+const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
+const sthServerUtils = require(ROOT_PATH + '/lib/server/utils/sthServerUtils');
 const sthHttpTestClient = require(ROOT_PATH + '/test/unit/sthHttpTestClient');
 const expect = require('expect.js');
 const http = require('http');
 
 /**
- * Starts a plain Node.js HTTP server listening on a random port
+ * Starts a plain Node.js HTTP server listening on a random port of the address the STH server would listen on,
+ *  since the test client sends the requests to the STH host by default
  * @param {Function} handler The request handler of the server
  * @param {Function} callback Callback function called with the server and the port it listens on
  */
 function startPlainServer(handler, callback) {
     const server = http.createServer(handler);
-    server.listen(0, 'localhost', function() {
-        callback(server, server.address().port);
+    sthServerUtils.getListenAddress(sthConfig.STH_HOST).then(function(address) {
+        server.listen(0, address, function() {
+            callback(server, server.address().port);
+        });
     });
 }
 
@@ -202,9 +207,7 @@ describe('sthHttpTestClient tests', function() {
         });
 
         it('should fail with the connection error if the server is not reachable', function(done) {
-            const unreachableServer = http.createServer();
-            unreachableServer.listen(0, 'localhost', function() {
-                const unreachablePort = unreachableServer.address().port;
+            startPlainServer(undefined, function(unreachableServer, unreachablePort) {
                 unreachableServer.close(function() {
                     sthHttpTestClient.sendRequest(
                         { port: unreachablePort, method: 'GET', path: '/' },
