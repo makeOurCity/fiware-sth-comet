@@ -21,13 +21,24 @@
 /*
  * E2E tests sending real HTTP requests to a running STH server.
  *
- * They detect that, with hapi 16 on Node.js 16+, the server never sends a (complete) response to the requests
- *  with a payload, such as POST /notify and DELETE, since hapi 16 handles the 'close' event emitted by Node.js
- *  once the request body has been read as a client disconnection (see node_modules/hapi/lib/request.js).
+ * They detect that, with hapi 16 on Node.js 16+, the server does not send a (complete) response to the requests
+ *  whose payload hapi reads, such as POST /notify and DELETE, since hapi 16 handles the 'close' event emitted by
+ *  Node.js once the request body has been read as a client disconnection (see node_modules/hapi/lib/request.js).
  *  GET requests are not affected because hapi does not read their payload.
  *
  * Each request times out after a short time, so that a hanging request makes its own test fail fast without
  *  affecting the rest of the test suite.
+ *
+ * Notes about why the previously existing tests did not reveal the problem on Node.js 16+:
+ *  - Most of the POST /notify and DELETE tests are in sth_test.js, which mocha runs last. When the DELETE test
+ *    in sthE2E_test.js timed out, its request callback was called later on and the assertion thrown there
+ *    reached the uncaughtException handler of lib/sth.js, which stops the server. The run ended before
+ *    sth_test.js was executed.
+ *  - The request handlers are executed anyway, only the response is lost. Thus, the data is stored or removed
+ *    and the tests checking it afterwards with GET requests pass.
+ *  - Whether the response is lost depends on the timing between the reply and the 'close' event. For example,
+ *    the 400 - Bad Request response to a notification without attributes, which is replied synchronously, is
+ *    received complete by this client on Node.js 22 and 24, but not on Node.js 16 nor using fetch().
  */
 
 const ROOT_PATH = require('app-root-path');
