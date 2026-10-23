@@ -17,6 +17,9 @@
 
 **This repository is now archived. STH is no longer supported and further development is not envisaged.**
 
+**This is a fork maintained by [makeOurCity](https://github.com/makeOurCity) to keep STH running on current Node.js
+versions. See [About this fork](#about-this-fork).**
+
 The **FIWARE Short Time Historic (STH) - Comet** is in charge of managing (storing and retrieving) historical raw and
 aggregated time series context information about the evolution in time of context data (i.e., entity attribute values)
 registered in an [Orion Context Broker](https://github.com/telefonicaid/fiware-orion) instance.
@@ -32,6 +35,23 @@ Whilst active, this project was part of [FIWARE](https://www.fiware.org/). For m
 | :books: [Documentation](https://fiware-sth-comet.readthedocs.io) | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/core/sth-comet) | <img style="height:1em" src="https://quay.io/static/img/quay_favicon.png"/> [quay.io](https://quay.io/repository/fiware/sth-comet) | :whale: [Docker Hub](https://registry.hub.docker.com/r/telefonicaiot/fiware-sth-comet) | :dart: [Roadmap](https://github.com/telefonicaid/fiware-sth-comet/blob/master/doc/roadmap.md) |
 | --------------------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --- |
 
+
+## About this fork
+
+This repository is a fork of [telefonicaid/fiware-sth-comet](https://github.com/telefonicaid/fiware-sth-comet),
+maintained by [makeOurCity](https://github.com/makeOurCity). The upstream project is no longer developed, so this fork
+keeps STH running on current Node.js LTS versions and updates outdated dependencies.
+
+-   Forked from upstream `master` at commit `64acd0c` on October 23rd, 2026 (upstream release 2.11.0 plus unreleased
+    changes).
+-   The goal is to support Node.js 24 and to update dependencies with known vulnerabilities. See the
+    [tracking issue](https://github.com/makeOurCity/fiware-sth-comet/issues/2) for the plan.
+-   Changes made in this fork are recorded in [CHANGES_NEXT_RELEASE](./CHANGES_NEXT_RELEASE) and in the
+    [change log](./Changelog).
+-   The license is still AGPL-3.0, and the original copyright notices are kept. See [License](#license).
+-   Report issues for this fork in
+    [makeOurCity/fiware-sth-comet](https://github.com/makeOurCity/fiware-sth-comet/issues). The badges, documentation
+    and Docker images linked above refer to the upstream project.
 
 # Contents
 
