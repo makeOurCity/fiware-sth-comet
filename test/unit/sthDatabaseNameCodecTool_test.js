@@ -28,6 +28,7 @@ const async = require('async');
 const expect = require('expect.js');
 const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthDatabase = require(ROOT_PATH + '/lib/database/sthDatabase');
+const sthUtils = require(ROOT_PATH + '/lib/utils/sthUtils');
 const sthDatabaseNameCodec = require(ROOT_PATH + '/lib/database/model/sthDatabaseNameCodec');
 const sthDatabaseNaming = require(ROOT_PATH + '/lib/database/model/sthDatabaseNaming');
 const sthDatabaseNameCodecTool = require(ROOT_PATH + '/lib/database/model/sthDatabaseNameCodecTool');
@@ -91,15 +92,16 @@ function createRawAndAggregatedCollections(callback) {
  * @param  {Function} callback       The callback
  */
 function checkCollectionExists(databaseName, collectionName, callback) {
-    sthDatabase.client
+    const collectionsList = sthDatabase.client
         .db(databaseName)
         .listCollections({ name: collectionName })
-        .toArray(function(err, collections) {
-            if (err) {
-                return process.nextTick(callback.bind(null, err));
-            }
-            return process.nextTick(callback.bind(null, err, collections.length === 1));
-        });
+        .toArray();
+    sthUtils.promiseToCallback(collectionsList, function(err, collections) {
+        if (err) {
+            return process.nextTick(callback.bind(null, err));
+        }
+        return process.nextTick(callback.bind(null, err, collections.length === 1));
+    });
 }
 
 /**
@@ -107,17 +109,18 @@ function checkCollectionExists(databaseName, collectionName, callback) {
  * @param  {Function} callback The callback
  */
 function dropDatabases(callback) {
-    sthDatabase.client.db(DATABASE_NAME.toLowerCase()).dropDatabase(function(err) {
-        if (err) {
-            return process.nextTick(callback.bind(null, err));
-        }
-        sthDatabase.client.db(DATABASE_NAME).dropDatabase(function(err) {
-            if (err) {
-                return process.nextTick(callback.bind(null, err));
-            }
-            sthDatabase.client.db(sthDatabaseNameCodec.encodeDatabaseName(DATABASE_NAME)).dropDatabase(callback);
-        });
-    });
+    const databaseNames = [
+        DATABASE_NAME.toLowerCase(),
+        DATABASE_NAME,
+        sthDatabaseNameCodec.encodeDatabaseName(DATABASE_NAME)
+    ];
+    async.eachSeries(
+        databaseNames,
+        function(databaseName, callback) {
+            sthUtils.promiseToCallback(sthDatabase.client.db(databaseName).dropDatabase(), callback);
+        },
+        callback
+    );
 }
 
 /**
@@ -204,7 +207,10 @@ function shouldNotDetectCollectionTest(encodingFlag, databaseName, callback) {
  */
 function checkDatabaseExists(databaseName, callback) {
     const adminDB = sthDatabase.connection.admin();
-    adminDB.listDatabases(function(err, databases) {
+    sthUtils.promiseToCallback(adminDB.listDatabases(), function(err, databases) {
+        if (err) {
+            return process.nextTick(callback.bind(null, err));
+        }
         let databaseFound = false;
         databases.databases.forEach(function(database) {
             if (database.name === databaseName) {

@@ -7,3 +7,6 @@
 - Upgrade: hapi dep from 16.7.0 to @hapi/hapi ~21.4.11, fixing that POST /notify and DELETE requests are not responded on Node.js 16+ (#5)
 - Upgrade: joi dep from 14.0.6 to ~17.13.8, keeping the validation error messages composed as joi 14 did (#5)
 - Upgrade: boom dep from 7.2.2 to @hapi/boom ~10.0.1 (#5)
+- Upgrade: mongodb dep from ~3.6.12 to ~6.21.0, removing the driver deprecation warnings (it requires Node.js >= 16.20.1) (#6)
+- Upgrade: POOL_SIZE is passed to the MongoDB driver as maxPoolSize, and DB_RECONNECT_TRIES * DB_RECONNECT_INTERVAL as serverSelectionTimeoutMS, since the driver 6.x does not support poolSize, reconnectTries and reconnectInterval (#6)
+- Fix: the STH reconnects to the database once it is available again, even after DB_RECONNECT_TRIES attempts, and DELETE of all the data returns 500 instead of no response while the database is unavailable (#6)

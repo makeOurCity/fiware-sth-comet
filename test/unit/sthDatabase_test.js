@@ -133,8 +133,8 @@ function dropCollection(collectionNameParams, dataType, dataModel, callback) {
             : sthDatabaseNaming.getAggregatedCollectionName(collectionNameParams);
 
     if (collectionName) {
-        sthDatabase.connection.dropCollection(collectionName, function(err) {
-            if (err && err.code === 26 && err.name === 'MongoError' && err.message === 'ns not found') {
+        sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName), function(err) {
+            if (err && err.code === 26) {
                 // The collection does not exist
                 return process.nextTick(callback);
             }
@@ -233,9 +233,8 @@ function collectionAccessTests() {
                                 shouldTruncate: false
                             },
                             function(err, collection) {
-                                expect(err).to.not.be(null);
-                                expect(err.name).to.equal('MongoError');
-                                expect(err.message.indexOf('does not exist. Currently in strict mode.')).to.be.above(0);
+                                expect(sthDatabase.isCollectionNotFoundError(err)).to.be(true);
+                                expect(err.message).to.contain('does not exist');
                                 expect(collection).to.be(null);
                                 done();
                             }
@@ -425,14 +424,13 @@ function expectResult(params, count, result, callback) {
  * @param {Function} callback The callback
  */
 function expectDataStored(params, count, callback) {
-    params.collection
-        .find(getQuery4ExpectDataStored(params.dataType, params.aggregation))
-        .toArray(function(err, result) {
-            if (err) {
-                return callback(err);
-            }
-            expectResult(params, count, result, callback);
-        });
+    const query = getQuery4ExpectDataStored(params.dataType, params.aggregation);
+    sthUtils.promiseToCallback(params.collection.find(query).toArray(), function(err, result) {
+        if (err) {
+            return callback(err);
+        }
+        expectResult(params, count, result, callback);
+    });
 }
 
 /**
@@ -1139,17 +1137,16 @@ describe('sthDatabase tests', function() {
         it('should notify as error the aim to connect to the database at an unavailable host', function(done) {
             const INVALID_DATABASE_CONNECTION_PARAMS = _.clone(DATABASE_CONNECTION_PARAMS);
             INVALID_DATABASE_CONNECTION_PARAMS.dbURI = 'unavailable_localhost:27017';
+            // The driver keeps on looking for an available server for reconnectTries * reconnectInterval ms
+            INVALID_DATABASE_CONNECTION_PARAMS.reconnectTries = 1;
+            INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 500;
             sthDatabase.connect(
                 INVALID_DATABASE_CONNECTION_PARAMS,
                 function(err, connection) {
                     /* eslint-disable-next-line no-unused-expressions */
                     expect(err).to.exist;
-                    expect(err.name).to.equal('MongoNetworkError');
-                    expect(
-                        err.message.indexOf(
-                            'failed to connect to server [' + INVALID_DATABASE_CONNECTION_PARAMS.dbURI + ']'
-                        )
-                    ).to.equal(0);
+                    expect(err.name).to.equal('MongoServerSelectionError');
+                    expect(err.message).to.contain('ENOTFOUND');
                     expect(connection).to.equal(null);
                     done();
                 }
@@ -1159,17 +1156,16 @@ describe('sthDatabase tests', function() {
         it('should notify as error the aim to connect to the database at an unavailable port', function(done) {
             const INVALID_DATABASE_CONNECTION_PARAMS = _.clone(DATABASE_CONNECTION_PARAMS);
             INVALID_DATABASE_CONNECTION_PARAMS.dbURI = 'localhost:12345';
+            // The driver keeps on looking for an available server for reconnectTries * reconnectInterval ms
+            INVALID_DATABASE_CONNECTION_PARAMS.reconnectTries = 1;
+            INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 500;
             sthDatabase.connect(
                 INVALID_DATABASE_CONNECTION_PARAMS,
                 function(err, connection) {
                     /* eslint-disable-next-line no-unused-expressions */
                     expect(err).to.exist;
-                    expect(err.name).to.equal('MongoNetworkError');
-                    expect(
-                        err.message.indexOf(
-                            'failed to connect to server [' + INVALID_DATABASE_CONNECTION_PARAMS.dbURI + ']'
-                        )
-                    ).to.equal(0);
+                    expect(err.name).to.equal('MongoServerSelectionError');
+                    expect(err.message).to.contain('ECONNREFUSED');
                     expect(connection).to.equal(null);
                     done();
                 }

@@ -93,7 +93,7 @@ config.database = {
     // The prefix to be added to the collections in the databases. More information below.
     //  Default value: "sth_".
     collectionPrefix: 'sth_',
-    // The default MongoDB pool size of database connections. Optional. Default value: "5".
+    // The maximum number of connections in the MongoDB connection pool (maxPoolSize). Optional. Default value: "5".
     poolSize: '5',
     // The write concern (see http://docs.mongodb.org/manual/core/write-concern/) to apply when
     // writing data to the MongoDB database. Default value: "1".
@@ -153,6 +153,8 @@ config.database = {
     // Server attempt to reconnect #times
     reconnectTries: 30,
     // Server will wait # milliseconds between retries.
+    // The MongoDB driver keeps on looking for an available server for up to reconnectTries * reconnectInterval
+    //  milliseconds before failing a database operation (serverSelectionTimeoutMS).
     reconnectInterval: 1000
 };
 
