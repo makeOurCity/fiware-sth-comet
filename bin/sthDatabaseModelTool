@@ -31,7 +31,7 @@ const sthLogger = require('logops');
 const sthError = require(ROOT_PATH + '/lib/utils/sthError');
 const sthDatabaseModelTool = require(ROOT_PATH + '/lib/database/model/sthDatabaseModelTool');
 const async = require('async');
-const commander = require('commander');
+const program = require('commander').program;
 const Progress = require('progress');
 
 const migrationSummary = {};
@@ -65,7 +65,7 @@ process.on('uncaughtException', function(exception) {
  */
 function filterCollections(databaseEntry) {
     for (let j = 0; j < databaseEntry.collections2Migrate.length; j++) {
-        if (databaseEntry.collections2Migrate[j].collectionName !== commander.collection) {
+        if (databaseEntry.collections2Migrate[j].collectionName !== options.collection) {
             databaseEntry.collections2Migrate.splice(j, 1);
             j--;
         }
@@ -78,12 +78,12 @@ function filterCollections(databaseEntry) {
  * @param callback The callback
  */
 function filterAnalysis(analysis, callback) {
-    if (commander.database) {
+    if (options.database) {
         for (let i = 0; i < analysis.result.length; i++) {
-            if (analysis.result[i].databaseName !== commander.database) {
+            if (analysis.result[i].databaseName !== options.database) {
                 analysis.result.splice(i, 1);
                 i--;
-            } else if (commander.collection) {
+            } else if (options.collection) {
                 filterCollections(analysis.result[i]);
                 if (!analysis.result[i].collections2Migrate.length) {
                     analysis.result.splice(i, 1);
@@ -104,10 +104,10 @@ function filterAnalysis(analysis, callback) {
 function print2Target(target, analysis, callback) {
     let output = '========== DATA MODEL ANALYSIS (' + new Date() + ' ==========\n\n';
 
-    if (commander.database) {
+    if (options.database) {
         output += '- Analisys delimited to ';
-        output += commander.collection ? "collection '" + commander.collection + "' of " : '';
-        output += "database '" + commander.database + "'\n\n";
+        output += options.collection ? "collection '" + options.collection + "' of " : '';
+        output += "database '" + options.database + "'\n\n";
     }
 
     output +=
@@ -208,14 +208,14 @@ function migrateCollection(databaseName, collectionInfo, callback) {
             databaseName,
             collectionInfo.collectionName,
             {
-                removeCollection: commander.removeCollection,
-                updateCollection: commander.updateCollection,
-                dictionary: commander.dictionary
+                removeCollection: options.removeCollection,
+                updateCollection: options.updateCollection,
+                dictionary: options.dictionary
             },
             function(err) {
                 if (err) {
                     migrationSummary[databaseName].error += 1;
-                    if (commander.full) {
+                    if (options.full) {
                         sthLogger.error(
                             sthConfig.LOGGING_CONTEXT.DB_LOG,
                             "Collection '" +
@@ -243,7 +243,7 @@ function migrateCollection(databaseName, collectionInfo, callback) {
                         sthConfig.DATA_MODEL +
                         "' data model"
                 );
-                if (commander.removeCollection) {
+                if (options.removeCollection) {
                     sthLogger.info(
                         sthConfig.LOGGING_CONTEXT.DB_LOG,
                         "Collection '" +
@@ -257,11 +257,11 @@ function migrateCollection(databaseName, collectionInfo, callback) {
             }
         );
         collectionMigrationProgress.on('progress', function(progressData) {
-            if (!showProgressChecked && !showProgress && commander.verbose) {
+            if (!showProgressChecked && !showProgress && options.verbose) {
                 showProgressChecked = true;
                 if (
                     progressData.total >=
-                    (commander.verbose === true || isNaN(commander.verbose) ? 1 : parseInt(commander.verbose))
+                    (options.verbose === true || isNaN(options.verbose) ? 1 : parseInt(options.verbose))
                 ) {
                     showProgress = true;
                 }
@@ -285,7 +285,7 @@ function migrateCollection(databaseName, collectionInfo, callback) {
             sthConfig.DATA_MODEL
         );
         migrationSummary[databaseName].error += 1;
-        if (commander.full) {
+        if (options.full) {
             sthLogger.error(
                 sthConfig.LOGGING_CONTEXT.DB_LOG,
                 "Collection '" +
@@ -335,13 +335,21 @@ function migrateDatabases(analysis, callback) {
  * Executes the commander command
  */
 function executeCommand() {
-    if (commander.analysis && !commander.migrate) {
+    if (options.collection && !options.database) {
+        // Exits the process
+        program.error(
+            "error: option '-d, --database <databaseName>' argument missing " +
+                "if '-c, --collection <collectionName>' is set"
+        );
+    }
+
+    if (options.analysis && !options.migrate) {
         // Only analysis printing requested
         async.waterfall(
             [
                 async.apply(sthDatabaseModelTool.getDataModelAnalysis, {
-                    database: commander.database,
-                    collection: commander.collection
+                    database: options.database,
+                    collection: options.collection
                 }),
                 filterAnalysis
             ],
@@ -349,12 +357,12 @@ function executeCommand() {
         );
     }
 
-    if (!commander.analysis && commander.migrate) {
+    if (!options.analysis && options.migrate) {
         // Only migration requested
         async.waterfall([sthDatabaseModelTool.getDataModelAnalysis, filterAnalysis, migrateDatabases], onMigration);
     }
 
-    if (commander.analysis && commander.migrate) {
+    if (options.analysis && options.migrate) {
         // Analysis printing and migration requested
         async.waterfall(
             [
@@ -367,29 +375,13 @@ function executeCommand() {
         );
     }
 
-    if (!commander.analysis && !commander.migrate) {
+    if (!options.analysis && !options.migrate) {
         // Neither analysis printing or migration requested
-        commander.help();
+        program.help();
     }
 }
 
-/**
- * Validates the collection name
- * @param collectionName The collection name
- */
-function validateCollection(collectionName) {
-    if (!collectionName || !commander.database) {
-        /* eslint-disable-next-line no-console */
-        console.log(
-            "error: option '-d, --database <databaseName>' argument missing " +
-                "if '-c, --collection <collectionName>' is set"
-        );
-    } else {
-        return collectionName;
-    }
-}
-
-commander
+program
     .version(require('../package.json').version)
     .option(
         '-a, --analysis',
@@ -429,8 +421,7 @@ commander
     )
     .option(
         '-c, --collection <collectionName>',
-        'only this collection will be taken info consideration, a database is mandatory if a collection is set',
-        validateCollection
+        'only this collection will be taken info consideration, a database is mandatory if a collection is set'
     )
     .option(
         '-x, --dictionary <dictionary>',
@@ -441,5 +432,7 @@ commander
             'be left as blank)'
     )
     .parse(process.argv);
+
+const options = program.opts();
 
 executeCommand();

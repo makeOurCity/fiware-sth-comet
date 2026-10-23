@@ -52,6 +52,31 @@ function createFakeToolkit() {
 }
 
 describe('sthServerUtils tests', function() {
+    describe('getContext', function() {
+        const UUID_V4_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+
+        it('should generate a version 4 UUID as the transaction and use it as the correlator by default', function() {
+            const context = sthServerUtils.getContext({ method: 'get', headers: {} });
+            expect(context.trans).to.match(UUID_V4_REGEXP);
+            expect(context.corr).to.equal(context.trans);
+        });
+
+        it('should generate a distinct transaction for each request', function() {
+            const first = sthServerUtils.getContext({ method: 'get', headers: {} });
+            const second = sthServerUtils.getContext({ method: 'get', headers: {} });
+            expect(first.trans).not.to.equal(second.trans);
+        });
+
+        it('should use the Fiware-Correlator header as the correlator if included in the request', function() {
+            const context = sthServerUtils.getContext({
+                method: 'get',
+                headers: { 'fiware-correlator': 'the-correlator' }
+            });
+            expect(context.corr).to.equal('the-correlator');
+            expect(context.trans).to.match(UUID_V4_REGEXP);
+        });
+    });
+
     describe('getRequestPath', function() {
         it('should return the path including the query string', function() {
             const request = { path: '/STH/v1/x', url: new URL('http://localhost:8666/STH/v1/x?lastN=1&count=true') };

@@ -27,7 +27,7 @@
 
 const ROOT_PATH = require('app-root-path');
 const async = require('async');
-const commander = require('commander');
+const program = require('commander').program;
 const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthDatabase = require(ROOT_PATH + '/lib/database/sthDatabase');
 const sthDatabaseNameCodecTool = require(ROOT_PATH + '/lib/database/model/sthDatabaseNameCodecTool');
@@ -73,40 +73,40 @@ process.on('uncaughtException', function(exception) {
 function printEncodingAnalysis(analysis, callback) {
     let output =
         '========== ' +
-        (commander.encode ? 'ENCODING' : 'DECODING') +
+        (options.encode ? 'ENCODING' : 'DECODING') +
         ' ANALYSIS RESULTS (' +
         new Date() +
         ' ==========\n\n';
-    if (commander.database) {
+    if (options.database) {
         output +=
             '  - ' +
-            (commander.encode ? 'Encoding' : 'Decoding') +
+            (options.encode ? 'Encoding' : 'Decoding') +
             " process limited to database '" +
-            commander.database +
+            options.database +
             "'\n";
     }
-    if (commander.collection) {
+    if (options.collection) {
         output +=
             '  - ' +
-            (commander.encode ? 'Encoding' : 'Decoding') +
+            (options.encode ? 'Encoding' : 'Decoding') +
             " process limited to collection '" +
-            commander.collection +
+            options.collection +
             "'\n";
     }
-    if (commander.database || commander.collection) {
+    if (options.database || options.collection) {
         output += '\n';
     }
     const databaseNames = Object.getOwnPropertyNames(analysis);
     databaseNames.forEach(function(databaseName) {
         if (databaseName === analysis[databaseName].name) {
             output +=
-                "  - Database '" + databaseName + "' will not be " + (commander.encode ? 'encoded' : 'decoded') + '\n';
+                "  - Database '" + databaseName + "' will not be " + (options.encode ? 'encoded' : 'decoded') + '\n';
         } else {
             output +=
                 "  - Database '" +
                 databaseName +
                 "' will be " +
-                (commander.encode ? 'encoded' : 'decoded') +
+                (options.encode ? 'encoded' : 'decoded') +
                 " as '" +
                 analysis[databaseName].name +
                 "'\n";
@@ -122,14 +122,14 @@ function printEncodingAnalysis(analysis, callback) {
                         "    - Collection '" +
                         collectionName +
                         "' will not be " +
-                        (commander.encode ? 'encoded' : 'decoded') +
+                        (options.encode ? 'encoded' : 'decoded') +
                         '\n';
                 } else {
                     output +=
                         "    - Collection '" +
                         collectionName +
                         "' will be " +
-                        (commander.encode ? 'encoded' : 'decoded') +
+                        (options.encode ? 'encoded' : 'decoded') +
                         " as '" +
                         analysis[databaseName].collections[collectionName].name +
                         "'\n";
@@ -138,7 +138,7 @@ function printEncodingAnalysis(analysis, callback) {
         }
     });
     if (!databaseNames.length) {
-        output += '  - Nothing will be ' + (commander.encode ? 'encoded' : 'decoded') + '\n';
+        output += '  - Nothing will be ' + (options.encode ? 'encoded' : 'decoded') + '\n';
     }
     /* eslint-disable-next-line no-console */
     console.log('\n' + output);
@@ -152,10 +152,10 @@ function printEncodingAnalysis(analysis, callback) {
 function printEncodingAnalysisCommand(callback) {
     async.seq(
         async.apply(sthDatabaseNameCodecTool.getEncodingAnalysis, {
-            encode: commander.encode,
-            decode: commander.decode,
-            database: commander.database,
-            collection: commander.collection
+            encode: options.encode,
+            decode: options.decode,
+            database: options.database,
+            collection: options.collection
         }),
         printEncodingAnalysis
     )(callback);
@@ -179,17 +179,17 @@ function onPrintEncodingAnalysisCommand(err) {
 function forceEncodeOrDecodeCommand(callback) {
     async.seq(
         async.apply(sthDatabaseNameCodecTool.getEncodingAnalysis, {
-            encode: commander.encode,
-            decode: commander.decode,
-            database: commander.database,
-            collection: commander.collection
+            encode: options.encode,
+            decode: options.decode,
+            database: options.database,
+            collection: options.collection
         }),
         printEncodingAnalysis,
         async.apply(sthDatabaseNameCodecTool.encodeOrDecode, {
-            encode: commander.encode,
-            decode: commander.decode,
-            database: commander.database,
-            collection: commander.collection
+            encode: options.encode,
+            decode: options.decode,
+            database: options.database,
+            collection: options.collection
         })
     )(callback);
 }
@@ -204,7 +204,7 @@ function onForceEncodeOrDecodeCommand(err) {
     }
     sthLogger.info(
         sthConfig.LOGGING_CONTEXT.DB_LOG,
-        (commander.encode ? 'Codification' : 'Decodification') + ' process successfully completed.'
+        (options.encode ? 'Codification' : 'Decodification') + ' process successfully completed.'
     );
     process.exit(err ? 1 : 0);
 }
@@ -213,25 +213,25 @@ function onForceEncodeOrDecodeCommand(err) {
  * Executes the requested command
  */
 function executeCommand() {
-    if (!commander.encode && !commander.decode) {
+    if (!options.encode && !options.decode) {
         /* eslint-disable-next-line no-console */
         console.log('\nERROR: Either the -e (--encode) or the -d (--decode) options are mandatory');
-        return commander.help();
+        return program.help();
     }
-    if (commander.collection && !commander.database) {
+    if (options.collection && !options.database) {
         /* eslint-disable-next-line no-console */
         console.log('\nERROR: The -b (--database) option is mandatory if the -c (--collection) option is set');
-        return commander.help();
+        return program.help();
     }
-    if (commander.force) {
+    if (options.force) {
         forceEncodeOrDecodeCommand(onForceEncodeOrDecodeCommand);
-    } else if (commander.encode || commander.decode) {
+    } else if (options.encode || options.decode) {
         printEncodingAnalysisCommand(onPrintEncodingAnalysisCommand);
     }
 }
 
 /* eslint-disable-next-line no-useless-concat */
-commander
+program
     .version(version)
     .option(
         '-e, --encode',
@@ -254,5 +254,7 @@ commander
         'Limits the codification or decodification process to certain collection'
     )
     .parse(process.argv);
+
+const options = program.opts();
 
 executeCommand();

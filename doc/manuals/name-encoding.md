@@ -50,15 +50,14 @@ which will present the command help information:
 ```text
 Usage: sthDatabaseNameCodecTool [options]
 
-  Options:
-
-    -h, --help                         output usage information
-    -V, --version                      output the version number
-    -e, --encode                       Shows a report regarding the result of the codification process if applied to databases and collections of a specific STH instance (either the -e or -d options are mandatory)
-    -d, --decode                       Shows a report regarding the result of the decodification process if applied to databases and collections of a specific STH instance (either the -e or -d options are mandatory)
-    -f, --force                        Forces the codification (-e) or decodification (-d) process and consequently the databases  will be renamed
-    -b, --database <databaseName>      Limits the codification or decodification process to certain database
-    -c, --collection <collectionName>  Limits the codification or decodification process to certain collection
+Options:
+  -V, --version                      output the version number
+  -e, --encode                       Shows a report regarding the result of the codification process if applied to databases and collections of a specific STH instance (either the -e or -d options are mandatory)
+  -d, --decode                       Shows a report regarding the result of the decodification process if applied to databases and collections of a specific STH instance (either the -e or -d options are mandatory)
+  -f, --force                        Forces the codification (-e) or decodification (-d) process and consequently the databases  will be renamed
+  -b, --database <databaseName>      Limits the codification or decodification process to certain database
+  -c, --collection <collectionName>  Limits the codification or decodification process to certain collection
+  -h, --help                         display help for command
 ```
 
 You can use the `sthDatabaseNameCodecTool` command-line tool to analyse your STH component databases and to get reports

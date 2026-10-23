@@ -27,7 +27,7 @@
 
 const ROOT_PATH = require('app-root-path');
 const async = require('async');
-const commander = require('commander');
+const program = require('commander').program;
 const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthDatabase = require(ROOT_PATH + '/lib/database/sthDatabase');
 const sthDatabaseNameMapperTool = require(ROOT_PATH + '/lib/database/model/sthDatabaseNameMapperTool');
@@ -73,40 +73,39 @@ process.on('uncaughtException', function(exception) {
 function printMappingAnalysis(analysis, callback) {
     let output =
         '========== ' +
-        (commander.map ? 'MAPPING' : 'UNMAPPING') +
+        (options.map ? 'MAPPING' : 'UNMAPPING') +
         ' ANALYSIS RESULTS (' +
         new Date() +
         ' ==========\n\n';
-    if (commander.database) {
+    if (options.database) {
         output +=
             '  - ' +
-            (commander.map ? 'Mapping' : 'Unmapping') +
+            (options.map ? 'Mapping' : 'Unmapping') +
             " process limited to database '" +
-            commander.database +
+            options.database +
             "'\n";
     }
-    if (commander.collection) {
+    if (options.collection) {
         output +=
             '  - ' +
-            (commander.map ? 'Mapping' : 'Unmapping') +
+            (options.map ? 'Mapping' : 'Unmapping') +
             " process limited to collection '" +
-            commander.collection +
+            options.collection +
             "'\n";
     }
-    if (commander.database || commander.collection) {
+    if (options.database || options.collection) {
         output += '\n';
     }
     const databaseNames = Object.getOwnPropertyNames(analysis);
     databaseNames.forEach(function(databaseName) {
         if (databaseName === analysis[databaseName].name) {
-            output +=
-                "  - Database '" + databaseName + "' will not be " + (commander.map ? 'mapped' : 'unmapped') + '\n';
+            output += "  - Database '" + databaseName + "' will not be " + (options.map ? 'mapped' : 'unmapped') + '\n';
         } else {
             output +=
                 "  - Database '" +
                 databaseName +
                 "' will be " +
-                (commander.map ? 'mapped' : 'unmapped') +
+                (options.map ? 'mapped' : 'unmapped') +
                 " as '" +
                 analysis[databaseName].name +
                 "'\n";
@@ -122,14 +121,14 @@ function printMappingAnalysis(analysis, callback) {
                         "    - Collection '" +
                         collectionName +
                         "' will not be " +
-                        (commander.map ? 'mapped' : 'unmapped') +
+                        (options.map ? 'mapped' : 'unmapped') +
                         '\n';
                 } else {
                     output +=
                         "    - Collection '" +
                         collectionName +
                         "' will be " +
-                        (commander.map ? 'mapped' : 'unmapped') +
+                        (options.map ? 'mapped' : 'unmapped') +
                         " as '" +
                         analysis[databaseName].collections[collectionName].name +
                         "'\n";
@@ -138,7 +137,7 @@ function printMappingAnalysis(analysis, callback) {
         }
     });
     if (!databaseNames.length) {
-        output += '  - Nothing will be ' + (commander.map ? 'mapped' : 'unmapped') + '\n';
+        output += '  - Nothing will be ' + (options.map ? 'mapped' : 'unmapped') + '\n';
     }
     /* eslint-disable-next-line no-console */
     console.log('\n' + output);
@@ -152,10 +151,10 @@ function printMappingAnalysis(analysis, callback) {
 function printMappingAnalysisCommand(callback) {
     async.seq(
         async.apply(sthDatabaseNameMapperTool.getMappingAnalysis, {
-            map: commander.map,
-            unmap: commander.unmap,
-            database: commander.database,
-            collection: commander.collection
+            map: options.map,
+            unmap: options.unmap,
+            database: options.database,
+            collection: options.collection
         }),
         printMappingAnalysis
     )(callback);
@@ -179,17 +178,17 @@ function onPrintMappingAnalysisCommand(err) {
 function forceMapOrUnmapCommand(callback) {
     async.seq(
         async.apply(sthDatabaseNameMapperTool.getMappingAnalysis, {
-            map: commander.map,
-            unmap: commander.unmap,
-            database: commander.database,
-            collection: commander.collection
+            map: options.map,
+            unmap: options.unmap,
+            database: options.database,
+            collection: options.collection
         }),
         printMappingAnalysis,
         async.apply(sthDatabaseNameMapperTool.mapOrUnmap, {
-            map: commander.map,
-            unmap: commander.unmap,
-            database: commander.database,
-            collection: commander.collection
+            map: options.map,
+            unmap: options.unmap,
+            database: options.database,
+            collection: options.collection
         })
     )(callback);
 }
@@ -204,7 +203,7 @@ function onForceMapOrUnmapCommand(err) {
     }
     sthLogger.info(
         sthConfig.LOGGING_CONTEXT.DB_LOG,
-        (commander.map ? 'Mapping' : 'Unmapping') + ' process successfully completed.'
+        (options.map ? 'Mapping' : 'Unmapping') + ' process successfully completed.'
     );
     process.exit(err ? 1 : 0);
 }
@@ -213,24 +212,24 @@ function onForceMapOrUnmapCommand(err) {
  * Executes the requested command
  */
 function executeCommand() {
-    if (!commander.map && !commander.unmap) {
+    if (!options.map && !options.unmap) {
         /* eslint-disable-next-line no-console */
         console.log('\nERROR: Either the -m (--map) or the -u (--unmap) options are mandatory');
-        return commander.help();
+        return program.help();
     }
-    if (commander.collection && !commander.database) {
+    if (options.collection && !options.database) {
         /* eslint-disable-next-line no-console */
         console.log('\nERROR: The -b (--database) option is mandatory if the -c (--collection) option is set');
-        return commander.help();
+        return program.help();
     }
-    if (commander.force) {
+    if (options.force) {
         forceMapOrUnmapCommand(onForceMapOrUnmapCommand);
-    } else if (commander.map || commander.unmap) {
+    } else if (options.map || options.unmap) {
         printMappingAnalysisCommand(onPrintMappingAnalysisCommand);
     }
 }
 
-commander
+program
     .version(version)
     .option(
         '-m, --map',
@@ -249,5 +248,7 @@ commander
     .option('-b, --database <databaseName>', 'Limits the mapping or unmapping process to certain database')
     .option('-c, --collection <collectionName>', 'Limits the mapping or unmapping process to certain collection')
     .parse(process.argv);
+
+const options = program.opts();
 
 executeCommand();
