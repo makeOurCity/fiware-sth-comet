@@ -27,6 +27,7 @@
 
 const ROOT_PATH = require('app-root-path');
 const sthHttpTestClient = require(ROOT_PATH + '/test/unit/sthHttpTestClient');
+const sthServerUtils = require(ROOT_PATH + '/lib/server/utils/sthServerUtils');
 const sthTestProcess = require(ROOT_PATH + '/test/unit/sthTestProcess');
 const expect = require('expect.js');
 const net = require('net');
@@ -139,27 +140,34 @@ describe('STH process lifecycle', function() {
         it('should exit with code 1 if the port is already in use', function(done) {
             this.timeout(15000);
             const blocker = net.createServer();
-            blocker.listen(PORT, 'localhost', function() {
-                const child = sthTestProcess.spawnSth({ STH_PORT: PORT });
-                sthTestProcess.waitForExit(child, 10000, function(err, exitInfo) {
-                    blocker.close(function() {
-                        try {
-                            expect(err).to.equal(null);
-                            expect(exitInfo).to.eql({ code: 1, signal: null });
-                            // The address depends on how localhost is resolved (127.0.0.1 or ::1)
-                            expect(child.output).to.match(
-                                new RegExp(
-                                    'listen EADDRINUSE: address already in use \\S+:' +
-                                        PORT +
-                                        ' \\(another STH instance maybe already listening on the same port\\)'
-                                )
-                            );
-                            expect(child.output).to.contain('Connection to MongoDb succesfully closed');
-                            expect(child.output).not.to.contain('Application exited successfully');
-                        } catch (assertionError) {
-                            return done(assertionError);
+            // Occupy the address the STH listens on for its default host (localhost), which is resolved to IPv4 first
+            sthServerUtils.getListenAddress('localhost').then(function(address) {
+                blocker.listen(PORT, address, function() {
+                    const child = sthTestProcess.spawnSth({ STH_PORT: PORT });
+                    sthTestProcess.waitForExit(child, 10000, function(err, exitInfo) {
+                        if (err) {
+                            // Do not leave the STH running on the port used by the other tests
+                            child.kill('SIGKILL');
                         }
-                        return done();
+                        blocker.close(function() {
+                            try {
+                                expect(err).to.equal(null);
+                                expect(exitInfo).to.eql({ code: 1, signal: null });
+                                // The address depends on how localhost is resolved (127.0.0.1 or ::1)
+                                expect(child.output).to.match(
+                                    new RegExp(
+                                        'listen EADDRINUSE: address already in use \\S+:' +
+                                            PORT +
+                                            ' \\(another STH instance maybe already listening on the same port\\)'
+                                    )
+                                );
+                                expect(child.output).to.contain('Connection to MongoDb succesfully closed');
+                                expect(child.output).not.to.contain('Application exited successfully');
+                            } catch (assertionError) {
+                                return done(assertionError);
+                            }
+                            return done();
+                        });
                     });
                 });
             });
