@@ -80,6 +80,8 @@
     "response": {
       "statusCode": 200,
       "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-expose-headers": "WWW-Authenticate,Server-Authorization",
         "content-type": "application/json; charset=utf-8",
         "fiware-correlator": "cors-getWithoutOrigin"
       },
