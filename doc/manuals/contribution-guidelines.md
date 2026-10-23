@@ -126,25 +126,11 @@ To run tests, type:
 npm test
 ```
 
-## Continuous testing
-
-Support for continuous testing by modifying a src file or a test. For continuous testing, type
-
-```bash
-npm run test:watch
-```
-
-If you want to continuously check also source code style, use instead:
-
-```bash
-npm run watch
-```
-
 ## Code coverage
 
 A very good practice is to measure the code coverage of your tests.
 
-To generate an HTML coverage report under `site/coverage/` and to print out a summary, type
+To generate an HTML coverage report under `coverage/lcov-report/` and to print out a summary, type
 
 ```bash
 npm run test:coverage
