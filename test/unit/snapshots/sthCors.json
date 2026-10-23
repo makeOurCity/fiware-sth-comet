@@ -1,0 +1,244 @@
+{
+  "enabled.preflight": {
+    "request": "OPTIONS /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-headers": "Access-Control-Allow-Origin,Access-Control-Allow-Headers,Access-Control-Request-Headers,Origin, Referer, User-Agent,fiware-servicepath,fiware-service",
+        "access-control-allow-methods": "GET",
+        "access-control-allow-origin": "http://dashboard.example.com",
+        "access-control-expose-headers": "WWW-Authenticate,Server-Authorization",
+        "access-control-max-age": "86400"
+      },
+      "body": ""
+    }
+  },
+  "enabled.preflightNotAllowedHeader": {
+    "request": "OPTIONS /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8"
+      },
+      "body": {
+        "message": "CORS error: Some headers are not allowed"
+      }
+    }
+  },
+  "enabled.preflightDelete": {
+    "request": "OPTIONS /STH/v1/contextEntities/type/T/id/E1",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-headers": "Access-Control-Allow-Origin,Access-Control-Allow-Headers,Access-Control-Request-Headers,Origin, Referer, User-Agent,fiware-servicepath,fiware-service",
+        "access-control-allow-methods": "DELETE",
+        "access-control-allow-origin": "http://dashboard.example.com",
+        "access-control-expose-headers": "WWW-Authenticate,Server-Authorization",
+        "access-control-max-age": "86400"
+      },
+      "body": ""
+    }
+  },
+  "enabled.getWithOrigin": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://dashboard.example.com",
+        "access-control-expose-headers": "WWW-Authenticate,Server-Authorization",
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-getWithOrigin"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "enabled.getWithoutOrigin": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-expose-headers": "WWW-Authenticate,Server-Authorization",
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-getWithoutOrigin"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "enabled.logLevelWithOrigin": {
+    "request": "GET /admin/log",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-origin": "http://dashboard.example.com",
+        "access-control-expose-headers": "WWW-Authenticate,Server-Authorization",
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-logLevelWithOrigin"
+      },
+      "body": {
+        "level": "INFO"
+      }
+    }
+  },
+  "disabled.preflight": {
+    "request": "OPTIONS /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-preflight"
+      },
+      "body": {
+        "statusCode": 404,
+        "error": "Not Found"
+      }
+    }
+  },
+  "disabled.preflightNotAllowedHeader": {
+    "request": "OPTIONS /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-preflightNotAllowedHeader"
+      },
+      "body": {
+        "statusCode": 404,
+        "error": "Not Found"
+      }
+    }
+  },
+  "disabled.preflightDelete": {
+    "request": "OPTIONS /STH/v1/contextEntities/type/T/id/E1",
+    "response": {
+      "statusCode": 404,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-preflightDelete"
+      },
+      "body": {
+        "statusCode": 404,
+        "error": "Not Found"
+      }
+    }
+  },
+  "disabled.getWithOrigin": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-getWithOrigin"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "disabled.getWithoutOrigin": {
+    "request": "GET /STH/v1/contextEntities/type/T/id/E1/attributes/temperature?lastN=10",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-getWithoutOrigin"
+      },
+      "body": {
+        "contextResponses": [
+          {
+            "contextElement": {
+              "attributes": [
+                {
+                  "name": "temperature",
+                  "values": []
+                }
+              ],
+              "id": "E1",
+              "isPattern": false,
+              "type": "T"
+            },
+            "statusCode": {
+              "code": "200",
+              "reasonPhrase": "OK"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "disabled.logLevelWithOrigin": {
+    "request": "GET /admin/log",
+    "response": {
+      "statusCode": 200,
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "fiware-correlator": "cors-logLevelWithOrigin"
+      },
+      "body": {
+        "level": "INFO"
+      }
+    }
+  }
+}
