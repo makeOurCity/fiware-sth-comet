@@ -27,7 +27,7 @@ const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthUtils = require(ROOT_PATH + '/lib/utils/sthUtils');
 const sthDatabase = require(ROOT_PATH + '/lib/database/sthDatabase');
 const sthDatabaseNaming = require(ROOT_PATH + '/lib/database/model/sthDatabaseNaming');
-const request = require('request');
+const request = require(ROOT_PATH + '/test/unit/sthHttpTestClient').request;
 const expect = require('expect.js');
 
 let events = [];
