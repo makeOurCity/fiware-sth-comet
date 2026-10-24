@@ -118,13 +118,13 @@ function getV2Path(entityId, attrName, query) {
  * @return {Object} The steps, grouped by the kind of request
  */
 function getSteps() {
-    const notify = function(entityId, attributes) {
+    const notify = function (entityId, attributes) {
         return { method: 'POST', path: '/notify', body: getNotification(entityId, attributes) };
     };
-    const get = function(requestPath) {
+    const get = function (requestPath) {
         return { method: 'GET', path: requestPath };
     };
-    const del = function(requestPath) {
+    const del = function (requestPath) {
         return { method: 'DELETE', path: requestPath };
     };
     const temperature = getAttribute.bind(null, 'temperature', 'Number');
@@ -223,20 +223,20 @@ function sendStep(name, step, callback) {
  * @param {Function} callback The callback
  */
 function removeAllData(callback) {
-    sendStep('cleanUp', { method: 'DELETE', path: '/STH/v1/contextEntities' }, function() {
+    sendStep('cleanUp', { method: 'DELETE', path: '/STH/v1/contextEntities' }, function () {
         callback();
     });
 }
 
-describe('HTTP API snapshots', function() {
+describe('HTTP API snapshots', function () {
     let restoreConfiguration;
 
-    before(function() {
+    before(function () {
         // The responses depend on the data model and the naming of the collections
         restoreConfiguration = sthConfigurationPin.pinInitialConfiguration();
     });
 
-    after(function() {
+    after(function () {
         restoreConfiguration();
     });
 
@@ -244,7 +244,7 @@ describe('HTTP API snapshots', function() {
     const steps = getSteps();
     let originalTZ;
 
-    before(function(done) {
+    before(function (done) {
         // The CSV files include the dates formatted with the time zone of the server
         originalTZ = process.env.TZ;
         process.env.TZ = 'UTC';
@@ -256,11 +256,11 @@ describe('HTTP API snapshots', function() {
                 database: sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE),
                 poolSize: sthConfig.POOL_SIZE
             },
-            function(err) {
+            function (err) {
                 if (err) {
                     return done(err);
                 }
-                return sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err) {
+                return sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function (err) {
                     if (err) {
                         return done(err);
                     }
@@ -270,11 +270,11 @@ describe('HTTP API snapshots', function() {
         );
     });
 
-    after(function(done) {
+    after(function (done) {
         matcher.save();
-        removeAllData(function() {
-            sthServer.stopServer(function() {
-                sthDatabase.closeConnection(function() {
+        removeAllData(function () {
+            sthServer.stopServer(function () {
+                sthDatabase.closeConnection(function () {
                     if (originalTZ === undefined) {
                         delete process.env.TZ;
                     } else {
@@ -286,15 +286,15 @@ describe('HTTP API snapshots', function() {
         });
     });
 
-    Object.keys(steps).forEach(function(group) {
-        describe(group, function() {
-            Object.keys(steps[group]).forEach(function(name) {
+    Object.keys(steps).forEach(function (group) {
+        describe(group, function () {
+            Object.keys(steps[group]).forEach(function (name) {
                 const step = steps[group][name];
-                it(name + ': ' + step.method + ' ' + step.path, function(done) {
+                it(name + ': ' + step.method + ' ' + step.path, function (done) {
                     sendStep(
                         name,
                         step,
-                        sthHttpTestClient.assertResponse(done, function(err, response) {
+                        sthHttpTestClient.assertResponse(done, function (err, response) {
                             matcher.match(name, sthSnapshot.toSnapshot(step, err, response));
                         })
                     );

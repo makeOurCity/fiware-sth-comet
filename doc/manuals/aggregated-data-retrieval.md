@@ -109,7 +109,7 @@ these situations, keys will need to substitute the reserved $ and . characters. 
 consider using the Unicode full width equivalents: U+FF04 (i.e. “＄”) and U+FF0E (i.e. “．”).".
 
 Due to the previous MongoDB limitation, if the textual values stored in the attributes for which aggregated context
-information is being generated contain the `$` or the `.` characters, they will be substituted for their Javascript
+information is being generated contain the `$` or the `.` characters, they will be substituted for their JavaScript
 Unicode full width equivalents, this is: `\uFF04` instead of `$` and `\uFF0E` instead of `.`.
 
 ## Deprecated API

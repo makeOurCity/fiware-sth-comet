@@ -134,7 +134,7 @@ It is important to note that there is a [limitation](https://docs.mongodb.com/ma
 STH generates the collection names using the following mechanism:
 
 -   The collection names are generated as a concatenation of the `COLLECTION_PREFIX` configuration parameter, the
-    service path, the entity id, the entity type and the suffix ".aggr" for the collections storing the aggregated data.
+    service path, the entity ID, the entity type and the suffix ".aggr" for the collections storing the aggregated data.
     The length of the collection name plus the `DB_PREFIX` plus the database name (or service) should not be more than
     120 bytes using UTF-8 format or MongoDB will complain and will not create the collection, and consequently no data
     would be stored by the STH. A warning message is logged in case this happens.

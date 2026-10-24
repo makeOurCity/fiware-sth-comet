@@ -50,18 +50,18 @@ function exitGracefully(err) {
     if (err) {
         sthLogger.error(sthConfig.LOGGING_CONTEXT.DB_LOG, 'Exiting gracefully due to error: ', err);
     }
-    cleanResources(function() {
+    cleanResources(function () {
         process.exit(err ? 1 : 0);
     });
 }
 
 // In case Control+C is clicked, exit gracefully
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
     return exitGracefully();
 });
 
 // In case of an uncaught exception exists gracefully
-process.on('uncaughtException', function(exception) {
+process.on('uncaughtException', function (exception) {
     return exitGracefully(exception);
 });
 
@@ -97,7 +97,7 @@ function printEncodingAnalysis(analysis, callback) {
         output += '\n';
     }
     const databaseNames = Object.getOwnPropertyNames(analysis);
-    databaseNames.forEach(function(databaseName) {
+    databaseNames.forEach(function (databaseName) {
         if (databaseName === analysis[databaseName].name) {
             output +=
                 "  - Database '" + databaseName + "' will not be " + (options.encode ? 'encoded' : 'decoded') + '\n';
@@ -116,7 +116,7 @@ function printEncodingAnalysis(analysis, callback) {
             Object.getOwnPropertyNames(analysis[databaseName].collections).length
         ) {
             const collectionNames = Object.getOwnPropertyNames(analysis[databaseName].collections);
-            collectionNames.forEach(function(collectionName) {
+            collectionNames.forEach(function (collectionName) {
                 if (collectionName === analysis[databaseName].collections[collectionName].name) {
                     output +=
                         "    - Collection '" +
@@ -230,7 +230,6 @@ function executeCommand() {
     }
 }
 
-/* eslint-disable-next-line no-useless-concat */
 program
     .version(version)
     .option(

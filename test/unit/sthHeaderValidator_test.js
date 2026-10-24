@@ -37,15 +37,15 @@ function getValidationError(headers) {
     return undefined;
 }
 
-describe('sthHeaderValidator tests', function() {
-    it('should not throw if the Fiware-Service and Fiware-ServicePath headers are included', function() {
+describe('sthHeaderValidator tests', function () {
+    it('should not throw if the Fiware-Service and Fiware-ServicePath headers are included', function () {
         const headers = {};
         headers[sthConfig.HEADER.FIWARE_SERVICE] = 'testservice';
         headers[sthConfig.HEADER.FIWARE_SERVICE_PATH] = '/testservicepath';
         expect(getValidationError(headers)).to.be(undefined);
     });
 
-    it('should throw a 400 Bad Request error if the Fiware-Service header is missing', function() {
+    it('should throw a 400 Bad Request error if the Fiware-Service header is missing', function () {
         const headers = {};
         headers[sthConfig.HEADER.FIWARE_SERVICE_PATH] = '/testservicepath';
         const error = getValidationError(headers);
@@ -56,7 +56,7 @@ describe('sthHeaderValidator tests', function() {
         );
     });
 
-    it('should throw a 400 Bad Request error if the Fiware-ServicePath header is missing', function() {
+    it('should throw a 400 Bad Request error if the Fiware-ServicePath header is missing', function () {
         const headers = {};
         headers[sthConfig.HEADER.FIWARE_SERVICE] = 'testservice';
         const error = getValidationError(headers);

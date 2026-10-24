@@ -116,7 +116,7 @@ function removeTestData(callback) {
             entityType: ENTITY_TYPE,
             attrName: ATTR_NAME
         },
-        function(err) {
+        function (err) {
             if (err && err.message.includes('does not exist')) {
                 // There was no data to remove
                 return callback();
@@ -126,8 +126,8 @@ function removeTestData(callback) {
     );
 }
 
-describe('HTTP E2E tests', function() {
-    before(function(done) {
+describe('HTTP E2E tests', function () {
+    before(function (done) {
         sthDatabase.connect(
             {
                 authentication: sthConfig.DB_AUTHENTICATION,
@@ -136,15 +136,15 @@ describe('HTTP E2E tests', function() {
                 database: sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE),
                 poolSize: sthConfig.POOL_SIZE
             },
-            function(err) {
+            function (err) {
                 if (err) {
                     return done(err);
                 }
-                return removeTestData(function(err) {
+                return removeTestData(function (err) {
                     if (err) {
                         return done(err);
                     }
-                    return sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err) {
+                    return sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function (err) {
                         done(err);
                     });
                 });
@@ -152,21 +152,21 @@ describe('HTTP E2E tests', function() {
         );
     });
 
-    after(function(done) {
-        sthServer.stopServer(function() {
-            removeTestData(function() {
-                sthDatabase.closeConnection(function() {
+    after(function (done) {
+        sthServer.stopServer(function () {
+            removeTestData(function () {
+                sthDatabase.closeConnection(function () {
                     done();
                 });
             });
         });
     });
 
-    describe('GET /version', function() {
-        it('should respond with 200 - OK and the version', function(done) {
+    describe('GET /version', function () {
+        it('should respond with 200 - OK and the version', function (done) {
             sthHttpTestClient.sendRequest(
                 { method: 'GET', path: '/version' },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(200);
                     expect(JSON.parse(response.body).version).to.be.a('string');
@@ -175,8 +175,8 @@ describe('HTTP E2E tests', function() {
         });
     });
 
-    describe('POST /notify', function() {
-        it('should respond with 200 - OK to a notification of a numeric attribute', function(done) {
+    describe('POST /notify', function () {
+        it('should respond with 200 - OK to a notification of a numeric attribute', function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: 'POST',
@@ -191,14 +191,14 @@ describe('HTTP E2E tests', function() {
                         }
                     ])
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(200);
                 })
             );
         });
 
-        it('should respond with 400 - Bad Request and the error details to a notification without attributes', function(done) {
+        it('should respond with 400 - Bad Request and the error details to a notification without attributes', function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: 'POST',
@@ -206,7 +206,7 @@ describe('HTTP E2E tests', function() {
                     headers: FIWARE_HEADERS,
                     body: getNotification([])
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(400);
                     expect(JSON.parse(response.body).message).to.equal(
@@ -217,11 +217,11 @@ describe('HTTP E2E tests', function() {
         });
     });
 
-    describe('GET /STH/v2/entities/{entityId}/attrs/{attrName}', function() {
-        it('should respond with 200 - OK and the notified raw data', function(done) {
+    describe('GET /STH/v2/entities/{entityId}/attrs/{attrName}', function () {
+        it('should respond with 200 - OK and the notified raw data', function (done) {
             sthHttpTestClient.sendRequest(
                 { method: 'GET', path: getRawDataPath(), headers: FIWARE_HEADERS },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(200);
                     const values = JSON.parse(response.body).value;
@@ -233,21 +233,21 @@ describe('HTTP E2E tests', function() {
         });
     });
 
-    describe('DELETE /STH/v1/contextEntities/type/{entityType}/id/{entityId}/attributes/{attrName}', function() {
-        it('should respond with 204 - No Content', function(done) {
+    describe('DELETE /STH/v1/contextEntities/type/{entityType}/id/{entityId}/attributes/{attrName}', function () {
+        it('should respond with 204 - No Content', function (done) {
             sthHttpTestClient.sendRequest(
                 { method: 'DELETE', path: getAttributeRemovalPath(), headers: FIWARE_HEADERS },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(204);
                 })
             );
         });
 
-        it('should not return the deleted raw data afterwards', function(done) {
+        it('should not return the deleted raw data afterwards', function (done) {
             sthHttpTestClient.sendRequest(
                 { method: 'GET', path: getRawDataPath(), headers: FIWARE_HEADERS },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(200);
                     expect(JSON.parse(response.body).value).to.eql([]);

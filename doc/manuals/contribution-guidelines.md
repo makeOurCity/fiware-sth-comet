@@ -72,11 +72,20 @@ release process is explained in the **Releasing** section below.
 
 ESLint
 
-Uses the provided `.eslintrc.json` flag files. To check source code style, type
+Uses the provided `eslint.config.js` file, which also checks the formatting of the code with Prettier. To check source
+code style, type
 
 ```bash
 npm run lint
 ```
+
+To fix the errors which can be fixed automatically, including the formatting, type
+
+```bash
+npm run lint:fix
+```
+
+The CI fails if `npm run lint` reports any error, so run it before committing.
 
 ## Branching model
 
@@ -117,9 +126,8 @@ More on this in the **Releasing** section below.
 ## Testing
 
 The test environment is preconfigured to run the [Mocha](https://mochajs.org/) Test Runner with support for the
-[Should.js](https://shouldjs.github.io/) assertion Library .
-
-Module mocking during testing can be done with [proxyquire](https://github.com/thlorenz/proxyquire).
+[expect.js](https://github.com/Automattic/expect.js) assertion Library. The tests need a MongoDB instance listening on
+`localhost:27017`.
 
 To run tests, type:
 
@@ -127,25 +135,11 @@ To run tests, type:
 npm test
 ```
 
-## Continuous testing
-
-Support for continuous testing by modifying a src file or a test. For continuous testing, type
-
-```bash
-npm run test:watch
-```
-
-If you want to continuously check also source code style, use instead:
-
-```bash
-npm run watch
-```
-
 ## Code coverage
 
 A very good practice is to measure the code coverage of your tests.
 
-To generate an HTML coverage report under `site/coverage/` and to print out a summary, type
+To generate an HTML coverage report under `coverage/lcov-report/` and to print out a summary, type
 
 ```bash
 npm run test:coverage
@@ -228,7 +222,7 @@ The version numbers will change for each release according to the following rule
 -   All version numbers will always follow the common pattern: `X.Y.Z`
 -   _X_ will change only when there are changes in the release breaking backwards compatibility or when there are very
     important changes in the feature set of the component. If _X_ changes, _Y_ should be set to 0.
--   _Y_ will change every time a new version is released. If only _Y_ changes, it means some new features or bug fixes
+-   _Y_ will change every time a new version is released. If only _Y_ changes, it means some new features or bugfixes
     have been released, but the component is just an improved version of the current major (_X_) release.
 -   _Z_ will increment its value as new bugfixes are detected and fixed for each major (_X_) and minor (_Y_) release.
 

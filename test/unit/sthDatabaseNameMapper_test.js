@@ -21,51 +21,49 @@
  * please contact with: [german.torodelvalle@telefonica.com]
  */
 
-/* eslint-disable consistent-return */
-
 const ROOT_PATH = require('app-root-path');
 const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthDatabaseNameMapper = require(ROOT_PATH + '/lib/database/model/sthDatabaseNameMapper');
 const expect = require('expect.js');
 
-describe('sthDatabaseNameMapper tests', function() {
-    describe('mapping tests', function() {
+describe('sthDatabaseNameMapper tests', function () {
+    describe('mapping tests', function () {
         const ORIGINAL_DATA_MODEL = sthConfig.DATA_MODEL;
         const ORIGINAL_NAME_MAPPING = sthConfig.NAME_MAPPING;
 
-        before(function() {
+        before(function () {
             sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
         });
 
-        it("should map the 'testservice' service as 'mappedtestservice'", function() {
+        it("should map the 'testservice' service as 'mappedtestservice'", function () {
             expect(sthDatabaseNameMapper.mapService('testservice')).to.equal('mappedtestservice');
         });
 
-        it("should map the 'testservicepath' service path as '/mappedtestservicepath'", function() {
+        it("should map the 'testservicepath' service path as '/mappedtestservicepath'", function () {
             expect(sthDatabaseNameMapper.mapServicePath('testservice', '/testservicepath')).to.equal(
                 '/mappedtestservicepath'
             );
         });
 
-        it("should map the 'entityId' entity id or name as 'mappedEntityId'", function() {
+        it("should map the 'entityId' entity id or name as 'mappedEntityId'", function () {
             expect(sthDatabaseNameMapper.mapEntityName('testservice', '/testservicepath', 'entityId')).to.equal(
                 'mappedEntityId'
             );
         });
 
-        it("should map the 'entityType' entity type as 'mappedEntityType'", function() {
+        it("should map the 'entityType' entity type as 'mappedEntityType'", function () {
             expect(sthDatabaseNameMapper.mapEntityType('testservice', '/testservicepath', 'entityType')).to.equal(
                 'mappedEntityType'
             );
         });
 
-        it("should map the 'attrName' attribute name as 'mappedAttrName'", function() {
+        it("should map the 'attrName' attribute name as 'mappedAttrName'", function () {
             expect(
                 sthDatabaseNameMapper.mapAttributeName('testservice', '/testservicepath', 'entityId', 'attrName')
             ).to.equal('mappedAttrName');
         });
 
-        it("should map the 'attrType' attribute type as 'mappedAttrType'", function() {
+        it("should map the 'attrType' attribute type as 'mappedAttrType'", function () {
             expect(
                 sthDatabaseNameMapper.mapAttributeType('testservice', '/testservicepath', 'entityId', 'attrType')
             ).to.equal('mappedAttrType');
@@ -240,43 +238,43 @@ describe('sthDatabaseNameMapper tests', function() {
             }
         );
 
-        after(function() {
+        after(function () {
             sthConfig.DATA_MODEL = ORIGINAL_DATA_MODEL;
             sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
         });
     });
 
-    describe('unmapping tests', function() {
+    describe('unmapping tests', function () {
         const ORIGINAL_DATA_MODEL = sthConfig.DATA_MODEL;
         const ORIGINAL_NAME_MAPPING = sthConfig.NAME_MAPPING;
 
-        before(function() {
+        before(function () {
             sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
         });
 
-        it("should unmap the 'mappedtestservice' service as 'testservice'", function() {
+        it("should unmap the 'mappedtestservice' service as 'testservice'", function () {
             expect(sthDatabaseNameMapper.unmapService('mappedtestservice')).to.equal('testservice');
         });
 
-        it("should unmap the 'testservicepath' service path as '/mappedtestservicepath'", function() {
+        it("should unmap the 'testservicepath' service path as '/mappedtestservicepath'", function () {
             expect(sthDatabaseNameMapper.unmapServicePath('mappedtestservice', '/mappedtestservicepath')).to.equal(
                 '/testservicepath'
             );
         });
 
-        it("should unmap the 'mappedEntityId' entity id or name as '/entityId'", function() {
+        it("should unmap the 'mappedEntityId' entity id or name as '/entityId'", function () {
             expect(
                 sthDatabaseNameMapper.unmapEntityName('mappedtestservice', '/mappedtestservicepath', 'mappedEntityId')
             ).to.equal('entityId');
         });
 
-        it("should unmap the 'mappedEntityType' entity type as '/entityType'", function() {
+        it("should unmap the 'mappedEntityType' entity type as '/entityType'", function () {
             expect(
                 sthDatabaseNameMapper.unmapEntityType('mappedtestservice', '/mappedtestservicepath', 'mappedEntityType')
             ).to.equal('entityType');
         });
 
-        it("should unmap the 'mappedAttrName' attribute name as '/attrName'", function() {
+        it("should unmap the 'mappedAttrName' attribute name as '/attrName'", function () {
             expect(
                 sthDatabaseNameMapper.unmapAttributeName(
                     'mappedtestservice',
@@ -287,7 +285,7 @@ describe('sthDatabaseNameMapper tests', function() {
             ).to.equal('attrName');
         });
 
-        it("should unmap the 'mappedAttrType' attribute type as '/attrType'", function() {
+        it("should unmap the 'mappedAttrType' attribute type as '/attrType'", function () {
             expect(
                 sthDatabaseNameMapper.unmapAttributeType(
                     'mappedtestservice',
@@ -467,7 +465,7 @@ describe('sthDatabaseNameMapper tests', function() {
             }
         );
 
-        after(function() {
+        after(function () {
             sthConfig.DATA_MODEL = ORIGINAL_DATA_MODEL;
             sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
         });

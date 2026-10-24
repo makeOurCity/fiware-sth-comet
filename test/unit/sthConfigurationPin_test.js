@@ -23,24 +23,24 @@ const sthConfig = require(ROOT_PATH + '/lib/configuration/sthConfiguration');
 const sthConfigurationPin = require(ROOT_PATH + '/test/unit/sthConfigurationPin');
 const expect = require('expect.js');
 
-describe('sthConfigurationPin', function() {
+describe('sthConfigurationPin', function () {
     let originalDataModel;
 
-    beforeEach(function() {
+    beforeEach(function () {
         originalDataModel = sthConfig.DATA_MODEL;
     });
 
-    afterEach(function() {
+    afterEach(function () {
         sthConfig.DATA_MODEL = originalDataModel;
     });
 
-    it('should set the configuration values changed by other tests back to their initial values', function() {
+    it('should set the configuration values changed by other tests back to their initial values', function () {
         sthConfig.DATA_MODEL = sthConfig.DATA_MODELS.COLLECTION_PER_SERVICE_PATH;
         sthConfigurationPin.pinInitialConfiguration();
         expect(sthConfig.DATA_MODEL).to.equal(sthConfigurationPin.INITIAL_CONFIGURATION.DATA_MODEL);
     });
 
-    it('should return a function restoring the values previous to pinning them', function() {
+    it('should return a function restoring the values previous to pinning them', function () {
         sthConfig.DATA_MODEL = sthConfig.DATA_MODELS.COLLECTION_PER_SERVICE_PATH;
         const restore = sthConfigurationPin.pinInitialConfiguration();
         restore();

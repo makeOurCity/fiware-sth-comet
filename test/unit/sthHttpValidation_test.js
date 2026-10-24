@@ -160,22 +160,22 @@ function getRequests() {
     };
 }
 
-describe('HTTP API validation snapshots', function() {
+describe('HTTP API validation snapshots', function () {
     let restoreConfiguration;
 
-    before(function() {
+    before(function () {
         // The responses depend on the data model and the naming of the collections
         restoreConfiguration = sthConfigurationPin.pinInitialConfiguration();
     });
 
-    after(function() {
+    after(function () {
         restoreConfiguration();
     });
 
     const matcher = sthSnapshot.createMatcher(path.join(__dirname, 'snapshots', 'sthHttpValidation.json'));
     const requests = getRequests();
 
-    before(function(done) {
+    before(function (done) {
         // No request is expected to reach the database, but the connection is established in case any of them does
         sthDatabase.connect(
             {
@@ -185,29 +185,29 @@ describe('HTTP API validation snapshots', function() {
                 database: sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE),
                 poolSize: sthConfig.POOL_SIZE
             },
-            function(err) {
+            function (err) {
                 if (err) {
                     return done(err);
                 }
-                return sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err) {
+                return sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function (err) {
                     done(err);
                 });
             }
         );
     });
 
-    after(function(done) {
+    after(function (done) {
         matcher.save();
-        sthServer.stopServer(function() {
-            sthDatabase.closeConnection(function() {
+        sthServer.stopServer(function () {
+            sthDatabase.closeConnection(function () {
                 done();
             });
         });
     });
 
-    Object.keys(requests).forEach(function(name) {
+    Object.keys(requests).forEach(function (name) {
         const request = requests[name];
-        it(name + ': ' + request.method + ' ' + request.path, function(done) {
+        it(name + ': ' + request.method + ' ' + request.path, function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: request.method,
@@ -215,7 +215,7 @@ describe('HTTP API validation snapshots', function() {
                     headers: Object.assign({ 'Fiware-Correlator': 'validation-' + name }, request.headers),
                     body: request.body
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     matcher.match(name, sthSnapshot.toSnapshot(request, err, response));
                 })
             );

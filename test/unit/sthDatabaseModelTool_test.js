@@ -68,10 +68,7 @@ function connectToDatabase(callback) {
     if (sthDatabase.connection) {
         return process.nextTick(callback.bind(null, null, sthDatabase.connection));
     }
-    sthDatabase.connect(
-        DATABASE_CONNECTION_PARAMS,
-        callback
-    );
+    sthDatabase.connect(DATABASE_CONNECTION_PARAMS, callback);
 }
 
 /**
@@ -87,7 +84,7 @@ function dropCollection(type, dataModel, callback) {
             ? sthDatabaseNaming.getRawCollectionName(COLLECTION_NAME_PARAMS)
             : sthDatabaseNaming.getAggregatedCollectionName(COLLECTION_NAME_PARAMS);
 
-    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName), function(err) {
+    sthUtils.promiseToCallback(sthDatabase.connection.dropCollection(collectionName), function (err) {
         if (err && err.code === 26) {
             // The collection does not exist
             return process.nextTick(callback);
@@ -102,7 +99,7 @@ function dropCollection(type, dataModel, callback) {
  */
 function cleanDatabaseTests(dataType) {
     const dataModelsKeys = Object.keys(sthConfig.DATA_MODELS);
-    describe('database clean up', function() {
+    describe('database clean up', function () {
         for (let index1 = 0; index1 < dataModelsKeys.length; index1++) {
             // prettier-ignore
             it('should drop the ' + sthConfig.DATA_MODELS[dataModelsKeys[index1]] + ' ' + dataType + 
@@ -136,7 +133,7 @@ function insertData(dataType, aggregationType, dataModel, callback) {
             : sthDatabaseNaming.getAggregatedCollectionName(COLLECTION_NAME_PARAMS);
 
     const collection = sthDatabase.connection.collection(collectionName);
-    process.nextTick(function() {
+    process.nextTick(function () {
         INSERTION_PARAMS = {
             collection,
             recvTime: ATTRIBUTE.RECV_TIME[dataModel],
@@ -199,7 +196,7 @@ function isCollectionIncluded(analysis, databaseName, collectionName) {
  */
 function analysisInclusionTest(dataType, originDataModel, targetDataModel, done) {
     sthConfig.DATA_MODEL = targetDataModel;
-    sthDatabaseModelTool.getDataModelAnalysis(function(err, analysis) {
+    sthDatabaseModelTool.getDataModelAnalysis(function (err, analysis) {
         if (err) {
             return done(err);
         }
@@ -229,7 +226,7 @@ function analysisInclusionTest(dataType, originDataModel, targetDataModel, done)
  */
 function analysisExclusionTest(dataType, originDataModel, targetDataModel, done) {
     sthConfig.DATA_MODEL = targetDataModel;
-    sthDatabaseModelTool.getDataModelAnalysis(function(err, analysis) {
+    sthDatabaseModelTool.getDataModelAnalysis(function (err, analysis) {
         if (err) {
             return done(err);
         }
@@ -255,7 +252,7 @@ function analysisExclusionTest(dataType, originDataModel, targetDataModel, done)
  */
 function systemCollectionNotIncludedTest(targetDataModel, done) {
     sthConfig.DATA_MODEL = targetDataModel;
-    sthDatabaseModelTool.getDataModelAnalysis(function(err, analysis) {
+    sthDatabaseModelTool.getDataModelAnalysis(function (err, analysis) {
         if (err) {
             return done(err);
         }
@@ -278,7 +275,7 @@ function systemCollectionNotIncludedTest(targetDataModel, done) {
  * @param  {String}  aggregationType The aggregation type
  */
 function collectionPerAttributeAnalysisTests(dataType, aggregationType) {
-    describe('collection per attribute analysis', function() {
+    describe('collection per attribute analysis', function () {
         // prettier-ignore
         it('should insert data into the ' + sthConfig.DATA_MODELS.COLLECTION_PER_ATTRIBUTE + ' ' + dataType +
             ' data collection',
@@ -349,7 +346,7 @@ function collectionPerAttributeAnalysisTests(dataType, aggregationType) {
  * @param  {String}  aggregationType The aggregation type
  */
 function collectionPerEntityAnalysisTests(dataType, aggregationType) {
-    describe('col// pretty analysis', function() {
+    describe('col// pretty analysis', function () {
         // prettier-ignore
         it( 'should insert data into the ' + sthConfig.DATA_MODELS.COLLECTION_PER_ENTITY +  ' ' + dataType +
             ' data collection',
@@ -419,7 +416,7 @@ function collectionPerEntityAnalysisTests(dataType, aggregationType) {
  * @param  {String}  aggregationType The aggregation type
  */
 function collectionPerServicePathAnalysisTests(dataType, aggregationType) {
-    describe('collection per service path analysis', function() {
+    describe('collection per service path analysis', function () {
         // prettier-ignore
         it('should insert data into the ' + sthConfig.DATA_MODELS.COLLECTION_PER_SERVICE_PATH + ' ' + dataType +
             ' data collection',
@@ -512,7 +509,7 @@ function getQuery4RawDataMigrationTest(originDataModel, targetDataModel) {
 function expectCollectionRemoved(collectionName, callback) {
     sthUtils.promiseToCallback(
         sthDatabase.connection.listCollections({ name: collectionName }, { nameOnly: true }).toArray(),
-        function(err, collections) {
+        function (err, collections) {
             if (err) {
                 return callback(err);
             }
@@ -539,12 +536,12 @@ function expectCollectionRemoved(collectionName, callback) {
  */
 function expectRawDataMigration(params, options, done) {
     const targetCollection = sthDatabase.connection.collection(params.targetCollectionName);
-    process.nextTick(function() {
+    process.nextTick(function () {
         sthUtils.promiseToCallback(
             targetCollection
                 .find(getQuery4RawDataMigrationTest(params.originDataModel, params.targetDataModel))
                 .toArray(),
-            function(err, results) {
+            function (err, results) {
                 if (err) {
                     return done(err);
                 }
@@ -558,7 +555,7 @@ function expectRawDataMigration(params, options, done) {
                     targetCollection
                         .find(getQuery4RawDataMigrationTest(params.targetDataModel, params.targetDataModel))
                         .toArray(),
-                    function(err, results) {
+                    function (err, results) {
                         if (err) {
                             return done(err);
                         }
@@ -644,7 +641,7 @@ function expectAggregatedDataMigration4Resolution(params, options, callback) {
         params.targetDataModel,
         params.resolution
     );
-    sthUtils.promiseToCallback(params.targetCollection.find(query).toArray(), function(err, results) {
+    sthUtils.promiseToCallback(params.targetCollection.find(query).toArray(), function (err, results) {
         if (err) {
             return process.nextTick(callback.bind(this, err));
         }
@@ -703,7 +700,7 @@ function expectAggregatedDataMigration(params, options, done) {
             },
             function onTargetCollection(targetCollection, callback) {
                 const expect4Resolution = [];
-                sthConfig.AGGREGATION_BY.forEach(function(resolution) {
+                sthConfig.AGGREGATION_BY.forEach(function (resolution) {
                     params.resolution = resolution;
                     params.targetCollection = targetCollection;
                     expect4Resolution.push(async.apply(expectAggregatedDataMigration4Resolution, params, options));
@@ -751,7 +748,7 @@ function migrationTest(params, options, done) {
             : sthDatabaseNaming.getAggregatedCollectionName(COLLECTION_NAME_PARAMS);
     params.targetCollectionName = targetCollectionName;
 
-    sthDatabaseModelTool.migrateCollection(DATABASE_NAME, originCollectionName, options, function(err) {
+    sthDatabaseModelTool.migrateCollection(DATABASE_NAME, originCollectionName, options, function (err) {
         if (err) {
             return done(err);
         }
@@ -778,7 +775,7 @@ function noMigrationTest(dataType, originDataModel, targetDataModel, done) {
             : sthDatabaseNaming.getAggregatedCollectionName(COLLECTION_NAME_PARAMS);
 
     sthConfig.DATA_MODEL = targetDataModel;
-    sthDatabaseModelTool.migrateCollection(DATABASE_NAME, originCollectionName, function(err) {
+    sthDatabaseModelTool.migrateCollection(DATABASE_NAME, originCollectionName, function (err) {
         /* eslint-disable-next-line no-unused-expressions */
         expect(err).to.exit;
         done();
@@ -792,7 +789,7 @@ function noMigrationTest(dataType, originDataModel, targetDataModel, done) {
  * @param  {String} aggregationType The aggregation type
  */
 function collectionPerEntityNotUpdatableMigrationTests(dataType, aggregationType) {
-    describe('collection per entity not updatable migration', function() {
+    describe('collection per entity not updatable migration', function () {
         // prettier-ignore
         it('should insert data into the ' + sthConfig.DATA_MODELS.COLLECTION_PER_ENTITY + ' ' +
             dataType + ' data collection',
@@ -833,7 +830,7 @@ function collectionPerEntityNotUpdatableMigrationTests(dataType, aggregationType
  *                                                          it exists
  */
 function collectionPerEntityCleanMigrationTests(dataType, aggregationType, options) {
-    describe('collection per entity clean migration', function() {
+    describe('collection per entity clean migration', function () {
         // prettier-ignore
         it('should insert data into the ' + sthConfig.DATA_MODELS.COLLECTION_PER_ENTITY + ' ' + dataType + 
             ' data collection',
@@ -873,7 +870,7 @@ function collectionPerEntityCleanMigrationTests(dataType, aggregationType, optio
  *                                                          it exists
  */
 function collectionPerEntityUpdateMigrationTests(dataType, aggregationType, options) {
-    describe('collection per entity updatable migration', function() {
+    describe('collection per entity updatable migration', function () {
         // prettier-ignore
         it('should insert data into the ' + sthConfig.DATA_MODELS.COLLECTION_PER_ENTITY + ' ' + dataType +
             ' data collection',
@@ -908,15 +905,15 @@ function collectionPerEntityUpdateMigrationTests(dataType, aggregationType, opti
     });
 }
 
-describe('sthDatabaseModelTool tests', function() {
+describe('sthDatabaseModelTool tests', function () {
     this.timeout(5000);
     const originalDataModel = sthConfig.DATA_MODEL;
-    [sthConfig.AGGREGATIONS.NUMERIC, sthConfig.AGGREGATIONS.TEXTUAL].forEach(function(aggregationType) {
-        describe(aggregationType + ' aggregation type', function() {
+    [sthConfig.AGGREGATIONS.NUMERIC, sthConfig.AGGREGATIONS.TEXTUAL].forEach(function (aggregationType) {
+        describe(aggregationType + ' aggregation type', function () {
             const dataTypes = Object.keys(sthTestConfig.DATA_TYPES);
-            dataTypes.forEach(function(dataType) {
-                describe(sthTestConfig.DATA_TYPES[dataType] + ' data', function() {
-                    describe('data model analysis', function() {
+            dataTypes.forEach(function (dataType) {
+                describe(sthTestConfig.DATA_TYPES[dataType] + ' data', function () {
+                    describe('data model analysis', function () {
                         before(connectToDatabase);
 
                         cleanDatabaseTests(dataType);
@@ -928,7 +925,7 @@ describe('sthDatabaseModelTool tests', function() {
                         collectionPerServicePathAnalysisTests(sthTestConfig.DATA_TYPES[dataType], aggregationType);
                     });
 
-                    describe('data model migration', function() {
+                    describe('data model migration', function () {
                         before(connectToDatabase);
 
                         cleanDatabaseTests(dataType);
@@ -963,7 +960,7 @@ describe('sthDatabaseModelTool tests', function() {
         });
     });
 
-    after(function() {
+    after(function () {
         sthConfig.DATA_MODEL = originalDataModel;
     });
 });

@@ -30,18 +30,18 @@ const sthTestHelper = require(ROOT_PATH + '/test/unit/sthTestUtils.js');
 const expect = require('expect.js');
 const sthHttpTestClient = require(ROOT_PATH + '/test/unit/sthHttpTestClient');
 
-describe('sthGetLogLevelHandler tests', function() {
-    after(function(done) {
+describe('sthGetLogLevelHandler tests', function () {
+    after(function (done) {
         // Leave neither the server nor the database connection open for the next test files
-        sth.sthServer.stopServer(function() {
-            sth.sthDatabase.closeConnection(function() {
+        sth.sthServer.stopServer(function () {
+            sth.sthDatabase.closeConnection(function () {
                 done();
             });
         });
     });
 
-    describe('database connection', function() {
-        it('should be a database available', function(done) {
+    describe('database connection', function () {
+        it('should be a database available', function (done) {
             sth.sthDatabase.connect(
                 {
                     authentication: sthConfig.DB_AUTHENTICATION,
@@ -50,22 +50,22 @@ describe('sthGetLogLevelHandler tests', function() {
                     database: sthDatabaseNaming.getDatabaseName(sthConfig.DEFAULT_SERVICE),
                     poolSize: sthConfig.POOL_SIZE
                 },
-                function(err) {
+                function (err) {
                     done(err);
                 }
             );
         });
     });
 
-    describe('database clean up', function() {
+    describe('database clean up', function () {
         it('should drop the event raw data collection if it exists', sthTestHelper.dropRawEventCollectionTest);
 
         it('should drop the aggregated data collection if it exists', sthTestHelper.dropAggregatedDataCollectionTest);
     });
 
-    describe('server start', function() {
-        it('should start gracefully', function(done) {
-            sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function(err, server) {
+    describe('server start', function () {
+        it('should start gracefully', function (done) {
+            sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function (err, server) {
                 expect(err).to.not.be.ok();
                 expect(server.info.started).to.be.greaterThan(0);
                 done();
@@ -73,14 +73,14 @@ describe('sthGetLogLevelHandler tests', function() {
         });
     });
 
-    describe('GET /admin/log', function() {
-        it('should respond with the logging level', function(done) {
+    describe('GET /admin/log', function () {
+        it('should respond with the logging level', function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: 'GET',
                     path: new URL(sthTestHelper.getURL(sthTestConfig.API_OPERATION.ADMIN.GET_LOG_LEVEL)).pathname
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(JSON.parse(response.body).level).to.equal(sthConfig.LOGOPS_LEVEL);
                 })

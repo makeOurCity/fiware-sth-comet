@@ -59,39 +59,36 @@ const DATABASE_CONNECTION_PARAMS = {
     poolSize: sthConfig.POOL_SIZE
 };
 
-describe('return 500 test', function() {
+describe('return 500 test', function () {
     this.timeout(5000);
-    describe('database connection', function() {
+    describe('database connection', function () {
         let contextResponseNumericWithFixedTimeInstantV1;
 
-        before(function(done) {
-            sthDatabase.connect(
-                DATABASE_CONNECTION_PARAMS,
-                function(err) {
-                    if (err) {
-                        return done(err);
-                    }
-                    // It is needed to start the server for e2e test using HTTP endpoint. Otherwise, this step is not needed
-                    sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function() {
-                        sthDatabase.closeConnection(function(err) {
-                            if (err) {
-                                return done(err);
-                            }
-                            contextResponseNumericWithFixedTimeInstantV1 = require('./contextResponses/V1contextResponseNumericWithFixedTimeInstant');
-                            done();
-                        });
-                    });
+        before(function (done) {
+            sthDatabase.connect(DATABASE_CONNECTION_PARAMS, function (err) {
+                if (err) {
+                    return done(err);
                 }
-            );
+                // It is needed to start the server for e2e test using HTTP endpoint. Otherwise, this step is not needed
+                sth.sthServer.startServer(sthConfig.STH_HOST, sthConfig.STH_PORT, function () {
+                    sthDatabase.closeConnection(function (err) {
+                        if (err) {
+                            return done(err);
+                        }
+                        contextResponseNumericWithFixedTimeInstantV1 = require('./contextResponses/V1contextResponseNumericWithFixedTimeInstant');
+                        done();
+                    });
+                });
+            });
         });
 
-        after(function(done) {
-            sth.sthServer.stopServer(function() {
+        after(function (done) {
+            sth.sthServer.stopServer(function () {
                 done();
             });
         });
 
-        it('should return 500 when GET http request V1 (e2e)', function(done) {
+        it('should return 500 when GET http request V1 (e2e)', function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: 'GET',
@@ -103,9 +100,8 @@ describe('return 500 test', function() {
                                 dateFrom:
                                     contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
                                         .attributes[0].metadatas[0].value,
-                                dateTo:
-                                    contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
-                                        .attributes[0].metadatas[0].value
+                                dateTo: contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
+                                    .attributes[0].metadatas[0].value
                             },
                             contextResponseNumericWithFixedTimeInstantV1.contextResponses[0].contextElement
                                 .attributes[0].name
@@ -113,7 +109,7 @@ describe('return 500 test', function() {
                     ),
                     headers: FIWARE_HEADERS
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(500);
                     expect(JSON.parse(response.body).statusCode).to.equal(500);
@@ -123,7 +119,7 @@ describe('return 500 test', function() {
             );
         });
 
-        it('should return 500 when DELETE http request V1 (e2e)', function(done) {
+        it('should return 500 when DELETE http request V1 (e2e)', function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: 'DELETE',
@@ -136,7 +132,7 @@ describe('return 500 test', function() {
                     ),
                     headers: FIWARE_HEADERS
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(500);
                     expect(JSON.parse(response.body).statusCode).to.equal(500);
@@ -146,7 +142,7 @@ describe('return 500 test', function() {
             );
         });
 
-        it('should return 500 when GET http request V2 (e2e)', function(done) {
+        it('should return 500 when GET http request V2 (e2e)', function (done) {
             sthHttpTestClient.sendRequest(
                 {
                     method: 'GET',
@@ -164,7 +160,7 @@ describe('return 500 test', function() {
                     ),
                     headers: FIWARE_HEADERS
                 },
-                sthHttpTestClient.assertResponse(done, function(err, response) {
+                sthHttpTestClient.assertResponse(done, function (err, response) {
                     expect(err).to.equal(null);
                     expect(response.statusCode).to.equal(500);
                     expect(JSON.parse(response.body).error).to.equal('InternalServer Error');

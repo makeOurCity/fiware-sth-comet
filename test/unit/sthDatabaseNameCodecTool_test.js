@@ -60,10 +60,7 @@ function connectToDatabase(callback) {
     if (sthDatabase.connection) {
         return process.nextTick(callback.bind(null, null, sthDatabase.connection));
     }
-    sthDatabase.connect(
-        DATABASE_CONNECTION_PARAMS,
-        callback
-    );
+    sthDatabase.connect(DATABASE_CONNECTION_PARAMS, callback);
 }
 
 /**
@@ -92,11 +89,8 @@ function createRawAndAggregatedCollections(callback) {
  * @param  {Function} callback       The callback
  */
 function checkCollectionExists(databaseName, collectionName, callback) {
-    const collectionsList = sthDatabase.client
-        .db(databaseName)
-        .listCollections({ name: collectionName })
-        .toArray();
-    sthUtils.promiseToCallback(collectionsList, function(err, collections) {
+    const collectionsList = sthDatabase.client.db(databaseName).listCollections({ name: collectionName }).toArray();
+    sthUtils.promiseToCallback(collectionsList, function (err, collections) {
         if (err) {
             return process.nextTick(callback.bind(null, err));
         }
@@ -116,7 +110,7 @@ function dropDatabases(callback) {
     ];
     async.eachSeries(
         databaseNames,
-        function(databaseName, callback) {
+        function (databaseName, callback) {
             sthUtils.promiseToCallback(sthDatabase.client.db(databaseName).dropDatabase(), callback);
         },
         callback
@@ -129,7 +123,7 @@ function dropDatabases(callback) {
  * @param  {Function} callback      The callback
  */
 function encodeDecodeMandatoryOptionsTest(function2Test, callback) {
-    function2Test({}, function(err) {
+    function2Test({}, function (err) {
         expect(err instanceof sthErrors.MandatoryOptionNotFound).to.be.ok();
         process.nextTick(callback);
     });
@@ -145,7 +139,7 @@ function collectionAndDatabaseMandatoryOptionsTest(function2Test, callback) {
         {
             collection: sthConfig.COLLECTION_PREFIX + 'any_collection'
         },
-        function(err) {
+        function (err) {
             expect(err instanceof sthErrors.MandatoryOptionNotFound).to.be.ok();
             process.nextTick(callback);
         }
@@ -164,7 +158,7 @@ function shouldDetectCollectionTest(encodingFlag, databaseName, collectionName, 
             encode: !!encodingFlag,
             decode: !encodingFlag
         },
-        function(err, analysis) {
+        function (err, analysis) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
@@ -189,7 +183,7 @@ function shouldNotDetectCollectionTest(encodingFlag, databaseName, callback) {
             database: databaseName,
             collection: sthConfig.COLLECTION_PREFIX + 'inexistent_collection'
         },
-        function(err, analysis) {
+        function (err, analysis) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
@@ -207,12 +201,12 @@ function shouldNotDetectCollectionTest(encodingFlag, databaseName, callback) {
  */
 function checkDatabaseExists(databaseName, callback) {
     const adminDB = sthDatabase.connection.admin();
-    sthUtils.promiseToCallback(adminDB.listDatabases(), function(err, databases) {
+    sthUtils.promiseToCallback(adminDB.listDatabases(), function (err, databases) {
         if (err) {
             return process.nextTick(callback.bind(null, err));
         }
         let databaseFound = false;
-        databases.databases.forEach(function(database) {
+        databases.databases.forEach(function (database) {
             if (database.name === databaseName) {
                 databaseFound = true;
                 return process.nextTick(callback.bind(null, null, databaseFound));
@@ -238,11 +232,11 @@ function shouldEncodeOrDecodeDatabaseTest(databaseName, encodingFlag, callback) 
             decode: !encodingFlag,
             database: databaseName
         },
-        function(err) {
+        function (err) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
-            checkDatabaseExists(databaseName, function(err, exists) {
+            checkDatabaseExists(databaseName, function (err, exists) {
                 if (err) {
                     return process.nextTick(callback.bind(null, err));
                 }
@@ -251,7 +245,7 @@ function shouldEncodeOrDecodeDatabaseTest(databaseName, encodingFlag, callback) 
                     encodingFlag
                         ? sthDatabaseNameCodec.encodeDatabaseName(databaseName)
                         : sthDatabaseNameCodec.decodeDatabaseName(databaseName),
-                    function(err, exists) {
+                    function (err, exists) {
                         if (err) {
                             return process.nextTick(callback.bind(null, err));
                         }
@@ -279,11 +273,11 @@ function shouldEncodeOrDecodeCollectionTest(databaseName, collectionName, encodi
             database: databaseName,
             collection: collectionName
         },
-        function(err) {
+        function (err) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
-            checkCollectionExists(databaseName, collectionName, function(err, exists) {
+            checkCollectionExists(databaseName, collectionName, function (err, exists) {
                 if (err) {
                     return process.nextTick(callback.bind(null, err));
                 }
@@ -295,7 +289,7 @@ function shouldEncodeOrDecodeCollectionTest(databaseName, collectionName, encodi
                     encodingFlag
                         ? sthDatabaseNameCodec.encodeCollectionName(collectionName)
                         : sthDatabaseNameCodec.decodeCollectionName(collectionName),
-                    function(err, exists) {
+                    function (err, exists) {
                         if (err) {
                             return process.nextTick(callback.bind(null, err));
                         }
@@ -308,16 +302,16 @@ function shouldEncodeOrDecodeCollectionTest(databaseName, collectionName, encodi
     );
 }
 
-describe('sthDatabaseNameCodecTool tests', function() {
+describe('sthDatabaseNameCodecTool tests', function () {
     this.timeout(5000);
     const ORIGINAL_NAME_ENCODING = sthConfig.NAME_ENCODING;
     const ORIGINAL_NAME_SEPARATOR = sthConfig.NAME_SEPARATOR;
 
-    describe('getEncodingAnalysis tests', function() {
-        describe('name encoding disabled', function() {
+    describe('getEncodingAnalysis tests', function () {
+        describe('name encoding disabled', function () {
             sthConfig.NAME_ENCODING = false;
             sthConfig.NAME_SEPARATOR = '_';
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_ENCODING = false;
                 sthConfig.NAME_SEPARATOR = '_';
                 async.series([connectToDatabase, dropDatabases, createRawAndAggregatedCollections], done);
@@ -333,12 +327,12 @@ describe('sthDatabaseNameCodecTool tests', function() {
                 collectionAndDatabaseMandatoryOptionsTest.bind(null, sthDatabaseNameCodecTool.getEncodingAnalysis)
             );
 
-            it("should detect database '" + DATABASE_NAME + "' as susceptible of being encoded", function(done) {
+            it("should detect database '" + DATABASE_NAME + "' as susceptible of being encoded", function (done) {
                 sthDatabaseNameCodecTool.getEncodingAnalysis(
                     {
                         encode: true
                     },
-                    function(err, analysis) {
+                    function (err, analysis) {
                         if (err) {
                             return done(err);
                         }
@@ -402,7 +396,7 @@ describe('sthDatabaseNameCodecTool tests', function() {
                 shouldNotDetectCollectionTest.bind(null, true, DATABASE_NAME)
             );
 
-            after(function() {
+            after(function () {
                 sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
                 sthConfig.NAME_SEPARATOR = ORIGINAL_NAME_SEPARATOR;
             });
@@ -410,10 +404,10 @@ describe('sthDatabaseNameCodecTool tests', function() {
             sthConfig.NAME_SEPARATOR = ORIGINAL_NAME_SEPARATOR;
         });
 
-        describe('name encoding enabled', function() {
+        describe('name encoding enabled', function () {
             sthConfig.NAME_ENCODING = true;
             sthConfig.NAME_SEPARATOR = 'xffff';
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_ENCODING = true;
                 sthConfig.NAME_SEPARATOR = 'xffff';
                 async.series([dropDatabases, createRawAndAggregatedCollections], done);
@@ -468,7 +462,7 @@ describe('sthDatabaseNameCodecTool tests', function() {
                 shouldNotDetectCollectionTest.bind(null, false, sthDatabaseNaming.getDatabaseName(DEFAULT_SERVICE))
             );
 
-            after(function() {
+            after(function () {
                 sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
                 sthConfig.NAME_SEPARATOR = ORIGINAL_NAME_SEPARATOR;
             });
@@ -477,11 +471,11 @@ describe('sthDatabaseNameCodecTool tests', function() {
         });
     });
 
-    describe('encodeOrDecode tests', function() {
-        describe('name encoding disabled', function() {
+    describe('encodeOrDecode tests', function () {
+        describe('name encoding disabled', function () {
             sthConfig.NAME_ENCODING = false;
             sthConfig.NAME_SEPARATOR = '_';
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_ENCODING = false;
                 sthConfig.NAME_SEPARATOR = '_';
                 async.series([dropDatabases, createRawAndAggregatedCollections], done);
@@ -536,7 +530,7 @@ describe('sthDatabaseNameCodecTool tests', function() {
                 )
             );
 
-            after(function() {
+            after(function () {
                 sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
                 sthConfig.NAME_SEPARATOR = ORIGINAL_NAME_SEPARATOR;
             });
@@ -544,10 +538,10 @@ describe('sthDatabaseNameCodecTool tests', function() {
             sthConfig.NAME_SEPARATOR = ORIGINAL_NAME_SEPARATOR;
         });
 
-        describe('name encoding enabled', function() {
+        describe('name encoding enabled', function () {
             sthConfig.NAME_ENCODING = true;
             sthConfig.NAME_SEPARATOR = 'xffff';
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_ENCODING = true;
                 sthConfig.NAME_SEPARATOR = 'xffff';
                 async.series([dropDatabases, createRawAndAggregatedCollections], done);
@@ -602,7 +596,7 @@ describe('sthDatabaseNameCodecTool tests', function() {
                 )
             );
 
-            after(function(done) {
+            after(function (done) {
                 sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
                 sthConfig.NAME_SEPARATOR = ORIGINAL_NAME_SEPARATOR;
                 dropDatabases(done);

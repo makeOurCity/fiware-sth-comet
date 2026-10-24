@@ -60,10 +60,7 @@ function connectToDatabase(callback) {
     if (sthDatabase.connection) {
         return process.nextTick(callback.bind(null, null, sthDatabase.connection));
     }
-    sthDatabase.connect(
-        DATABASE_CONNECTION_PARAMS,
-        callback
-    );
+    sthDatabase.connect(DATABASE_CONNECTION_PARAMS, callback);
 }
 
 /**
@@ -92,11 +89,8 @@ function createRawAndAggregatedCollections(callback) {
  * @param  {Function} callback       The callback
  */
 function checkCollectionExists(databaseName, collectionName, callback) {
-    const collectionsList = sthDatabase.client
-        .db(databaseName)
-        .listCollections({ name: collectionName })
-        .toArray();
-    sthUtils.promiseToCallback(collectionsList, function(err, collections) {
+    const collectionsList = sthDatabase.client.db(databaseName).listCollections({ name: collectionName }).toArray();
+    sthUtils.promiseToCallback(collectionsList, function (err, collections) {
         if (err) {
             return process.nextTick(callback.bind(null, err));
         }
@@ -116,7 +110,7 @@ function dropDatabases(callback) {
     ];
     async.eachSeries(
         databaseNames,
-        function(databaseName, callback) {
+        function (databaseName, callback) {
             sthUtils.promiseToCallback(sthDatabase.client.db(databaseName).dropDatabase(), callback);
         },
         callback
@@ -129,7 +123,7 @@ function dropDatabases(callback) {
  * @param  {Function} callback      The callback
  */
 function mapUnmapMandatoryOptionsTest(function2Test, callback) {
-    function2Test({}, function(err) {
+    function2Test({}, function (err) {
         expect(err instanceof sthErrors.MandatoryOptionNotFound).to.be.ok();
         process.nextTick(callback);
     });
@@ -145,7 +139,7 @@ function collectionAndDatabaseMandatoryOptionsTest(function2Test, callback) {
         {
             collection: sthConfig.COLLECTION_PREFIX + 'any_collection'
         },
-        function(err) {
+        function (err) {
             expect(err instanceof sthErrors.MandatoryOptionNotFound).to.be.ok();
             process.nextTick(callback);
         }
@@ -164,7 +158,7 @@ function shouldDetectCollectionTest(mappingFlag, databaseName, collectionName, c
             map: !!mappingFlag,
             unmap: !mappingFlag
         },
-        function(err, analysis) {
+        function (err, analysis) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
@@ -189,7 +183,7 @@ function shouldNotDetectCollectionTest(mappingFlag, databaseName, collectionName
             database: databaseName,
             collection: collectionName
         },
-        function(err, analysis) {
+        function (err, analysis) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
@@ -210,12 +204,12 @@ function shouldNotDetectCollectionTest(mappingFlag, databaseName, collectionName
  */
 function checkDatabaseExists(databaseName, callback) {
     const adminDB = sthDatabase.connection.admin();
-    sthUtils.promiseToCallback(adminDB.listDatabases(), function(err, databases) {
+    sthUtils.promiseToCallback(adminDB.listDatabases(), function (err, databases) {
         if (err) {
             return process.nextTick(callback.bind(null, err));
         }
         let databaseFound = false;
-        databases.databases.forEach(function(database) {
+        databases.databases.forEach(function (database) {
             if (database.name === databaseName) {
                 databaseFound = true;
                 return process.nextTick(callback.bind(null, null, databaseFound));
@@ -241,11 +235,11 @@ function shouldMapOrUnmapDatabaseTest(databaseName, mappingFlag, callback) {
             unmap: !mappingFlag,
             database: databaseName
         },
-        function(err) {
+        function (err) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
-            checkDatabaseExists(databaseName, function(err, exists) {
+            checkDatabaseExists(databaseName, function (err, exists) {
                 if (err) {
                     return process.nextTick(callback.bind(null, err));
                 }
@@ -254,7 +248,7 @@ function shouldMapOrUnmapDatabaseTest(databaseName, mappingFlag, callback) {
                     mappingFlag
                         ? sthDatabaseNameMapper.mapDatabaseName(databaseName)
                         : sthDatabaseNameMapper.unmapDatabaseName(databaseName),
-                    function(err, exists) {
+                    function (err, exists) {
                         if (err) {
                             return process.nextTick(callback.bind(null, err));
                         }
@@ -281,11 +275,11 @@ function shouldNotMapOrUnmapDatabaseTest(databaseName, mappingFlag, callback) {
             unmap: !mappingFlag,
             database: databaseName
         },
-        function(err) {
+        function (err) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
-            checkDatabaseExists(databaseName, function(err, exists) {
+            checkDatabaseExists(databaseName, function (err, exists) {
                 if (err) {
                     return process.nextTick(callback.bind(null, err));
                 }
@@ -311,11 +305,11 @@ function shouldMapOrUnmapCollectionTest(databaseName, collectionName, mappingFla
             database: databaseName,
             collection: collectionName
         },
-        function(err) {
+        function (err) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
-            checkCollectionExists(databaseName, collectionName, function(err, exists) {
+            checkCollectionExists(databaseName, collectionName, function (err, exists) {
                 if (err) {
                     return process.nextTick(callback.bind(null, err));
                 }
@@ -333,7 +327,7 @@ function shouldMapOrUnmapCollectionTest(databaseName, collectionName, mappingFla
                               sthDatabaseNameMapper.mapService(sthDatabaseNaming.getService(databaseName)),
                               collectionName
                           ),
-                    function(err, exists) {
+                    function (err, exists) {
                         if (err) {
                             return process.nextTick(callback.bind(null, err));
                         }
@@ -361,11 +355,11 @@ function shouldNotMapOrUnmapCollectionTest(databaseName, collectionName, mapping
             database: databaseName,
             collection: collectionName
         },
-        function(err) {
+        function (err) {
             if (err) {
                 return process.nextTick(callback.bind(null, err));
             }
-            checkCollectionExists(databaseName, collectionName, function(err, exists) {
+            checkCollectionExists(databaseName, collectionName, function (err, exists) {
                 if (err) {
                     return process.nextTick(callback.bind(null, err));
                 }
@@ -376,13 +370,13 @@ function shouldNotMapOrUnmapCollectionTest(databaseName, collectionName, mapping
     );
 }
 
-describe('sthDatabaseNameMapperTool tests', function() {
+describe('sthDatabaseNameMapperTool tests', function () {
     const ORIGINAL_NAME_MAPPING = sthConfig.NAME_MAPPING;
 
-    describe('getMappingAnalysis tests', function() {
-        describe('name mapping disabled', function() {
+    describe('getMappingAnalysis tests', function () {
+        describe('name mapping disabled', function () {
             sthConfig.NAME_MAPPING = undefined;
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_MAPPING = undefined;
                 async.series([connectToDatabase, dropDatabases, createRawAndAggregatedCollections], done);
             });
@@ -397,12 +391,12 @@ describe('sthDatabaseNameMapperTool tests', function() {
                 collectionAndDatabaseMandatoryOptionsTest.bind(null, sthDatabaseNameMapperTool.getMappingAnalysis)
             );
 
-            it("should not detect database '" + DATABASE_NAME + "' as susceptible of being mapped", function(done) {
+            it("should not detect database '" + DATABASE_NAME + "' as susceptible of being mapped", function (done) {
                 sthDatabaseNameMapperTool.getMappingAnalysis(
                     {
                         map: true
                     },
-                    function(err, analysis) {
+                    function (err, analysis) {
                         if (err) {
                             return done(err);
                         }
@@ -477,15 +471,15 @@ describe('sthDatabaseNameMapperTool tests', function() {
                 )
             );
 
-            after(function() {
+            after(function () {
                 sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
             });
             sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
         });
 
-        describe('name mapping enabled', function() {
+        describe('name mapping enabled', function () {
             sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
                 async.series([dropDatabases, createRawAndAggregatedCollections], done);
             });
@@ -592,17 +586,17 @@ describe('sthDatabaseNameMapperTool tests', function() {
                 )
             );
 
-            after(function() {
+            after(function () {
                 sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
             });
             sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
         });
     });
 
-    describe('mapOrUnmap tests', function() {
-        describe('name mapping disabled', function() {
+    describe('mapOrUnmap tests', function () {
+        describe('name mapping disabled', function () {
             sthConfig.NAME_MAPPING = undefined;
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_MAPPING = undefined;
                 async.series([dropDatabases, createRawAndAggregatedCollections], done);
             });
@@ -645,15 +639,15 @@ describe('sthDatabaseNameMapperTool tests', function() {
                 )
             );
 
-            after(function() {
+            after(function () {
                 sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
             });
             sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
         });
 
-        describe('name mapping enabled', function() {
+        describe('name mapping enabled', function () {
             sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
-            before(function(done) {
+            before(function (done) {
                 sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
                 async.series([dropDatabases, createRawAndAggregatedCollections], done);
             });
@@ -700,7 +694,7 @@ describe('sthDatabaseNameMapperTool tests', function() {
                 )
             );
 
-            after(function(done) {
+            after(function (done) {
                 sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
                 dropDatabases(done);
             });

@@ -171,49 +171,49 @@ function databaseNameTests() {
     const ORIGINAL_NAME_MAPPING = sthConfig.NAME_MAPPING;
     const ORIGINAL_NAME_ENCODING = sthConfig.NAME_ENCODING;
 
-    ['name mapping and encoding', 'name mapping', 'name encoding', 'no mapping or encoding'].forEach(function(
-        mechanism
-    ) {
-        describe(mechanism, function() {
-            before(function() {
-                switch (mechanism) {
-                    case 'name mapping and encoding':
-                        sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
-                        sthConfig.NAME_ENCODING = true;
-                        break;
-                    case 'name mapping':
-                        sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
-                        sthConfig.NAME_ENCODING = false;
-                        break;
-                    case 'name encoding':
-                        sthConfig.NAME_MAPPING = undefined;
-                        sthConfig.NAME_ENCODING = true;
-                        break;
-                    case 'no mapping or encoding':
-                        sthConfig.NAME_MAPPING = undefined;
-                        sthConfig.NAME_ENCODING = false;
-                        break;
-                }
-            });
+    ['name mapping and encoding', 'name mapping', 'name encoding', 'no mapping or encoding'].forEach(
+        function (mechanism) {
+            describe(mechanism, function () {
+                before(function () {
+                    switch (mechanism) {
+                        case 'name mapping and encoding':
+                            sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
+                            sthConfig.NAME_ENCODING = true;
+                            break;
+                        case 'name mapping':
+                            sthConfig.NAME_MAPPING = require(ROOT_PATH + '/test/unit/nameMappings/name-mapping.json');
+                            sthConfig.NAME_ENCODING = false;
+                            break;
+                        case 'name encoding':
+                            sthConfig.NAME_MAPPING = undefined;
+                            sthConfig.NAME_ENCODING = true;
+                            break;
+                        case 'no mapping or encoding':
+                            sthConfig.NAME_MAPPING = undefined;
+                            sthConfig.NAME_ENCODING = false;
+                            break;
+                    }
+                });
 
-            it('should compose the database name', function(done) {
-                const databaseName = sthDatabaseNaming.getDatabaseName(INVALID_SERVICE);
-                expectDatabaseName(INVALID_SERVICE, databaseName);
-                done();
-            });
+                it('should compose the database name', function (done) {
+                    const databaseName = sthDatabaseNaming.getDatabaseName(INVALID_SERVICE);
+                    expectDatabaseName(INVALID_SERVICE, databaseName);
+                    done();
+                });
 
-            it('should not compose the database name for a very long service', function(done) {
-                const databaseName = sthDatabaseNaming.getDatabaseName(VERY_LONG_SERVICE);
-                expect(databaseName).to.be(null);
-                done();
-            });
+                it('should not compose the database name for a very long service', function (done) {
+                    const databaseName = sthDatabaseNaming.getDatabaseName(VERY_LONG_SERVICE);
+                    expect(databaseName).to.be(null);
+                    done();
+                });
 
-            after(function() {
-                sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
-                sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
+                after(function () {
+                    sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
+                    sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
+                });
             });
-        });
-    });
+        }
+    );
 }
 
 /**
@@ -226,26 +226,28 @@ function collectionNameTests() {
     const dataTypes = Object.keys(sthTestConfig.DATA_TYPES);
     const dataModels = Object.keys(sthConfig.DATA_MODELS);
 
-    dataModels.forEach(function(dataModel) {
-        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function() {
-            before(function() {
+    dataModels.forEach(function (dataModel) {
+        describe(sthConfig.DATA_MODELS[dataModel] + ' data model', function () {
+            before(function () {
                 sthConfig.DATA_MODEL = sthConfig.DATA_MODELS[dataModel];
             });
 
-            dataTypes.forEach(function(dataType) {
+            dataTypes.forEach(function (dataType) {
                 ['name mapping and encoding', 'name mapping', 'name encoding', 'no mapping or encoding'].forEach(
-                    function(mechanism) {
-                        describe(mechanism, function() {
-                            before(function() {
+                    function (mechanism) {
+                        describe(mechanism, function () {
+                            before(function () {
                                 switch (mechanism) {
                                     case 'name mapping and encoding':
-                                        sthConfig.NAME_MAPPING = require(ROOT_PATH +
-                                            '/test/unit/nameMappings/name-mapping.json');
+                                        sthConfig.NAME_MAPPING = require(
+                                            ROOT_PATH + '/test/unit/nameMappings/name-mapping.json'
+                                        );
                                         sthConfig.NAME_ENCODING = true;
                                         break;
                                     case 'name mapping':
-                                        sthConfig.NAME_MAPPING = require(ROOT_PATH +
-                                            '/test/unit/nameMappings/name-mapping.json');
+                                        sthConfig.NAME_MAPPING = require(
+                                            ROOT_PATH + '/test/unit/nameMappings/name-mapping.json'
+                                        );
                                         sthConfig.NAME_ENCODING = false;
                                         break;
                                     case 'name encoding':
@@ -263,7 +265,7 @@ function collectionNameTests() {
                                 'should compose the collection name for ' +
                                     sthTestConfig.DATA_TYPES[dataType] +
                                     ' data',
-                                function(done) {
+                                function (done) {
                                     const collectionName =
                                         sthTestConfig.DATA_TYPES[dataType] === sthTestConfig.DATA_TYPES.RAW
                                             ? sthDatabaseNaming.getRawCollectionName(COLLECTION_NAME_PARAMS)
@@ -282,7 +284,7 @@ function collectionNameTests() {
                                 'should not compose the collection name for ' +
                                     sthTestConfig.DATA_TYPES[dataType] +
                                     ' data if very long service path',
-                                function(done) {
+                                function (done) {
                                     const collectionName =
                                         sthTestConfig.DATA_TYPES[dataType] === sthTestConfig.DATA_TYPES.RAW
                                             ? sthDatabaseNaming.getRawCollectionName(VERY_LONG_COLLECTION_NAME_PARAMS)
@@ -294,7 +296,7 @@ function collectionNameTests() {
                                 }
                             );
 
-                            after(function() {
+                            after(function () {
                                 sthConfig.NAME_MAPPING = ORIGINAL_NAME_MAPPING;
                                 sthConfig.NAME_ENCODING = ORIGINAL_NAME_ENCODING;
                             });
@@ -303,14 +305,14 @@ function collectionNameTests() {
                 );
             });
 
-            after(function() {
+            after(function () {
                 sthConfig.DATA_MODEL = ORIGINAL_DATA_MODEL;
             });
         });
     });
 }
 
-describe('sthDatabaseNaming tests', function() {
+describe('sthDatabaseNaming tests', function () {
     describe('database names', databaseNameTests);
 
     describe('collection names', collectionNameTests);
