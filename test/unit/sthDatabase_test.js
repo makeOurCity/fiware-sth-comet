@@ -1130,17 +1130,29 @@ describe('sthDatabase tests', function () {
 
         it('should notify as error the aim to connect to the database at an unavailable host', function (done) {
             const INVALID_DATABASE_CONNECTION_PARAMS = _.clone(DATABASE_CONNECTION_PARAMS);
-            INVALID_DATABASE_CONNECTION_PARAMS.dbURI = 'unavailable_localhost:27017';
-            // The driver keeps on looking for an available server for reconnectTries * reconnectInterval ms
+            // The .invalid top level domain is guaranteed not to resolve (RFC 6761)
+            INVALID_DATABASE_CONNECTION_PARAMS.dbURI = 'unavailable-host.invalid:27017';
+            // The driver keeps on looking for an available server for reconnectTries * reconnectInterval ms.
+            //  It has to last longer than the DNS lookup, or the error reports the timeout instead of the lookup
+            //  failure
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectTries = 1;
-            INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 500;
+            INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 2000;
+            this.timeout(5000);
             sthDatabase.connect(INVALID_DATABASE_CONNECTION_PARAMS, function (err, connection) {
-                /* eslint-disable-next-line no-unused-expressions */
-                expect(err).to.exist;
-                expect(err.name).to.equal('MongoServerSelectionError');
-                expect(err.message).to.contain('ENOTFOUND');
-                expect(connection).to.equal(null);
-                done();
+                // Assertion errors are passed to done() since an exception thrown here would reach the
+                //  uncaughtException handler of the STH and stop the whole test run
+                let assertionError;
+                try {
+                    /* eslint-disable-next-line no-unused-expressions */
+                    expect(err).to.exist;
+                    expect(err.name).to.equal('MongoServerSelectionError');
+                    // The resolver reports either ENOTFOUND or EAI_AGAIN depending on the DNS configuration
+                    expect(err.message).to.match(/ENOTFOUND|EAI_AGAIN/);
+                    expect(connection).to.equal(null);
+                } catch (e) {
+                    assertionError = e;
+                }
+                done(assertionError);
             });
         });
 
@@ -1151,12 +1163,17 @@ describe('sthDatabase tests', function () {
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectTries = 1;
             INVALID_DATABASE_CONNECTION_PARAMS.reconnectInterval = 500;
             sthDatabase.connect(INVALID_DATABASE_CONNECTION_PARAMS, function (err, connection) {
-                /* eslint-disable-next-line no-unused-expressions */
-                expect(err).to.exist;
-                expect(err.name).to.equal('MongoServerSelectionError');
-                expect(err.message).to.contain('ECONNREFUSED');
-                expect(connection).to.equal(null);
-                done();
+                let assertionError;
+                try {
+                    /* eslint-disable-next-line no-unused-expressions */
+                    expect(err).to.exist;
+                    expect(err.name).to.equal('MongoServerSelectionError');
+                    expect(err.message).to.contain('ECONNREFUSED');
+                    expect(connection).to.equal(null);
+                } catch (e) {
+                    assertionError = e;
+                }
+                done(assertionError);
             });
         });
     });

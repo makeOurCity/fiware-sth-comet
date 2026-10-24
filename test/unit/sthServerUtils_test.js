@@ -120,7 +120,8 @@ describe('sthServerUtils tests', function () {
                     throw new Error('Expected the promise to be rejected');
                 },
                 function (err) {
-                    expect(err.code).to.equal('ENOTFOUND');
+                    // The resolver reports either ENOTFOUND or EAI_AGAIN depending on the DNS configuration
+                    expect(['ENOTFOUND', 'EAI_AGAIN']).to.contain(err.code);
                 }
             );
         });
